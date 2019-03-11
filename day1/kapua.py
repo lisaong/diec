@@ -1,7 +1,9 @@
-import swagger_client # Generated python client
-from swagger_client.rest import ApiException
-
+import time
 from pprint import pprint
+
+ # Generated python client
+import swagger_client
+from swagger_client.rest import ApiException
 
 # create an instance of the API class
 api_instance = swagger_client.AuthenticationApi()
@@ -14,10 +16,17 @@ try:
     api_response = api_instance.authentication_api_key(body)
     pprint(api_response)
 
-    # Get the token id for future requests
-    token_id = api_response.token_id
+    # Set the token id as the Auth token
+    configuration = swagger_client.Configuration()
+    configuration.api_key['Authorization'] = api_response.token_id
 
-    # Get 
+    users_api = swagger_client.UsersApi(swagger_client.ApiClient(configuration))
+    scope_id = '_' # str | The ScopeId in which to count results
+    body = swagger_client.UserQuery() # UserQuery | The UserQuery to use to filter count results
+
+    # Count the number of users
+    users_response = users_api.user_count(scope_id, body)
+    pprint(users_response)
 
 except ApiException as e:
-    print("Exception when calling AuthenticationApi->authentication_api_key: %s\n" % e)
+    print("Exception when calling API: %s\n" % e)
