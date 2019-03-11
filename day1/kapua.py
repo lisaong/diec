@@ -1,6 +1,6 @@
-# Generated python client
-import swagger_client
+import swagger_client # Generated python client
 from swagger_client.rest import ApiException
+
 from pprint import pprint
 
 # create an instance of the API class
