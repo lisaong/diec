@@ -34,6 +34,30 @@ def list_accounts():
     except ApiException as e:
         print("Exception when calling API: %s\n" % e)    
 
+def list_permissions():
+    try:
+        api_client = kapua_config.get_api_client()
+        api_instance = swagger_client.AccessInfoApi(api_client)
+
+         # AccessInfoQuery | The AccessInfoQuery to use to filter results
+        body = swagger_client.AccessInfoQuery()
+
+        api_response = api_instance.access_info_query(kapua_config.get_scope_id(), body)
+
+        for info in api_response.items:
+            # AccessPermissionQuery | The AccessPermissionQuery to use to filter count results
+            pprint(info.id)
+            permission_query = swagger_client.AccessPermissionQuery()
+            permission_response = api_instance.access_permission_query(kapua_config.get_scope_id(),
+                info.id, permission_query) 
+            pprint(permission_response)
+
+        #pprint(api_response)
+
+    except ApiException as e:
+        print("Exception when calling API: %s\n" % e)
+
 if __name__ == '__main__':
     #create_account()
     list_accounts()
+    #list_permissions()
