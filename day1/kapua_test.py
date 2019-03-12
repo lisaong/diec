@@ -13,11 +13,10 @@ try:
     pprint(api_client.configuration.api_key)
 
     users_api = swagger_client.UsersApi(api_client)
-    scope_id = kapua_config.SCOPE_ID # str | The ScopeId in which to count results
     body = swagger_client.UserQuery() # UserQuery | The UserQuery to use to filter count results
 
     # Count the number of users
-    users_response = users_api.user_count(scope_id, body)
+    users_response = users_api.user_count(kapua_config.get_scope_id(), body)
     pprint(users_response)
 
 except ApiException as e:

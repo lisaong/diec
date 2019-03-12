@@ -4,7 +4,9 @@
  # Generated python client
 import swagger_client
 
-SCOPE_ID = '_'
+def get_scope_id():
+    SCOPE_ID = '_'
+    return SCOPE_ID
 
 def get_api_client():
     API_KEY = '12345678kapua-password'
