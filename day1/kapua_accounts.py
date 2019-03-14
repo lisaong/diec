@@ -54,6 +54,7 @@ def delete_account(name):
 
         account_id = get_account_id(name)
         api_instance.account_delete(scope_id, account_id)
+        print(f'Deleted account id: {account_id}')
 
     except ApiException as e:
         print("Exception when calling API: %s\n" % e)
@@ -82,8 +83,8 @@ def delete_user(account_id, name):
 
         if len(api_response.items) > 0:
             user_id = api_response.items[0].id
-            print(f'Found user id: {user_id}')
             api_instance.user_delete(account_id, user_id)
+            print(f'Deleted user id: {user_id}')
         else:
             print(f'No user named {name} found for account {account_id}')
 
@@ -108,7 +109,7 @@ def list_users(account_id=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Automates creation of Kapua accounts and users')
-    parser.add_argument('command', type=str, choices=['add_acc', 'add_user', 'delete_all'])
+    parser.add_argument('command', type=str, choices=['add_acc', 'add_user', 'delete_user', 'delete_all'])
 
     args = parser.parse_args()
 
@@ -122,11 +123,13 @@ if __name__ == '__main__':
 
     if args.command == 'add_acc':
         create_account(name=account['name'], organization=account['org'], email=account['email'])
-    elif args.command == 'add_user':
+    else:
         account['id'] = get_account_id(name=account['name'])
-        create_user(account_id=account['id'], name=user)
-        list_users(account_id=account['id'])
-    elif args.command == 'delete_all':
-        account['id'] = get_account_id(name=account['name'])
-        delete_user(account_id=account['id'], name=user)
-        delete_account(name=account['name'])
+        if args.command == 'add_user':
+            create_user(account_id=account['id'], name=user)
+            list_users(account_id=account['id'])
+        elif args.command == 'delete_user':
+            delete_user(account_id=account['id'], name=user)
+        elif args.command == 'delete_all':
+            delete_user(account_id=account['id'], name=user)
+            delete_account(name=account['name'])
