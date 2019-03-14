@@ -140,7 +140,7 @@ if __name__ == '__main__':
         'email':'diec1@iss.edu',
         'org':'iss'
     }
-    user = 'user2'
+    user = 'user1'
 
     if args.command == 'add_acc':
         create_account(name=account['name'], organization=account['org'], email=account['email'])
