@@ -1,4 +1,6 @@
 import time
+import argparse
+import sys
 from pprint import pprint
 
  # Generated python client
@@ -105,11 +107,26 @@ def list_users(account_id=None):
         print("Exception when calling API: %s\n" % e)
 
 if __name__ == '__main__':
-    #account_id = create_account(name='diec', organization='iss', email='diec@iss.edu')
+    parser = argparse.ArgumentParser(description='Automates creation of Kapua accounts and users')
+    parser.add_argument('command', type=str, choices=['add_acc', 'add_user', 'delete_all'])
 
-    account_id = get_account_id(name='diec')
-    #create_user(account_id=account_id, name='user1')
-    #list_users(account_id=account_id)
+    args = parser.parse_args()
 
-    #delete_user(account_id=account_id, name='user1')
-    #delete_account(name='diec')
+    # test values
+    account = {
+        'name': 'diec1',
+        'email':'diec1@iss.edu',
+        'org':'iss'
+    }
+    user = 'user1'
+
+    if args.command == 'add_acc':
+        create_account(name=account['name'], organization=account['org'], email=account['email'])
+    elif args.command == 'add_user':
+        account['id'] = get_account_id(name=account['name'])
+        create_user(account_id=account['id'], name=user)
+        list_users(account_id=account['id'])
+    elif args.command == 'delete_all':
+        account['id'] = get_account_id(name=account['name'])
+        delete_user(account_id=account['id'], name=user)
+        delete_account(name=account['name'])
