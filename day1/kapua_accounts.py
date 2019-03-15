@@ -23,7 +23,7 @@ def create_account(name, organization, email):
         print(f'Created account with id: {api_response.id}')
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)
+        print(f'Exception when calling API: {e}')
 
 def get_account_id(name):
     scope_id = kapua_config.get_scope_id()
@@ -40,7 +40,7 @@ def get_account_id(name):
             raise NameError(f'No account named {name} found')
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)    
+        print(f'Exception when calling API: {e}')
 
 def delete_account(name):
     scope_id = kapua_config.get_scope_id()
@@ -53,7 +53,7 @@ def delete_account(name):
         print(f'Deleted account id: {account_id}')
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)
+        print(f'Exception when calling API: {e}')
 
 def create_user(account_id, name):
     try:
@@ -68,7 +68,7 @@ def create_user(account_id, name):
         return api_response.id
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)
+        print(f'Exception when calling API: {e}')
 
 def get_user_id(account_id, name):
     try:
@@ -85,7 +85,7 @@ def get_user_id(account_id, name):
             raise NameError(f'No user named {name} found')
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)
+        print(f'Exception when calling API: {e}')
 
 def delete_user(account_id, name):
     try:
@@ -96,7 +96,7 @@ def delete_user(account_id, name):
         print(f'Deleted user id: {user_id}')
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)
+        print(f'Exception when calling API: {e}')
 
 def grant_permissions(account_id, user_id):
     try:
@@ -116,7 +116,7 @@ def grant_permissions(account_id, user_id):
         pprint(api_response)
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)    
+        print(f'Exception when calling API: {e}')    
 
 def list_permissions(account_id, user_id):
     try:
@@ -135,7 +135,7 @@ def list_permissions(account_id, user_id):
         pprint(api_response)
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)    
+        print(f'Exception when calling API: {e}')    
 
 def add_credentials(account_id, user_id, password):
     try:
@@ -157,7 +157,7 @@ def add_credentials(account_id, user_id, password):
         api_response = api_instance.credential_create(account_id, body)
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)
+        print(f'Exception when calling API: {e}')
 
 def list_credentials(account_id, user_id):
     try:
@@ -168,7 +168,7 @@ def list_credentials(account_id, user_id):
         pprint(api_response)
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)
+        print(f'Exception when calling API: {e}')
 
 def get_api_key(account_id, user_id):
     try:
@@ -183,7 +183,7 @@ def get_api_key(account_id, user_id):
         raise KeyError(f'No API key found for user {user_id}')
 
     except ApiException as e:
-        print('Exception when calling API: %s\n' % e)
+        print(f'Exception when calling API: {e}')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Automates creation of Kapua accounts and users')
