@@ -190,8 +190,7 @@ def delete_user_keys(account_id, user_id, key_type='API_KEY'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Automates creation of Kapua accounts and users')
-    parser.add_argument('command', type=str, choices=['add_acc', 'add_user', 'delete_user', 'delete_all',
-        'add_user_key'])
+    parser.add_argument('command', type=str, choices=['add_acc', 'add_user', 'delete_user', 'delete_all'])
 
     args = parser.parse_args()
 

@@ -1,3 +1,8 @@
+#
+# Kapua REST API test script
+# Author: Lisa Ong, NUS/ISS
+#
+
 import time
 from pprint import pprint
 
