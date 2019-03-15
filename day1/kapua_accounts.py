@@ -1,3 +1,8 @@
+#
+# Kapua account management utilities
+# Author: Lisa Ong, NUS/ISS
+#
+
 import argparse
 import datetime
 from pprint import pprint

@@ -1,3 +1,8 @@
+#
+# Kapua device deletion utilities
+# Author: Lisa Ong, NUS/ISS
+#
+
 import argparse
 import random
 from pprint import pprint

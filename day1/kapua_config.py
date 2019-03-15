@@ -1,7 +1,9 @@
-"""Common configuration and code for Kapua REST API client
-"""
+#
+# Common configuration and code for Kapua REST API client
+# Author: Lisa Ong, NUS/ISS
+#
 
- # Generated python client
+# Generated python client
 import swagger_client
 
 def get_scope_id():
