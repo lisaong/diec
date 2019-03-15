@@ -8,9 +8,10 @@ from swagger_client.rest import ApiException
 import kapua_config
 import kapua_accounts
 
-def add_devices(account_name, user_name, device_names):
+def add_devices(account_id, user_id, device_names):
     print(device_names)
-    pass
+    api_key = kapua_accounts.get_api_key(account_id, user_id)
+    print(api_key)
 
 if __name__ == '__main__':
 
@@ -24,8 +25,12 @@ if __name__ == '__main__':
     parser.add_argument('--delete', nargs='+', type=str, help='Removes one or more devices with the given names')
 
     args = parser.parse_args()
+
+    account_id = kapua_accounts.get_account_id(name=account_name)
+    user_id = kapua_accounts.get_user_id(account_id=account_id, name=user_name)
+
     if args.add:
-        add_devices(account_name, user_name, args.add)
+        add_devices(account_id, user_id, args.add)
     elif args.list:
         pass
     elif args.delete:
