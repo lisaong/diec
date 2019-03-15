@@ -1,4 +1,5 @@
 import argparse
+import random
 from pprint import pprint
 
  # Generated python client
@@ -13,20 +14,37 @@ def list_devices(api_client, account_id):
     try:
         api_response = api_instance.device_simple_query(account_id)
         pprint(api_response)
+
     except ApiException as e:
         print(f'Exception when calling API: {e}')
 
 def add_devices(api_client, account_id, device_names):
     api_instance = swagger_client.DevicesApi(api_client)
     try:
-        pass
+        for device_name in device_names:
+            # Create dummy devices with some fake properties
+            body = swagger_client.DeviceCreator(client_id='fake_device_' + device_name,
+                display_name=device_name, model_name=device_name,
+                serial_number=random.randint(1, 1000), status='ENABLED')
+            api_response = api_instance.device_create(account_id, body)
+            print(f'Created device: {api_response.display_name}')
+
     except ApiException as e:
         print(f'Exception when calling API: {e}')
 
 def delete_devices(api_client, account_id, device_names):
     api_instance = swagger_client.DevicesApi(api_client)
     try:
-        pass
+        for device_name in device_names:    
+            api_response = api_instance.device_simple_query(account_id,
+                client_id='fake_device_' + device_name)
+
+            if len(api_response.items) > 0:
+                api_instance.device_delete(account_id, api_response.items[0].id)
+                print(f'Deleted device: {device_name}')
+            else:
+                print(f'Device {device_name} not found, skipping')
+
     except ApiException as e:
         print(f'Exception when calling API: {e}')
 
