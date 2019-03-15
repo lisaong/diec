@@ -1,6 +1,4 @@
-import time
 import argparse
-import sys
 from pprint import pprint
 
  # Generated python client
@@ -109,7 +107,6 @@ def list_permissions(account_id, user_id):
 
     except ApiException as e:
         print("Exception when calling API: %s\n" % e)    
-
 
 def delete_user(account_id, name):
     try:
