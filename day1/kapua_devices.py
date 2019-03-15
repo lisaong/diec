@@ -10,8 +10,9 @@ import kapua_accounts
 
 def add_devices(account_id, user_id, device_names):
     print(device_names)
-    api_key = kapua_accounts.get_api_key(account_id, user_id)
-    print(api_key)
+
+    api_client = kapua_config.get_api_client(api_key='QJ1ixt7HF8yf10dc5M3F6bRw6kvjFNahT7pyr5fA')
+    pprint(api_client)
 
 if __name__ == '__main__':
 
