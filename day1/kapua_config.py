@@ -8,14 +8,16 @@ def get_scope_id():
     SCOPE_ID = '_'
     return SCOPE_ID
 
-def get_api_client():
-    API_KEY = '12345678kapua-password'
+def get_api_client(api_key=None):
+    if not api_key:
+        # kapua-sys's API key
+        api_key = '12345678kapua-password'
     
     # create an instance of the API class
     api_instance = swagger_client.AuthenticationApi()
 
     # ApiKeyCredentials | The API KEY authentication credential of a user.
-    body = swagger_client.ApiKeyCredentials(api_key=API_KEY)
+    body = swagger_client.ApiKeyCredentials(api_key=api_key)
 
     # Authenticate an API user
     api_response = api_instance.authentication_api_key(body)
