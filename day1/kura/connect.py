@@ -1,31 +1,46 @@
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
-import getmac
 import argparse
+import json
+
+import kurapayload_pb2
+from google.protobuf import json_format
 
 # TODO: update this to the Kapua MQTT server hostname & port
 hostname='0.tcp.ngrok.io'
 port=11418
+client_id='02:42:AC:11:00:02'
 
 # default username and password created on Kapua,
 # associated with this device
 username='user1'
 password='Kapu@12345678'
 
-# assume we are running the docker version of kapu
-mac=getmac.get_mac_address(interface='docker0')
+def send_message(subtopic, json_payload):
+    topic='$EDC/diec1/' + client_id + '/MQTT/' + subtopic
 
-def connect():
-    # send a message to connect
-    topic=f'$EDC/diec1/{mac}/MQTT/BIRTH'
+    pb = json_format.Parse(json.dumps(json_payload),
+                           kurapayload_pb2.KuraPayload(),
+                           ignore_unknown_fields=False)
 
-    publish.single(topic, payload='test', qos=0, retain=False,
+    publish.single(topic, payload=pb.SerializeToString(), qos=0, retain=False,
         hostname=hostname, port=port, keepalive=60, will=None,
         auth={'username':username, 'password':password}, tls=None,
         protocol=mqtt.MQTTv311, transport='tcp')
 
 def disconnect():
-    pass
+    with open('disconnect_template.json') as f:
+        payload = json.load(f)
+    print(payload)
+
+    send_message('DC', payload)
+
+def connect(subtopic='BIRTH'):
+    with open('connect_template.json') as f:
+        payload = json.load(f)
+    print(payload)
+
+    send_message('BIRTH', payload)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Sends a Kapua connection / disconnection request')
