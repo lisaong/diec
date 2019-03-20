@@ -28,11 +28,25 @@ def send_message(subtopic, json_payload):
         auth={'username':username, 'password':password}, tls=None,
         protocol=mqtt.MQTTv311, transport='tcp')
 
+def send_event(event):
+    topic='$EDC/diec1/' + client_id + '/MQTT/' + event
+
+    # Event,CONNECT,,DeviceId,02:42:AC:11:00:02,,Username,user1
+    payload = 'Event,' + event + ',DeviceId,' + client_id + \
+              ',,Username,' + username
+    print(payload)
+
+    publish.single(topic, payload=payload, qos=0, retain=False,
+        hostname=hostname, port=port, keepalive=60, will=None,
+        auth={'username':username, 'password':password}, tls=None,
+        protocol=mqtt.MQTTv311, transport='tcp')
+
 def disconnect():
     with open('disconnect_template.json') as f:
         payload = json.load(f)
     print(payload)
 
+    send_event('DISCONNECT')
     send_message('DC', payload)
 
 def connect(subtopic='BIRTH'):
@@ -41,6 +55,7 @@ def connect(subtopic='BIRTH'):
     print(payload)
 
     send_message('BIRTH', payload)
+    send_event('CONNECT')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Sends a Kapua connection / disconnection request')
