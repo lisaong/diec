@@ -40,6 +40,18 @@
       "name":"serial_number",
       "type":5,
       "string_value":"abcd-1234-defg-5678"
+    },{
+      "name":"payload_encoding",
+      "type":5,
+      "string_value":"KURA_PROTOBUF"
+    },{
+      "name":"accept_encoding",
+      "type":5,
+      "string_value":""
+    },{
+      "name":"kura_version",
+      "type":5,
+      "string_value":"KURA_4.0.0"
     }
   ]
 }
