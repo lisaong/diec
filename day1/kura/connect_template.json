@@ -4,33 +4,43 @@
     "longitude":0,
     "altitude":0
   },
-  "metrics":{
-    "connection_ip":"172.17.0.2",
-    "jvm_profile":"OpenJDK Runtime Environment 1.8.0_181-8u181-b13-2~deb9u1-b13",
-    "accept_encoding":"gzip",
-    "firmware_version":"N/A",
-    "jvm_version":"25.181-b13 mixed mode",
-    "application_framework_version":"KURA_4.0.0",
-    "connection_interface":"eth0 (02:42:AC:11:00:02)",
-    "available_processors":"4",
-    "osgi_framework_version":"1.8.0",
-    "total_memory":"126720",
-    "model_name":"Raspberry-Pi",
-    "osgi_framework":"Eclipse",
-    "kura_version":"KURA_4.0.0",
-    "jvm_name":"OpenJDK Client VM",
-    "os":"Linux",
-    "application_ids":"DEPLOY-V2,CONF-V1,CMD-V1,ASSET-V1",
-    "os_version":"4.14.79-v7+ #1159 SMP Sun Nov 4 17:50:20 GMT 2018",
-    "application_framework":"Kura",
-    "os_arch":"arm",
-    "serial_number":"Raspberry-Pi",
-    "model_id":"Raspberry-Pi",
-    "display_name":"Raspberry-Pi",
-    "bios_version":"N/A",
-    "uptime":"14037040",
-    "payload_encoding":"SIMPLE_JSON",
-    "part_number":"Raspberry-Pi"
-  }
+  "metric":[{
+      "name":"connection_ip",
+      "type":5,
+      "string_value":"172.17.0.2"
+    },{
+      "name":"firmware_version",
+      "type":5,
+      "string_value":"1.0"
+    },{
+      "name":"available_processors",
+      "type":5,
+      "string_value":"4"
+    },{
+      "name":"total_memory",
+      "type":5,
+      "string_value":"126720"
+    },{
+      "name":"model_name",
+      "type":5,
+      "string_value":"Raspberry-Pi"
+    },{
+      "name":"os",
+      "type":5,
+      "string_value":"Linux"
+    },{
+      "name":"os_arch",
+      "type":5,
+      "string_value":"arm"
+    },{
+      "name":"uptime",
+      "type":5,
+      "string_value":"23543580"
+    },{
+      "name":"serial_number",
+      "type":5,
+      "string_value":"abcd-1234-defg-5678"
+    }
+  ]
 }
 
