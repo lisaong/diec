@@ -1,14 +1,13 @@
 {
   "metric":[{
-
       "name":"display_name",
       "type":5,
       "string_value":"Raspberry-Pi"
     },
     {
-       "name":"uptime",
-       "type":2,
-       "long_value":14006380
+      "name":"uptime",
+      "type":5,
+      "string_value":"23543580"
     }]
 }
 
