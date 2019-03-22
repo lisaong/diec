@@ -17,10 +17,16 @@ def generate_addresses(seed, count):
     generator = AddressGenerator(seed=seed, security_level=security_level)
     return generator.get_addresses(0, count) # index, count
 
-start = time.time()
-seed = generate_seed()
-print('Seed:', seed)
-addresses = generate_addresses(seed, 2)
-pprint(addresses)
-end = time.time()
-print('Elapsed Time:', end - start, 's')
+def create_data_transaction(addresses):
+    """Creates a meta (data-only) transaction to addresses
+    """
+    pass
+
+if __name__ == "__main__":
+    start = time.time()
+    seed = generate_seed()
+    print('Seed:', seed)
+    addresses = generate_addresses(seed, 2)
+    pprint(addresses)
+    end = time.time()
+    print('Elapsed Time:', end - start, 's')
