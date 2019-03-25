@@ -13,7 +13,7 @@ import zmq
 node_config = {
     'url': 'https://nodes.devnet.iota.org:443',
     'min_weight_magnitude': 9,
-    'zmq': 'tcp://zmq.testnet.iota.org:5556'
+    'zmq': 'tcp://zmq.devnet.iota.org:5556'
 }
 
 security_level = 2
@@ -27,13 +27,13 @@ def generate_addresses(count):
 
 def str_to_address(address_str):
     # address is a string 'ABCD...', convert to byte string b'ABCD...'
-    return iota.Address(bytes(address, 'ASCII'))
+    return iota.Address(bytes(address_str, 'ASCII'))
 
 def get_balance(address_str):
     """Gets the balance of a given IOTA address"""
     api = iota.Iota(node_config['url'])
 
-    addresses = [str_to_address(address)]
+    addresses = [str_to_address(addresss_str)]
     return api.get_balances(addresses)
 
 def monitor(address_str):
@@ -49,15 +49,21 @@ def monitor(address_str):
     sock = context.socket(zmq.SUB)
 
     # subscribe to this IOTA address
-    sock.setsockopt(zmq.SUBSCRIBE, str_to_address(address))
+    sock.setsockopt(zmq.SUBSCRIBE, bytes(address_str, 'ASCII'))
+
+    # Or subscribe to everything
+    #sock.setsockopt(zmq.SUBSCRIBE, bytes('sn', 'ASCII'))
+
     sock.connect(node_config['zmq'])
-    sock.RCVTIMEO = 3000 # timeout (milliseconds)
+    #sock.RCVTIMEO = 10000 # timeout (milliseconds)
 
     try:
+        print('Waiting for messages')
         while True:
             message = sock.recv()
             print(message)
     finally:
+        print('Closing socket')
         sock.close()
 
 
