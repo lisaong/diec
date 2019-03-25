@@ -7,11 +7,13 @@ from iota.crypto.types import Seed
 from pprint import pprint
 import argparse
 import time
+import zmq
 
 # https://docs.iota.org/docs/getting-started/0.1/references/iota-networks#devnet
 node_config = {
     'url': 'https://nodes.devnet.iota.org:443',
-    'min_weight_magnitude': 9
+    'min_weight_magnitude': 9,
+    'zmq': 'tcp://zmq.testnet.iota.org:5556'
 }
 
 security_level = 2
@@ -23,18 +25,45 @@ def generate_addresses(count):
     generator = AddressGenerator(seed=seed, security_level=security_level)
     return generator.get_addresses(0, count) # index, count
 
-def get_balance(address):
+def str_to_address(address_str):
+    # address is a string 'ABCD...', convert to byte string b'ABCD...'
+    return iota.Address(bytes(address, 'ASCII'))
+
+def get_balance(address_str):
     """Gets the balance of a given IOTA address"""
     api = iota.Iota(node_config['url'])
 
-    # address is a string 'ABCD...', convert to byte string b'ABCD...'
-    addresses = [iota.Address(bytes(address, 'ASCII'))]
+    addresses = [str_to_address(address)]
     return api.get_balances(addresses)
+
+def monitor(address_str):
+    """Monitors a given address for a confirmed transaction
+
+    References:
+    https://docs.iota.org/docs/iri/0.1/references/zmq-events
+    https://www.digitalocean.com/community/tutorials/how-to-work-with-the-zeromq-messaging-library
+    """
+    context = zmq.Context()
+
+    # get a socket for our context
+    sock = context.socket(zmq.SUB)
+
+    # subscribe to this IOTA address
+    sock.setsockopt(zmq.SUBSCRIBE, str_to_address(address))
+    sock.connect(node_config['zmq'])
+    sock.RCVTIMEO = 3000 # timeout (milliseconds)
+
+    try:
+        while True:
+            message = sock.recv()
+            print(message)
+    finally:
+        sock.close()
+
 
 def create_data_transaction(address, msg):
     """Creates a meta (data-only) IOTA transaction to an IOTA address
     """
-    # https://iota.stackexchange.com/questions/328/what-are-trytes-and-trits
     return iota.ProposedTransaction(address=address, message=iota.TryteString.from_unicode(msg),
              tag=iota.Tag(b'DIECPYOTAWORKSHOP'), value=0)
 
@@ -61,8 +90,9 @@ def perform_pow(bundle):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='IOTA client script for workshop')
-    parser.add_argument('--gen_address', type=int, help='generates the given number of IOTA addresses')
-    parser.add_argument('--balance', type=str, help='checks balance for a given IOTA address')
+    parser.add_argument('--gen_address', metavar='COUNT', type=int, help='generates the given number of IOTA addresses')
+    parser.add_argument('--balance', metavar='ADDRESS', type=str, help='checks balance for a given IOTA address')
+    parser.add_argument('--monitor', metavar='ADDRESS', type=str, help='monitors transactions for a given IOTA address')
 
     args = parser.parse_args()
 
@@ -74,6 +104,8 @@ if __name__ == "__main__":
     elif args.balance is not None:
         balance = get_balance(args.balance)
         pprint(balance)
+    elif args.monitor is not None:
+        monitor(args.monitor)
     else:
         parser.print_help()
 
