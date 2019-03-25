@@ -69,8 +69,10 @@ def monitor(address_str):
         print('Closing socket')
         sock.close()
 
-def do_transaction(sender_seed, to, amount, message='Test DIEC transaction'):
-    """Performs a transaction"""
+def do_transaction(sender_seed, to, amount, message='TESTDIECTRANSACTION'):
+    """Performs a transaction
+    message must only contain A-Z, 9
+    """
     to_address = str_to_address(to)
 
     # Once an address has been used to send tokens, it becomes useless
@@ -101,7 +103,7 @@ def do_transaction(sender_seed, to, amount, message='Test DIEC transaction'):
              security_level=security_level)
 
     print("Done! Bundle hash: %s" % (sent_bundle['bundle'].hash))
-    for tx in SentBundle['bundle']:
+    for tx in send_bundle['bundle']:
         print("\n")
         pprint(vars(tx))
 
@@ -114,8 +116,8 @@ if __name__ == "__main__":
 
     # arguments for transactions
     tx_args = parser.add_argument_group('transaction arguments')
-    tx_args.add_argument('--sender', metavar='SEED', type=str, help='source seed for transaction')
-    tx_args.add_argument('--to', metavar='ADDRESS', type=str, help='destination address for transaction')
+    tx_args.add_argument('--sender_seed', metavar='SEED', type=str, help='source seed for transaction')
+    tx_args.add_argument('--to_address', metavar='ADDRESS', type=str, help='destination address for transaction')
     tx_args.add_argument('--amount', metavar='AMOUNT', type=int, help='amount of tokens to send')
 
     args = parser.parse_args()
@@ -131,8 +133,8 @@ if __name__ == "__main__":
         pprint(balance)
     elif args.monitor is not None:
         monitor(args.monitor)
-    elif args.sender and args.to and args.amount is not None:
-        do_transaction(args.sender, args.to, args.amount)
+    elif args.sender_seed and args.to_address and args.amount is not None:
+        do_transaction(args.sender_seed, args.to_address, args.amount)
     else:
         parser.print_help()
 
