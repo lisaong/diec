@@ -18,23 +18,27 @@ node_config = {
 
 security_level = 2
 
-def generate_addresses(count):
-    """Generates a number of IOTA addresses (given by count)"""
-    seed = Seed.random()
+def generate_addresses(count, seed=None):
+    """Generates a number of IOTA addresses (given by count and optional seed)
+    Returns: (address, seed)
+    """
+    if seed is None:
+        seed = Seed.random()
 
     generator = AddressGenerator(seed=seed, security_level=security_level)
-    return generator.get_addresses(0, count) # index, count
+    return (generator.get_addresses(0, count), seed) # index, count
 
 def str_to_address(address_str):
     # address is a string 'ABCD...', convert to byte string b'ABCD...'
     return iota.Address(bytes(address_str, 'ASCII'))
 
-def get_balance(address_str):
-    """Gets the balance of a given IOTA address"""
-    api = iota.Iota(node_config['url'])
-
-    addresses = [str_to_address(addresss_str)]
-    return api.get_balances(addresses)
+def get_balance(seed_str):
+    """Gets the balance of a given IOTA address
+    If need to add tokens: https://faucet.devnet.iota.org/
+    """
+    seed = bytes(seed_str, 'ASCII')
+    api = iota.Iota(node_config['url'], seed)
+    return api.get_account_data(start=0, stop=None)
 
 def monitor(address_str):
     """Monitors a given address for a confirmed transaction
@@ -55,10 +59,9 @@ def monitor(address_str):
     #sock.setsockopt(zmq.SUBSCRIBE, bytes('sn', 'ASCII'))
 
     sock.connect(node_config['zmq'])
-    #sock.RCVTIMEO = 10000 # timeout (milliseconds)
 
     try:
-        print('Waiting for messages')
+        print('Monitoring transactions for', address_str)
         while True:
             message = sock.recv()
             print(message)
@@ -66,71 +69,72 @@ def monitor(address_str):
         print('Closing socket')
         sock.close()
 
+def do_transaction(sender_seed, to, amount, message='Test DIEC transaction'):
+    """Performs a transaction"""
+    to_address = str_to_address(to)
 
-def create_data_transaction(address, msg):
-    """Creates a meta (data-only) IOTA transaction to an IOTA address
-    """
-    return iota.ProposedTransaction(address=address, message=iota.TryteString.from_unicode(msg),
-             tag=iota.Tag(b'DIECPYOTAWORKSHOP'), value=0)
+    # Once an address has been used to send tokens, it becomes useless
+    # (a security hazard to reuse, because private key is compromised).
+    # So we need to get a new address to hold the remaining tokens (if any).
+    # The address must be retrieved using the sender's seed.
+    #
+    # This is also why we don't use sender address, but rather the sender seed
+    change_address, _ = generate_addresses(1, sender_seed)
 
-def create_bundle(transactions):
-    """Creates an IOTA bundle from a list of transactions"""
-    bundle = iota.ProposedBundle(transactions=transactions)
-    bundle.finalize()
-    return bundle
+    print('Sending iotas ...')
+    print('\tSender seed:', sender_seed)
+    print('\tRecipient address:', to)
+    print('\tAmount (iotas):', amount)
+    print('\tChange address:', change_address[0])
 
-def perform_pow(bundle):
-    """Performs a proof of work on a bundle"""
-    api = iota.Iota(node_config['url'])
+    api = iota.Iota(node_config['url'], seed=sender_seed)
+    output_tx = iota.ProposedTransaction(address=to_address,
+             message=message,
+             tag=iota.Tag(b'DIECWORKSHOPDAYTWO'), # A-Z or 9
+             value=amount)
 
-    # depth: how many milestones to go in the past
-    # Higher value has better network, but requires more resources
-    tips = api.get_transactions_to_approve(depth=2)
-    att = api.attach_to_tangle(trunk_transaction=tips['trunkTransaction'], # first tip
-              branch_transaction=tips['branchTransaction'], # second tip
-              trytes=bundle.as_tryte_strings(),
-              min_weight_magnitude=node_config['min_weight_magnitude'])
+    sent_bundle = api.send_transfer(depth=3,
+             transfers=[output_tx],
+             inputs=None, # using seed because address can change
+             change_address=change_address[0], # where unspent tokens go
+             min_weight_magnitude=node_config['min_weight_magnitude'],
+             security_level=security_level)
 
-    res = api.broadcast_and_store(att['trytes'])
-    return res, att
+    print("Done! Bundle hash: %s" % (sent_bundle['bundle'].hash))
+    for tx in SentBundle['bundle']:
+        print("\n")
+        pprint(vars(tx))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='IOTA client script for workshop')
     parser.add_argument('--gen_address', metavar='COUNT', type=int, help='generates the given number of IOTA addresses')
-    parser.add_argument('--balance', metavar='ADDRESS', type=str, help='checks balance for a given IOTA address')
+    parser.add_argument('--balance', metavar='SEED', type=str, help='checks balance for a given IOTA sender seed')
     parser.add_argument('--monitor', metavar='ADDRESS', type=str, help='monitors transactions for a given IOTA address')
+
+    # arguments for transactions
+    tx_args = parser.add_argument_group('transaction arguments')
+    tx_args.add_argument('--sender', metavar='SEED', type=str, help='source seed for transaction')
+    tx_args.add_argument('--to', metavar='ADDRESS', type=str, help='destination address for transaction')
+    tx_args.add_argument('--amount', metavar='AMOUNT', type=int, help='amount of tokens to send')
 
     args = parser.parse_args()
 
     start = time.time()
 
     if args.gen_address is not None and args.gen_address > 0:
-        addresses = generate_addresses(args.gen_address)
+        (addresses, seed) = generate_addresses(args.gen_address)
         pprint(addresses)
-    elif args.balance is not None:
+        print(seed)
+    elif args.balance:
         balance = get_balance(args.balance)
         pprint(balance)
     elif args.monitor is not None:
         monitor(args.monitor)
+    elif args.sender and args.to and args.amount is not None:
+        do_transaction(args.sender, args.to, args.amount)
     else:
         parser.print_help()
-
-    #tx = create_data_transaction(addresses[0], 'hello')
-    #pprint(vars(tx))
-
-    #pb = create_bundle([tx])
-    #print('Bundle hash', pb.hash)
-
-    #res, att = perform_pow(pb)
-
-    # show what has been broadcasted - hash transaction + nonce (POW)
-    #print("Final bundle including POW and branch/trunk transactions:")
-    #for t in att['trytes']:
-    #    pprint(vars(iota.Transaction.from_tryte_string(t)))
-    #    print("")
-
-    #print('Broadcast result:')
-    #pprint(res)
 
     end = time.time()
     print('Elapsed Time:', end - start, 's')
