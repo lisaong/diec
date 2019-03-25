@@ -103,7 +103,7 @@ def do_transaction(sender_seed, to, amount, message='TESTDIECTRANSACTION'):
              security_level=security_level)
 
     print("Done! Bundle hash: %s" % (sent_bundle['bundle'].hash))
-    for tx in send_bundle['bundle']:
+    for tx in sent_bundle['bundle']:
         print("\n")
         pprint(vars(tx))
 
