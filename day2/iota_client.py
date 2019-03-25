@@ -29,6 +29,7 @@ def generate_addresses(seed, count):
 def create_data_transaction(address, msg):
     """Creates a meta (data-only) IOTA transaction to an IOTA address
     """
+    # https://iota.stackexchange.com/questions/328/what-are-trytes-and-trits
     return iota.ProposedTransaction(address=address, message=iota.TryteString.from_unicode(msg),
              tag=iota.Tag(b'DIECPYOTAWORKSHOP'), value=0)
 
