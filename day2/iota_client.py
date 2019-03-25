@@ -5,13 +5,10 @@ import iota
 from iota.crypto.addresses import AddressGenerator
 from iota.crypto.types import Seed
 from pprint import pprint
+import argparse
 import time
 
-#node_config = {
-#    'url': 'https://nodes.thetangle.org:443',
-#    'min_weight_magnitude': 12
-#}
-
+# https://docs.iota.org/docs/getting-started/0.1/references/iota-networks#devnet
 node_config = {
     'url': 'https://nodes.devnet.iota.org:443',
     'min_weight_magnitude': 9
@@ -19,12 +16,20 @@ node_config = {
 
 security_level = 2
 
-def generate_seed():
-    return Seed.random()
+def generate_addresses(count):
+    """Generates a number of IOTA addresses (given by count)"""
+    seed = Seed.random()
 
-def generate_addresses(seed, count):
     generator = AddressGenerator(seed=seed, security_level=security_level)
     return generator.get_addresses(0, count) # index, count
+
+def get_balance(address):
+    """Gets the balance of a given IOTA address"""
+    api = iota.Iota(node_config['url'])
+
+    # address is a string 'ABCD...', convert to byte string b'ABCD...'
+    addresses = [iota.Address(bytes(address, 'ASCII'))]
+    return api.get_balances(addresses)
 
 def create_data_transaction(address, msg):
     """Creates a meta (data-only) IOTA transaction to an IOTA address
@@ -55,28 +60,39 @@ def perform_pow(bundle):
     return res, att
 
 if __name__ == "__main__":
-    seed = generate_seed()
-    print('Seed:', seed)
-    addresses = generate_addresses(seed, 1)
-    pprint(addresses)
+    parser = argparse.ArgumentParser(description='IOTA client script for workshop')
+    parser.add_argument('--gen_address', type=int, help='generates the given number of IOTA addresses')
+    parser.add_argument('--balance', type=str, help='checks balance for a given IOTA address')
 
-    tx = create_data_transaction(addresses[0], 'hello')
-    pprint(vars(tx))
-
-    pb = create_bundle([tx])
-    print('Bundle hash', pb.hash)
+    args = parser.parse_args()
 
     start = time.time()
-    res, att = perform_pow(pb)
+
+    if args.gen_address is not None and args.gen_address > 0:
+        addresses = generate_addresses(args.gen_address)
+        pprint(addresses)
+    elif args.balance is not None:
+        balance = get_balance(args.balance)
+        pprint(balance)
+    else:
+        parser.print_help()
+
+    #tx = create_data_transaction(addresses[0], 'hello')
+    #pprint(vars(tx))
+
+    #pb = create_bundle([tx])
+    #print('Bundle hash', pb.hash)
+
+    #res, att = perform_pow(pb)
 
     # show what has been broadcasted - hash transaction + nonce (POW)
-    print("Final bundle including POW and branch/trunk transactions:")
-    for t in att['trytes']:
-        pprint(vars(iota.Transaction.from_tryte_string(t)))
-        print("")
+    #print("Final bundle including POW and branch/trunk transactions:")
+    #for t in att['trytes']:
+    #    pprint(vars(iota.Transaction.from_tryte_string(t)))
+    #    print("")
 
-    print('Broadcast result:')
-    pprint(res)
+    #print('Broadcast result:')
+    #pprint(res)
 
     end = time.time()
     print('Elapsed Time:', end - start, 's')
