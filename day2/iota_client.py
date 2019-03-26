@@ -1,5 +1,6 @@
 # References:
 # https://github.com/Hribek25/IOTA101
+# https://medium.com/coinmonks/integrating-physical-devices-with-iota-83f4e00cc5bb
 
 import iota
 from iota.crypto.addresses import AddressGenerator
