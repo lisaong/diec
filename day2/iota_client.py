@@ -28,17 +28,13 @@ def generate_addresses(count, seed=None):
     generator = AddressGenerator(seed=seed, security_level=security_level)
     return (generator.get_addresses(0, count), seed) # index, count
 
-def str_to_address(address_str):
-    # address is a string 'ABCD...', convert to byte string b'ABCD...'
-    return iota.Address(bytes(address_str, 'ASCII'))
-
-def get_balance(seed_str):
+def get_balance(address_str):
     """Gets the balance of a given IOTA address
     If need to add tokens: https://faucet.devnet.iota.org/
     """
-    seed = bytes(seed_str, 'ASCII')
-    api = iota.Iota(node_config['url'], seed)
-    return api.get_account_data(start=0, stop=None)
+    address = iota.Address(bytes(address_str, 'ASCII'))
+    api = iota.Iota(node_config['url'])
+    return api.get_balances(addresses=[address], threshold=100)
 
 def monitor(address_str):
     """Monitors a given address for a confirmed transaction
@@ -73,7 +69,8 @@ def do_transaction(sender_seed, to, amount, message='TESTDIECTRANSACTION'):
     """Performs a transaction
     message must only contain A-Z, 9
     """
-    to_address = str_to_address(to)
+    # address is a string 'ABCD...', convert to byte string b'ABCD...'
+    to_address = iota.Address(bytes(to, 'ASCII'))
 
     # Once an address has been used to send tokens, it becomes useless
     # (a security hazard to reuse, because private key is compromised).
@@ -111,7 +108,7 @@ def do_transaction(sender_seed, to, amount, message='TESTDIECTRANSACTION'):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='IOTA client script for workshop')
     parser.add_argument('--gen_address', metavar='COUNT', type=int, help='generates the given number of IOTA addresses')
-    parser.add_argument('--balance', metavar='SEED', type=str, help='checks balance for a given IOTA sender seed')
+    parser.add_argument('--balance', metavar='ADDRESS', type=str, help='checks balance for a given IOTA address')
     parser.add_argument('--monitor', metavar='ADDRESS', type=str, help='monitors transactions for a given IOTA address')
 
     # arguments for transactions
