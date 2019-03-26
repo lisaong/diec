@@ -18,6 +18,9 @@ node_config = {
 
 security_level = 2
 
+def as_bytes(string):
+    return bytes(string, 'ASCII')
+
 def generate_addresses(count, seed=None):
     """Generates a number of IOTA addresses (given by count and optional seed)
     Returns: (address, seed)
@@ -32,7 +35,7 @@ def get_balance(address_str):
     """Gets the balance of a given IOTA address
     If need to add tokens: https://faucet.devnet.iota.org/
     """
-    address = iota.Address(bytes(address_str, 'ASCII'))
+    address = iota.Address(as_bytes(address_str))
     api = iota.Iota(node_config['url'])
     return api.get_balances(addresses=[address], threshold=100)
 
@@ -49,10 +52,10 @@ def monitor(address_str):
     sock = context.socket(zmq.SUB)
 
     # subscribe to this IOTA address
-    sock.setsockopt(zmq.SUBSCRIBE, bytes(address_str, 'ASCII'))
+    sock.setsockopt(zmq.SUBSCRIBE, as_bytes(address_str))
 
     # Or subscribe to everything
-    #sock.setsockopt(zmq.SUBSCRIBE, bytes('sn', 'ASCII'))
+    #sock.setsockopt(zmq.SUBSCRIBE, as_bytes('sn'))
 
     sock.connect(node_config['zmq'])
 
@@ -65,12 +68,11 @@ def monitor(address_str):
         print('Closing socket')
         sock.close()
 
-def do_transaction(sender_seed, to, amount, message=None):
-    """Performs a transaction
-    message must only contain A-Z, 9
-    """
+def do_transaction(sender_seed_str, recipient_str, amount, message=None):
+    """Performs an IOTA transaction with an optional message"""
+
     # address is a string 'ABCD...', convert to byte string b'ABCD...'
-    to_address = iota.Address(bytes(to, 'ASCII'))
+    recipient_address = iota.Address(as_bytes(recipient_str))
 
     # Once an address has been used to send tokens, it becomes useless
     # (a security hazard to reuse, because private key is compromised).
@@ -78,11 +80,11 @@ def do_transaction(sender_seed, to, amount, message=None):
     # The address must be retrieved using the sender's seed.
     #
     # This is also why we don't use sender address, but rather the sender seed
-    change_address, _ = generate_addresses(1, sender_seed)
+    change_address, _ = generate_addresses(1, sender_seed_str)
 
     print('Sending iotas ...')
-    print('\tSender seed:', sender_seed)
-    print('\tRecipient address:', to)
+    print('\tSender seed:', sender_seed_str)
+    print('\tRecipient address:', recipient_str)
     print('\tAmount (iotas):', amount)
     print('\tChange address:', change_address[0])
 
@@ -90,8 +92,8 @@ def do_transaction(sender_seed, to, amount, message=None):
          # message needs to be encoded as tryte
          message = iota.TryteString.from_unicode(message)
 
-    api = iota.Iota(node_config['url'], seed=sender_seed)
-    output_tx = iota.ProposedTransaction(address=to_address,
+    api = iota.Iota(node_config['url'], seed=sender_seed_str)
+    output_tx = iota.ProposedTransaction(address=recipient_address,
              message=message,
              tag=iota.Tag(b'DIECWORKSHOPTWO'), # A-Z, 9
              value=amount)
