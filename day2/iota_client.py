@@ -65,7 +65,7 @@ def monitor(address_str):
         print('Closing socket')
         sock.close()
 
-def do_transaction(sender_seed, to, amount, message='TESTDIECTRANSACTION'):
+def do_transaction(sender_seed, to, amount, message=None):
     """Performs a transaction
     message must only contain A-Z, 9
     """
@@ -86,10 +86,14 @@ def do_transaction(sender_seed, to, amount, message='TESTDIECTRANSACTION'):
     print('\tAmount (iotas):', amount)
     print('\tChange address:', change_address[0])
 
+    if message:
+         # message needs to be encoded as tryte
+         message = iota.TryteString.from_unicode(message)
+
     api = iota.Iota(node_config['url'], seed=sender_seed)
     output_tx = iota.ProposedTransaction(address=to_address,
              message=message,
-             tag=iota.Tag(b'DIECWORKSHOPDAYTWO'), # A-Z or 9
+             tag=iota.Tag(b'DIECWORKSHOPTWO'), # A-Z, 9
              value=amount)
 
     sent_bundle = api.send_transfer(depth=3,
@@ -116,6 +120,7 @@ if __name__ == "__main__":
     tx_args.add_argument('--sender_seed', metavar='SEED', type=str, help='source seed for transaction')
     tx_args.add_argument('--to_address', metavar='ADDRESS', type=str, help='destination address for transaction')
     tx_args.add_argument('--amount', metavar='AMOUNT', type=int, help='amount of tokens to send')
+    tx_args.add_argument('--message', type=str, help='optional transaction message')
 
     args = parser.parse_args()
 
@@ -131,7 +136,7 @@ if __name__ == "__main__":
     elif args.monitor is not None:
         monitor(args.monitor)
     elif args.sender_seed and args.to_address and args.amount is not None:
-        do_transaction(args.sender_seed, args.to_address, args.amount)
+        do_transaction(args.sender_seed, args.to_address, args.amount, args.message)
     else:
         parser.print_help()
 
