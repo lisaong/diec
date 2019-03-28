@@ -1,0 +1,3 @@
+[submodule "ext/bitio"]
+	path = ext/bitio
+	url = https://github.com/whaleygeek/bitio.git
