@@ -1,9 +1,11 @@
 #
 # Micro:bit IO Test
 # Receives data (e.g. button presses, accelerometer readings) via the serial interface
+# References: https://bigl.es/friday-fun-sending-serial-data-from-micro-bit-to-laptop/
 #
 # Author: Lisa Ong, NUS/ISS
 #
+
 
 import argparse
 import serial
