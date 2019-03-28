@@ -9,10 +9,12 @@ import os
 import sys
 import time
 import argparse
+import json
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
-
-sys.path.append(os.path.join('..','ext', 'bitio', 'src'))
+import serial
+sport = '/dev/ttyACM0'
+sbaud = 115200
 
 def send_event(args, subtopic, message=None):
     publish.single(args.topic + '/' + subtopic, payload=message,
@@ -30,14 +32,26 @@ if __name__ == '__main__':
     if args.port is None:
         args.port = 1883
 
-
-    # this will trigger discovery if no previous micro:bit has been found
-    # to reset, delete the portscan.cache file
-    import microbit
+    s = serial.Serial(sport)
+    s.baudrate = sbaud
 
     while True:
-        time.sleep(0.25)
-        if microbit.button_a.was_pressed():
-            print('Button A pressed')
-            send_event(args, 'button', 'a')
+        #time.sleep(0.25)
+        data = s.readline()
+        print(data)
+
+        # This is a dumb publisher
+        # periodically publish, let the subscriber(s)
+        # decide when/what to receive
+
+        #if microbit.button_a.was_pressed():
+        #    print('Button A pressed')
+        #    send_event(args, 'button', 'a')
+
+        #sensors = {
+        #   'acc': microbit.accelerometer.get_values(),
+        #   'temp': microbit.temperature()
+        #}
+
+        #send_event(args, 'sensors', json.dumps(sensors))
 
