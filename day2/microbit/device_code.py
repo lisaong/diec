@@ -1,16 +1,16 @@
 from microbit import *
 
-# IOTA address is transmitted over serial
-# (in real life this needs to be replaced with an ID lookup)
-address = 'XQKBUNOERH9CJLLRQTNOLMWBJYUCGXORVNGEOEMBHNCPRVVBNSNNUOJMZODVUJXCOMMYXVLVNNJMBQMYX'
-bad_address = '999999999999999999999999999999999999BADBADBADBADBAD'
+id_1 = 'arrival:123'
+id_2 = 'arrival:456'
 
 while True:
+    # arrivals
     if button_a.is_pressed():
-        print(address)
+        print(id_1)
     elif button_b.is_pressed():
-        print(bad_address)
+        print(id_2)
 
+    # sensor data stream
     print(accelerometer.current_gesture(),
           accelerometer.get_values(), temperature(), compass.heading())
     sleep(100)
