@@ -1,4 +1,43 @@
-# Install on Raspberry Pi
+# Day2 Workshop
+
+## Use Case - IOTA micro vending machine
+
+![use_case](assets/use_case.png)
+
+You work in an animal wildlife sanctuary and take care of a flock of endangered bird species that frequently visit the sanctuary. Due to environmental pollution, the birds need additional nutrients to survive long term.
+
+To improve the health of the birds, the wildlife conservation agency has decided to enhance the bird food with supplementary nutrients. You’ve installed smart feeders scattered across the sanctuary, connected to cellular networks.
+
+The nutrient feeding system needs to meet these requirements:
+- Each bird should only consume an optimum amount of supplements assigned to it (no overdose!)
+- Unauthorised birds/non-birds should not consume the nutrients
+- Provide different mixes of supplements, depending on environmental conditions
+
+This can be solved in a variety of ways. The key advantages that IOTA offers:
+- Distributed ledger eliminates the need to centralise and dispatch the feed requests
+- Decouples the feeders (producers) from the birds (consumers)
+- Built-in way to uniquely identify the feeders and birds
+- Supports fine-grained (micro) transactions
+
+Proposed solution using IOTA
+- Create an IOTA address for the feeder which is used for monitoring when new funds are added
+- Each bird has a QR code attached (in a humane way) pointing to its IOTA wallet
+- When a bird visits a feeder:
+  1. Scan the bird’s QR code to get its IOTA wallet
+  2. Release supplements and deduct from the bird’s balance as it consumes the food. 
+  3. Stop adding supplements if the balance is empty.
+- [Not covered in workshop] A central system that:
+  - Monitors and replenishes the birds’ IOTA wallets based on demand and prescription
+  -  Monitors and replenishes the feeders based on transaction volume
+
+## Architecture
+![architecture](assets/architecture.png)
+
+## Microbit to MQTT relay
+![relay](assets/microbit_to_mqtt.png)
+
+## Installation
+### Raspberry Pi
 ```
 sudo apt-get install libssl-dev
 
@@ -7,7 +46,7 @@ pip install –r requirements.txt
 
 ```
 
-# Install on Windows
+### Windows
 PyOTA is not compatible with python 3.7. See https://stackoverflow.com/questions/52971244/import-filters-typeerror-type-doesnt-support-mro-entry-resolution
 
 ```
@@ -17,6 +56,6 @@ conda activate iota
 pip install -r requirements.txt
 ```
 
-# References
+## References
 - https://github.com/iotaledger/iota.lib.py (curl extension not available for Raspberry Pi)
 
