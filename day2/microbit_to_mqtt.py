@@ -17,10 +17,18 @@ import serial
 SERIAL_BAUDRATE = 115200
 
 def send_event(args, subtopic, message):
-    # drop the initial / from the topic (dev/ttyXXXX)
     # ensure that message is a string
     print(message)
-    publish.single(args.serial_port[1:] + '/' + subtopic, payload=str(message),
+    
+    if args.serial_port[0] == b'/':
+        # drop the initial / from the topic (dev/ttyXXXX) if
+        # if it begins with /, because MQTT topics use
+        # this as topic separator
+        topic = args.serial_port[1:]
+    else:
+        topic = args.serial_port
+
+    publish.single(topic + '/' + subtopic, payload=str(message),
        retain=False, hostname=args.hostname, port=args.port,
        protocol=mqtt.MQTTv311)
 
@@ -35,7 +43,7 @@ def send_data(args, timestamp, data):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Relays micro:bit events to MQTT')
     parser.add_argument('serial_port', type=str,
-        help='Micro:bit serial port, e.g. /dev/ttyACM0')
+        help='Micro:bit serial port, e.g. /dev/ttyACM0 or COM4')
     parser.add_argument('--hostname', type=str, default='localhost',
         help='MQTT broker hostname, defaults to TCP localhost')
     parser.add_argument('--port', type=int, default=1883, help='MQTT broker port, defaults to 1883')

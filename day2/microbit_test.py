@@ -11,7 +11,7 @@ import argparse
 import serial
 
 parser = argparse.ArgumentParser(description='Tests serial connection to micro:bit')
-parser.add_argument('port', type=str, help='serial port identified e.g. /dev/ttyACM0')
+parser.add_argument('port', type=str, help='serial port identified e.g. /dev/ttyACM0 or COM4')
 args = parser.parse_args()
 
 s = serial.Serial(args.port)
