@@ -53,6 +53,13 @@ Install mosquitto service:
 sudo apt install mosquitto mosquitto-clients
 ```
 
+To find the microbit serial port path:
+1. Disconnect the micro:bit
+2. `ls /dev/ttyA*`
+3. Connect the micro:bit over USB
+4. `ls /dev/ttyA*`
+5. The path is whatever is new in step 4 after the micro:bit is plugged in. If nothing new comes up, try expand the search path by doing `ls /dev/tty*` instead (note that you'll see a lot more paths here)
+
 ### Windows
 PyOTA is not compatible with python 3.7. See https://stackoverflow.com/questions/52971244/import-filters-typeerror-type-doesnt-support-mro-entry-resolution
 
@@ -68,6 +75,14 @@ Install mosquitto (tested with 64 bit version): https://mosquitto.org/download/
 cd C:\Program Files\mosquitto
 mosquitto.exe
 ```
+
+To find the microbit serial port path:
+1. Connect the micro:bit over USB. The driver should automatically install (will require admin privileges)
+2. Start -> Device Manager
+  a. Expand Ports (COM & LPT)
+  b. Look for something like "USB Serial Device (COM4)" (the last digit will change depending on your computer)
+3. Now you can do something like python microbit_test.py COM4
+
 
 ## References
 - https://github.com/iotaledger/iota.lib.py (curl extension not available for Raspberry Pi)
