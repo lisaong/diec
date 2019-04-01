@@ -41,9 +41,16 @@ Proposed solution using IOTA
 ```
 sudo apt-get install libssl-dev
 
+conda create -n iota python=3.6
+conda activate iota
 pip install packages/*
 pip install –r requirements.txt
 
+```
+
+Install mosquitto service:
+```
+sudo apt install mosquitto mosquitto-clients
 ```
 
 ### Windows
@@ -54,6 +61,12 @@ conda create -n iota python=3.6
 conda activate iota
 
 pip install -r requirements.txt
+```
+
+Install mosquitto (tested with 64 bit version): https://mosquitto.org/download/
+```
+cd C:\Program Files\mosquitto
+mosquitto.exe
 ```
 
 ## References
