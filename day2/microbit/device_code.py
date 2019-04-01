@@ -1,7 +1,7 @@
 from microbit import *
 
-id_1 = 'arrival:123'
-id_2 = 'arrival:456'
+id_1 = 'arrival,123'
+id_2 = 'arrival,456'
 
 while True:
     # arrivals
@@ -11,6 +11,11 @@ while True:
         print(id_2)
 
     # sensor data stream
-    print(accelerometer.current_gesture(),
-          accelerometer.get_values(), temperature(), compass.heading())
+    acc = accelerometer.get_values()
+    
+    # convert to comma separated string
+    print(','.join(map(str, 
+        [accelerometer.current_gesture(),
+         acc[0], acc[1], acc[2],
+         temperature(), compass.heading()])))
     sleep(100)
