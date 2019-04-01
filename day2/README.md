@@ -79,8 +79,8 @@ mosquitto.exe
 To find the microbit serial port path:
 1. Connect the micro:bit over USB. The driver should automatically install (will require admin privileges)
 2. Start -> Device Manager
-  a. Expand Ports (COM & LPT)
-  b. Look for something like "USB Serial Device (COM4)" (the last digit will change depending on your computer)
+  - Expand Ports (COM & LPT)
+  - Look for something like "USB Serial Device (COM4)" (the last digit will change depending on your computer)
 3. Now you can do something like python microbit_test.py COM4
 
 
