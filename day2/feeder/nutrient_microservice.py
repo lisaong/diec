@@ -42,7 +42,9 @@ class NutrientMicroservice(MqttMicroservice):
         # compute how much feed is needed
         # create iota transaction
         try:
-        # self.publish_message('iota', msg.payload)
+            import pdb; pdb.set_trace()
+            self.data.to_csv('test-*.csv')
+            # self.publish_message('iota', msg.payload)
             print(payload)
 
         except Exception as e:
@@ -55,15 +57,13 @@ class NutrientMicroservice(MqttMicroservice):
             # create dataframe and append to dask dataframe
             # treat first column as index (usually timestamp)
             df = pd.DataFrame([payload.values()], columns=config.DATA_COLUMNS)
-            df.set_index(config.DATA_COLUMNS[0], inplace=True)
-
             ddf = dd.from_pandas(df, npartitions=config.DASK_PARTITIONS)
+            ddf = ddf.set_index(config.DATA_COLUMNS[0], sorted=True)
 
             if self.data is None:
                 self.data = ddf
             else:
-                self.data = dd.concat([self.data, ddf], interleave_partitions=True)
-            print(self.data.head())
+                self.data = dd.concat([self.data, ddf])
 
         except Exception as e:
             print('Exception:', e)

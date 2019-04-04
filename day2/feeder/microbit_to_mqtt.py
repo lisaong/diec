@@ -62,10 +62,11 @@ if __name__ == '__main__':
 
     s = serial.Serial(args.serial_port)
     s.baudrate = SERIAL_BAUDRATE
+    start = int(time.time() * 1000)
 
     while True:
         data = s.readline()
-        timestamp = int(time.time())
+        timestamp = int(time.time() * 1000) - start # relative timestamp msec
 
         # minimal processing for simplicity and flexibility
         data = data.decode().strip()
