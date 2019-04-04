@@ -37,7 +37,14 @@ def send_arrival(args, timestamp, id):
     send_event(args, 'arrival', message)
 
 def send_data(args, timestamp, data):
-    message = {'ts': timestamp, 'data': data}
+    fields = ['ges', 'accX', 'accY', 'accZ', 'temp', 'head']
+    values = data.split(',')
+
+    # convert to dictionary
+    message = {'ts': timestamp}
+    if len(fields) == len(values): # no missing values
+        for f, v in zip(fields, values):
+            message[f] = v
     send_event(args, 'stream', message)
 
 if __name__ == '__main__':

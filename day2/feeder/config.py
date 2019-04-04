@@ -5,6 +5,9 @@
 #
 import argparse
 
+window_size = 100
+data_columns = ['ts', 'gest', 'accX', 'accY', 'accZ', 'temp', 'head']
+
 def parse_args(description):
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('topic_id', type=str,
