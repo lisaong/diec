@@ -10,6 +10,7 @@ import sys
 import time
 import argparse
 import json
+import config
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import serial
@@ -37,15 +38,13 @@ def send_arrival(args, timestamp, id):
     send_event(args, 'arrival', message)
 
 def send_data(args, timestamp, data):
-    fields = ['ges', 'accX', 'accY', 'accZ', 'temp', 'head']
-    values = data.split(',')
+    fields = config.DATA_COLUMNS
+    values = [timestamp] + data.split(',')
 
-    # convert to dictionary
-    message = {'ts': timestamp}
     if len(fields) == len(values): # no missing values
-        for f, v in zip(fields, values):
-            message[f] = v
-    send_event(args, 'stream', message)
+        # convert to dictionary, performing type coercion as well
+        message = {k:d(v) for k, v, d in zip(fields, values, config.DATA_TYPES)}
+        send_event(args, 'stream', message)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Relays micro:bit events to MQTT')

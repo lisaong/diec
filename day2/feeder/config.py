@@ -5,8 +5,14 @@
 #
 import argparse
 
-window_size = 100
-data_columns = ['ts', 'gest', 'accX', 'accY', 'accZ', 'temp', 'head']
+# Data format from Micro:bit
+DATA_COLUMNS = ['ts', 'gest', 'accX_mg', 'accY_mg', 'accZ_mg', 'temp_C', 'head_degN']
+DATA_TYPES = [int, str, int, int, int, int, int]
+
+# Some of these should eventually become environmental variables
+# so that we can configure when containerised
+WINDOW_SIZE = 100
+DASK_PARTITIONS = 4 # typically set to number of cores
 
 def parse_args(description):
     parser = argparse.ArgumentParser(description=description)

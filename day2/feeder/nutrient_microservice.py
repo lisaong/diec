@@ -10,6 +10,7 @@
 
 import json
 import pandas as pd
+import dask.dataframe as dd
 import config # common configuration
 from base_microservices import *
 
@@ -20,8 +21,8 @@ class NutrientMicroservice(MqttMicroservice):
             'stream'
         ]
 
-        self.data = pd.DataFrame(columns=config.data_columns)
-        self.window_size = config.window_size
+        self.data = None
+        self.window_size = config.WINDOW_SIZE
 
         MqttMicroservice.__init__(self, args, channels)
 
@@ -50,12 +51,19 @@ class NutrientMicroservice(MqttMicroservice):
             print('Exception:', e)
 
     def on_stream(self, payload):
-        # update rolling mean
         try:
-            print(payload['data'].split(','))
+            # create dataframe and append to dask dataframe
+            # treat first column as index (usually timestamp)
+            df = pd.DataFrame([payload.values()], columns=config.DATA_COLUMNS)
+            df.set_index(config.DATA_COLUMNS[0], inplace=True)
 
-            #self.data.append() = pd.DataFrame(columns=['timestamp', 'gesture',
-            #    'accX', 'accY', 'accZ', 'temperature', 'heading'])
+            ddf = dd.from_pandas(df, npartitions=config.DASK_PARTITIONS)
+
+            if self.data is None:
+                self.data = ddf
+            else:
+                self.data = dd.concat([self.data, ddf], interleave_partitions=True)
+            print(self.data.head())
 
         except Exception as e:
             print('Exception:', e)
