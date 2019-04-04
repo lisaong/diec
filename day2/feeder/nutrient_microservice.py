@@ -42,7 +42,7 @@ class NutrientMicroservice(MqttMicroservice):
         # compute how much feed is needed
         # create iota transaction
         try:
-            self.data.to_csv('test-*.csv')
+            self.data.to_csv('test-*.csv', index=False)
             # self.publish_message('iota', msg.payload)
             print(payload)
 
