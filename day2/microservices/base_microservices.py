@@ -9,6 +9,7 @@
 
 # References: https://www.eclipse.org/paho/clients/python/docs/
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 
 def on_connect(client, userdata, flags, rc):
     userdata._on_connect()
@@ -43,7 +44,17 @@ class MqttMicroservice:
 
         Should be overridden by subclasses
         """
-        print(msg.topic, str(msg.payload))
+        print(msg.topic, msg.payload)
+
+    def publish_message(self, channel, msg):
+        """Publishes a message to an MQTT topic
+
+        Should not be overwritten by subclasses.
+        """
+        publish.single(self.topic_id + '/' + channel,
+            payload=msg, retain=False,
+            hostname=self.hostname, port=self.port,
+            protocol=mqtt.MQTTv311)
 
     def run(self):
         """Called to run the service

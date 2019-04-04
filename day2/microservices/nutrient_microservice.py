@@ -21,7 +21,8 @@ class NutrientMicroservice(MqttMicroservice):
 
     def on_message(self, msg):
         """Specialised message handler for this service"""
-        print(msg.topic, str(msg.payload))
+        print(msg.topic, msg.payload)
+        self.publish_message('iota', msg.payload)
 
 if __name__ == '__main__':
     args = config.parse_args('IOTA bird feeder system')

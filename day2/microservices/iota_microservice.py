@@ -14,14 +14,13 @@ from base_microservices import *
 class IotaMicroservice(MqttMicroservice):
     def __init__(self, args):
         channels = [
-            'arrival',
-            'stream'
+            'iota'
         ]
         MqttMicroservice.__init__(self, args, channels)
 
     def on_message(self, msg):
         """Specialised message handler for this service"""
-        print(msg.topic, str(msg.payload))
+        print(msg.topic, msg.payload)
 
 if __name__ == '__main__':
     args = config.parse_args('IOTA services for IOTA bird feeder system')
