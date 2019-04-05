@@ -9,13 +9,12 @@
 #
 
 import json
-import pandas as pd
-import dask.dataframe as dd
-import config # common configuration
+
+import config
 from base_microservices import *
 
 class NutrientMicroservice(MqttMicroservice):
-    def __init__(self, args, window=100):
+    def __init__(self):
         channels = [
             'arrival',
             'stream'
@@ -24,7 +23,7 @@ class NutrientMicroservice(MqttMicroservice):
         self.data = None
         self.window_size = config.WINDOW_SIZE
 
-        MqttMicroservice.__init__(self, args, channels)
+        MqttMicroservice.__init__(self, channels)
 
     def on_message(self, msg):
         """Specialised message handler for this service"""
@@ -40,6 +39,7 @@ class NutrientMicroservice(MqttMicroservice):
     def on_arrival(self, payload):
         # bird has arrived
         # compute how much feed is needed
+        # run task graph
         # create iota transaction
         try:
             self.data.to_csv('test-*.csv', index=False)
@@ -53,22 +53,20 @@ class NutrientMicroservice(MqttMicroservice):
 
     def on_stream(self, payload):
         try:
-            # create dataframe and append to dask dataframe
-            # treat first column as index (usually timestamp)
-            df = pd.DataFrame([payload.values()], columns=config.DATA_COLUMNS)
-            df.set_index(config.DATA_COLUMNS[0])
-            ddf = dd.from_pandas(df, npartitions=config.DASK_PARTITIONS)
-
-            if self.data is None:
-                self.data = ddf
-            else:
-                self.data = dd.concat([self.data, ddf], interleave_partitions=True)
-            # print(self.data.head())
-
+            # collect data in a buffer
+            # this data will be processed on arrival
+            pass
         except Exception as e:
             print('Exception:', e)
 
+    def run(self):
+        # initialisation before running the service
+        # setup local cluster
+        # create simple task graph to process the data in parallel
+
+        MqttMicroservice.run()
+
 if __name__ == '__main__':
-    args = config.parse_args('IOTA bird feeder system')
-    service = NutrientMicroservice(args)
+    service = NutrientMicroservice()
+    service.parse_args('Nutrient Microservice')
     service.run()

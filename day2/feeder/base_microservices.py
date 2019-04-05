@@ -7,32 +7,31 @@
 # Author: Lisa Ong, NUS/ISS
 #
 
+import argparse
+
 # References: https://www.eclipse.org/paho/clients/python/docs/
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 
-def on_connect(client, userdata, flags, rc):
+def _on_connect(client, userdata, flags, rc):
     userdata._on_connect()
 
-def on_message(client, userdata, msg):
+def _on_message(client, userdata, msg):
     userdata.on_message(msg)
 
 class MqttMicroservice:
-    def __init__(self, args, channels):
+    def __init__(self, channels):
 
         # protocol-specific settings
         self.client = mqtt.Client(userdata=self)
-        self.client.on_connect = on_connect
-        self.client.on_message = on_message
-        self.hostname = args.hostname
-        self.port = args.port
-        self.topic_id = args.topic_id
+        self.client.on_connect = _on_connect
+        self.client.on_message = _on_message
         self.channels = channels
+        self.hostname = 'localhost'
+        self.port = 1883
 
-    def _on_connect(self):
+    def on_connect(self):
         """Called when the MQTT client is connected
-
-        Should not be overwritten by subclasses.
         """
         for channel in self.channels:
             topic = self.topic_id + '/' + channel
@@ -41,15 +40,11 @@ class MqttMicroservice:
 
     def on_message(self, msg):
         """Called when an MQTT client is received
-
-        Should be overridden by subclasses
         """
         print(msg.topic, msg.payload)
 
     def publish_message(self, channel, msg):
         """Publishes a message to an MQTT topic
-
-        Should not be overwritten by subclasses.
         """
         publish.single(self.topic_id + '/' + channel,
             payload=msg, retain=False,
@@ -58,11 +53,26 @@ class MqttMicroservice:
 
     def run(self):
         """Called to run the service
-
-        Should not be overridden by subclasses
         """
         try:
             self.client.connect(self.hostname, self.port)
             self.client.loop_forever()
         finally:
             self.client.disconnect() # cleanly disconnect
+
+    def parse_args(self, description):
+        parser = argparse.ArgumentParser(description=description)
+
+        parser.add_argument('topic_id', type=str,
+            help='Top level topic identifier, e.g. dev/ttyACM0 or COM4')
+        parser.add_argument('--hostname', type=str, default='localhost',
+            help='MQTT broker hostname, defaults to TCP localhost')
+        parser.add_argument('--port', type=int, default=1883, help='MQTT broker port, defaults to 1883')
+
+        args = parser.parse_args()
+        self.topic_id = args.topic_id
+        
+        if args.hostname is not None:
+            self.hostname = args.hostname
+        if self.args is not None:
+            self.args.port = args.port
