@@ -60,7 +60,7 @@ class NutrientMicroservice(MqttMicroservice):
         # setup local cluster
         # create simple task graph to process the data in parallel
 
-        # actuall the service
+        # run the service
         MqttMicroservice.run()
 
 if __name__ == '__main__':
