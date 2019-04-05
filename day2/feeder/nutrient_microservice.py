@@ -38,19 +38,22 @@ class NutrientMicroservice(MqttMicroservice):
 
     def on_arrival(self, payload):
         # bird has arrived
-        # compute how much feed is needed
-        # run task graph
+
+        # run task graph that:
+        # computes how much feed is needed (parallel)
         # create iota transaction
 
-        # self.publish_message('iota', msg.payload)
         print(payload)
+        # self.publish_message('iota', msg.payload)
 
     def on_stream(self, payload):
-        # this will discard items at the opposite end
-        # if already full
+        # automatically discards items at the opposite end if full
         self.data_queue.append(payload)
-        print(self.data_queue[0])
-        print(self.data_queue[-1])
+
+        # To see the loop-around, you can set FEEDER_DATA_WINDOW_SIZE
+        # to a small number (e.g. 10), and then uncomment this:
+        # print('leftmost entry', self.data_queue[0])
+        # print('rightmost entry', self.data_queue[-1])
 
     def run(self):
         """Overrides MqttMicroservice.run"""
