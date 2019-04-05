@@ -14,10 +14,15 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 
 def _on_connect(client, userdata, flags, rc):
-    userdata._on_connect()
+    userdata.on_connect()
 
 def _on_message(client, userdata, msg):
-    userdata.on_message(msg)
+    try:
+        userdata.on_message(msg)
+    except Exception as e:
+        # exceptions tend to get swallowed up in callbacks
+        # print them here
+        print('Exception:', e)
 
 class MqttMicroservice:
     def __init__(self, channels):
@@ -74,5 +79,5 @@ class MqttMicroservice:
         
         if args.hostname is not None:
             self.hostname = args.hostname
-        if self.args is not None:
-            self.args.port = args.port
+        if args.port is not None:
+            self.port = args.port
