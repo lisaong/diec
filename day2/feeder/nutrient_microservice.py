@@ -26,44 +26,41 @@ class NutrientMicroservice(MqttMicroservice):
         MqttMicroservice.__init__(self, channels)
 
     def on_message(self, msg):
-        """Specialised message handler for this service"""
-
-        # JSON requires doublequotes instead of singlequotes
-        payload = json.loads(msg.payload.replace(b"'", b'"'))
-
-        if 'arrival' in msg.topic:
-            self.on_arrival(payload)
-        else:
-            self.on_stream(payload)
-
-    def on_arrival(self, payload):
-        # bird has arrived
-        # compute how much feed is needed
-        # run task graph
-        # create iota transaction
+        """Overrides MqttMicroservice.on_message"""
         try:
-            self.data.to_csv('test-*.csv', index=False)
-            # self.publish_message('iota', msg.payload)
-            print(payload)
+            # JSON requires doublequotes instead of singlequotes
+            payload = json.loads(msg.payload.replace(b"'", b'"'))
+
+            if 'arrival' in msg.topic:
+                self.on_arrival(payload)
+            else:
+                self.on_stream(payload)
 
         except Exception as e:
             # exceptions tend to get swallowed up in callbacks
             # print them here
             print('Exception:', e)
 
+    def on_arrival(self, payload):
+        # bird has arrived
+        # compute how much feed is needed
+        # run task graph
+        # create iota transaction
+
+        # self.publish_message('iota', msg.payload)
+        print(payload)
+
     def on_stream(self, payload):
-        try:
-            # collect data in a buffer
-            # this data will be processed on arrival
-            pass
-        except Exception as e:
-            print('Exception:', e)
+        # fill up sliding-window buffer
+        pass
 
     def run(self):
+        """Overrides MqttMicroservice.run"""
         # initialisation before running the service
         # setup local cluster
         # create simple task graph to process the data in parallel
 
+        # actuall the service
         MqttMicroservice.run()
 
 if __name__ == '__main__':
