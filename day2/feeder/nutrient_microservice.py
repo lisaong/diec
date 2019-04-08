@@ -8,11 +8,13 @@
 # Author: Lisa Ong, NUS/ISS
 #
 
-from collections import deque, Counter
+from collections import deque
 from dask.multiprocessing import get
 from itertools import islice
 from functools import reduce
-import numpy as np
+
+# numpy is too heavyweight, use statistics library
+from statistics import mean, mode, stdev
 
 import config
 from base_microservices import *
@@ -104,14 +106,13 @@ class NutrientMicroservice(MqttMicroservice):
             ld = {k: [dic[k] for dic in window] for k in window[0]}
 
             results.append({
-                'gest': Counter(ld['gest']).most_common(1),
+                'gest_common': mode(ld['gest'])
             })
 
             # compute mean and std
             for k in ['accX_mg', 'accY_mg', 'accZ_mg', 'temp_C', 'head_degN']:
-                np_values = np.array(ld[k])
-                results[-1][k + '_mean'] = np_values.mean()
-                results[-1][k + '_std'] = np_values.std()
+                results[-1][k + '_mean'] = mean(ld[k])
+                results[-1][k + '_std'] = stdev(ld[k])
 
         return results
 
