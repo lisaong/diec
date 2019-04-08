@@ -81,3 +81,10 @@ class MqttMicroservice:
             self.hostname = args.hostname
         if args.port is not None:
             self.port = args.port
+
+
+if __name__ == '__main__':
+    # for testing purposes only
+    service = MqttMicroservice(['stream'])
+    service.parse_args('MQTT Microservice')
+    service.run()
