@@ -10,7 +10,7 @@
 
 from collections import deque
 from dask.multiprocessing import get
-from itertools import islice, filterfalse
+from itertools import islice
 
 import config
 from base_microservices import *
@@ -76,13 +76,13 @@ class NutrientMicroservice(MqttMicroservice):
         return list(islice(queue, offset, offset+batch_size))
 
     def clean(data):
-        """Cleans data by removing entries with missing/invalid data
-        """
+        """Cleans data by removing entries with missing/invalid gestures"""
         print('clean')
-        return list(filterfalse(lambda x: x['gest'] not in config.GESTURES, data))
+        return list(filter(lambda x: x['gest'] in config.GESTURES, data))
 
     def analyze(data):
-        print('analyze data')
+        """Reduces the data into a summary report"""
+        print('analyze')
         print(data)
         return []
 
