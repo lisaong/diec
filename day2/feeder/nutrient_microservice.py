@@ -10,7 +10,7 @@
 
 from collections import deque
 from dask.multiprocessing import get
-import itertools
+from itertools import islice, filterfalse
 
 import config
 from base_microservices import *
@@ -55,11 +55,8 @@ class NutrientMicroservice(MqttMicroservice):
         # print('rightmost entry', self.data_queue[-1])
 
     def run(self):
-        """Overrides MqttMicroservice.run"""
-        # initialisation before running the service
-        # setup local cluster
-        # create simple task graph to process the data in parallel
-
+        """Overrides MqttMicroservice.run with service-specific initialization"""
+        # Create simple task graph to process the data in parallel
         # https://docs.dask.org/en/latest/custom-graphs.html
         batch_size = config.WINDOW_SIZE // 2
         self.dsk = {
@@ -70,20 +67,23 @@ class NutrientMicroservice(MqttMicroservice):
             'analyze': (NutrientMicroservice.analyze, ['clean-%d' % i for i in [1, 2]])
         }
 
-        # run the service
+        # Run the service
         MqttMicroservice.run(self)
 
     def load(queue, offset, batch_size):
         """Loads batch_size entries from the queue, starting at offset"""
         print('load: offset', offset)
-        return list(itertools.islice(queue, offset, offset+batch_size))
+        return list(islice(queue, offset, offset+batch_size))
 
     def clean(data):
-        print('clean running')
-        return []
+        """Cleans data by removing entries with missing/invalid data
+        """
+        print('clean')
+        return list(filterfalse(lambda x: x['gest'] not in config.GESTURES, data))
 
     def analyze(data):
-        print('analyze running')
+        print('analyze data')
+        print(data)
         return []
 
 if __name__ == '__main__':
