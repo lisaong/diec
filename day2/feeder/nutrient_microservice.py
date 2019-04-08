@@ -11,6 +11,8 @@
 from collections import deque, Counter
 from dask.multiprocessing import get
 from itertools import islice
+from functools import reduce
+import numpy as np
 
 import config
 from base_microservices import *
@@ -40,6 +42,7 @@ class NutrientMicroservice(MqttMicroservice):
         # run task graph that computes how much feed is needed
         print(payload)
         result = get(self.dsk, 'combine')
+        print(result)
 
         # create iota transaction
         self.publish_message('iota', result)
@@ -93,16 +96,29 @@ class NutrientMicroservice(MqttMicroservice):
         window_size = 10
         num_windows = len(data) // window_size
 
-        result = []
+        results = []
         for i in range(num_windows-1):
             window = data[i*window_size:(i+1)*window_size]
-            print(window)
-        return result
+
+            # list of dictionaries => dictionary of lists
+            ld = {k: [dic[k] for dic in window] for k in window[0]}
+
+            results.append({
+                'gest': Counter(ld['gest']).most_common(1),
+            })
+
+            # compute mean and std
+            for k in ['accX_mg', 'accY_mg', 'accZ_mg', 'temp_C', 'head_degN']:
+                np_values = np.array(ld[k])
+                results[-1][k + '_mean'] = np_values.mean()
+                results[-1][k + '_std'] = np_values.std()
+
+        return results
 
     def combine(data):
+        """Combines all the different lists into 1 list"""
         print('combine')
-        # does nothing for now
-        return data
+        return reduce(lambda x, y: x + y, data)
 
 if __name__ == '__main__':
     service = NutrientMicroservice()
