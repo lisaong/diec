@@ -20,14 +20,7 @@ SERIAL_BAUDRATE = 115200
 def send_event(args, subtopic, message):
     # ensure that message is a string
     print(message)
-    
-    if args.serial_port[0] == b'/':
-        # drop the initial / from the topic (dev/ttyXXXX) if
-        # if it begins with /, because MQTT topics use
-        # this as topic separator
-        topic = args.serial_port[1:]
-    else:
-        topic = args.serial_port
+    topic = args.serial_port
 
     publish.single(topic + '/' + subtopic, payload=str(message),
        retain=False, hostname=args.hostname, port=args.port,
