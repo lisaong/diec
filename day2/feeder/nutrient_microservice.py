@@ -10,6 +10,7 @@
 
 from collections import deque
 from dask.multiprocessing import get
+import itertools
 
 import config
 from base_microservices import *
@@ -60,9 +61,10 @@ class NutrientMicroservice(MqttMicroservice):
         # create simple task graph to process the data in parallel
 
         # https://docs.dask.org/en/latest/custom-graphs.html
+        batch_size = config.WINDOW_SIZE // 2
         self.dsk = {
-            'load-1': (NutrientMicroservice.load, self.data_queue, 0),
-            'load-2': (NutrientMicroservice.load, self.data_queue, config.WINDOW_SIZE // 2 + 1),
+            'load-1': (NutrientMicroservice.load, self.data_queue, 0, batch_size),
+            'load-2': (NutrientMicroservice.load, self.data_queue, batch_size, batch_size),
             'clean-1': (NutrientMicroservice.clean, 'load-1'),
             'clean-2': (NutrientMicroservice.clean, 'load-2'),
             'analyze': (NutrientMicroservice.analyze, ['clean-%d' % i for i in [1, 2]])
@@ -71,9 +73,10 @@ class NutrientMicroservice(MqttMicroservice):
         # run the service
         MqttMicroservice.run(self)
 
-    def load(queue, offset):
-        print('load running')
-        return []
+    def load(queue, offset, batch_size):
+        """Loads batch_size entries from the queue, starting at offset"""
+        print('load: offset', offset)
+        return list(itertools.islice(queue, offset, offset+batch_size))
 
     def clean(data):
         print('clean running')
