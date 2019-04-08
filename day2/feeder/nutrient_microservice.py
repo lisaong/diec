@@ -30,7 +30,7 @@ class NutrientMicroservice(MqttMicroservice):
     def on_message(self, msg):
         """Overrides MqttMicroservice.on_message"""
         # JSON requires doublequotes instead of singlequotes
-        payload = json.loads(msg.payload.replace(b"'", b'"'))
+        payload = json.loads(msg.payload.replace(b"'", b'"').decode('utf-8'))
 
         if 'arrival' in msg.topic:
             self.on_arrival(payload)
