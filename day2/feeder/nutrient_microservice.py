@@ -8,7 +8,7 @@
 # Author: Lisa Ong, NUS/ISS
 #
 
-from collections import deque
+from collections import deque, Counter
 from dask.multiprocessing import get
 from itertools import islice
 
@@ -39,7 +39,7 @@ class NutrientMicroservice(MqttMicroservice):
 
         # run task graph that computes how much feed is needed
         print(payload)
-        result = get(self.dsk, 'analyze')
+        result = get(self.dsk, 'combine')
 
         # create iota transaction
         self.publish_message('iota', result)
@@ -63,8 +63,8 @@ class NutrientMicroservice(MqttMicroservice):
             'load-2': (NutrientMicroservice.load, self.data_queue, batch_size, batch_size),
             'clean-1': (NutrientMicroservice.clean, 'load-1'),
             'clean-2': (NutrientMicroservice.clean, 'load-2'),
-            'analyze-1': (NutrientMicroservice.analyze, 'analyze-1')
-            'analyze-2': (NutrientMicroservice.analyze, 'analyze-2')
+            'analyze-1': (NutrientMicroservice.analyze, 'clean-1'),
+            'analyze-2': (NutrientMicroservice.analyze, 'clean-2'),
             'combine': (NutrientMicroservice.combine, ['analyze-%d' % i for i in [1, 2]])
         }
 
@@ -82,17 +82,22 @@ class NutrientMicroservice(MqttMicroservice):
         return list(filter(lambda x: x['gest'] in config.GESTURES, data))
 
     def analyze(data):
-        """Extracts features from the data
+        """Extracts features from the data using window size samples
         - most common gesture
-        - mean and standard deviation using a batch size of 100 samples
+        - mean and standard deviation
            - accelerometer
            - heading
            - temperature
         """
         print('analyze')
+        window_size = 10
+        num_windows = len(data) // window_size
 
-        print(data)
-        return []
+        result = []
+        for i in range(num_windows-1):
+            window = data[i*window_size:(i+1)*window_size]
+            print(window)
+        return result
 
     def combine(data):
         print('combine')
