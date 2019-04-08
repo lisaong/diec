@@ -8,6 +8,7 @@
 #
 
 import argparse
+import json
 
 # References: https://www.eclipse.org/paho/clients/python/docs/
 import paho.mqtt.client as mqtt
@@ -18,7 +19,10 @@ def _on_connect(client, userdata, flags, rc):
 
 def _on_message(client, userdata, msg):
     try:
-        userdata.on_message(msg)
+        # JSON requires doublequotes instead of singlequotes
+        # decode converts byte array to str for JSON parser
+        payload = json.loads(msg.payload.replace(b"'", b'"').decode('utf-8'))
+        userdata.on_message(msg.topic, payload)
     except Exception as e:
         # exceptions tend to get swallowed up in callbacks
         # print them here
@@ -43,16 +47,16 @@ class MqttMicroservice:
             self.client.subscribe(topic)
             print('Subscribed to:' + topic)
 
-    def on_message(self, msg):
+    def on_message(self, topic, payload):
         """Called when an MQTT client is received
         """
-        print(msg.topic, msg.payload)
+        print(topic, payload)
 
     def publish_message(self, channel, msg):
         """Publishes a message to an MQTT topic
         """
         publish.single(self.topic_id + '/' + channel,
-            payload=msg, retain=False,
+            payload=json.dumps(msg), retain=False,
             hostname=self.hostname, port=self.port,
             protocol=mqtt.MQTTv311)
 

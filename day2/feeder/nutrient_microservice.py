@@ -8,7 +8,6 @@
 # Author: Lisa Ong, NUS/ISS
 #
 
-import json
 from collections import deque
 from dask.multiprocessing import get
 
@@ -27,12 +26,9 @@ class NutrientMicroservice(MqttMicroservice):
 
         MqttMicroservice.__init__(self, channels)
 
-    def on_message(self, msg):
-        """Overrides MqttMicroservice.on_message"""
-        # JSON requires doublequotes instead of singlequotes
-        payload = json.loads(msg.payload.replace(b"'", b'"').decode('utf-8'))
-
-        if 'arrival' in msg.topic:
+    def on_message(self, topic, payload):
+        """Specialised message handler for this service"""
+        if 'arrival' in topic:
             self.on_arrival(payload)
         else:
             self.on_stream(payload)
@@ -45,8 +41,8 @@ class NutrientMicroservice(MqttMicroservice):
         # create iota transaction
         print(payload)
 
-        get(self.dsk, 'analyze')
-        # self.publish_message('iota', msg.payload)
+        result = get(self.dsk, 'analyze')
+        self.publish_message('iota', result)
 
     def on_stream(self, payload):
         # automatically discards items at the opposite end if full
