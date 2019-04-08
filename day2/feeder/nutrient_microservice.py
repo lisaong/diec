@@ -23,7 +23,7 @@ class NutrientMicroservice(MqttMicroservice):
         ]
 
         # queue to hold samples
-        self.data_queue = deque(maxlen=config.WINDOW_SIZE)
+        self.data_queue = deque(maxlen=config.BUFFER_SIZE)
 
         MqttMicroservice.__init__(self, channels)
 
@@ -37,19 +37,18 @@ class NutrientMicroservice(MqttMicroservice):
     def on_arrival(self, payload):
         # bird has arrived
 
-        # run task graph that:
-        # computes how much feed is needed (parallel)
-        # create iota transaction
+        # run task graph that computes how much feed is needed
         print(payload)
-
         result = get(self.dsk, 'analyze')
+
+        # create iota transaction
         self.publish_message('iota', result)
 
     def on_stream(self, payload):
         # automatically discards items at the opposite end if full
         self.data_queue.append(payload)
 
-        # To see the loop-around, you can set FEEDER_DATA_WINDOW_SIZE
+        # To see the loop-around, you can set FEEDER_DATA_BUFFER_SIZE
         # to a small number (e.g. 10), and then uncomment this:
         # print('leftmost entry', self.data_queue[0])
         # print('rightmost entry', self.data_queue[-1])
@@ -58,13 +57,15 @@ class NutrientMicroservice(MqttMicroservice):
         """Overrides MqttMicroservice.run with service-specific initialization"""
         # Create simple task graph to process the data in parallel
         # https://docs.dask.org/en/latest/custom-graphs.html
-        batch_size = config.WINDOW_SIZE // 2
+        batch_size = config.BUFFER_SIZE // 2
         self.dsk = {
             'load-1': (NutrientMicroservice.load, self.data_queue, 0, batch_size),
             'load-2': (NutrientMicroservice.load, self.data_queue, batch_size, batch_size),
             'clean-1': (NutrientMicroservice.clean, 'load-1'),
             'clean-2': (NutrientMicroservice.clean, 'load-2'),
-            'analyze': (NutrientMicroservice.analyze, ['clean-%d' % i for i in [1, 2]])
+            'analyze-1': (NutrientMicroservice.analyze, 'analyze-1')
+            'analyze-2': (NutrientMicroservice.analyze, 'analyze-2')
+            'combine': (NutrientMicroservice.combine, ['analyze-%d' % i for i in [1, 2]])
         }
 
         # Run the service
@@ -81,10 +82,22 @@ class NutrientMicroservice(MqttMicroservice):
         return list(filter(lambda x: x['gest'] in config.GESTURES, data))
 
     def analyze(data):
-        """Reduces the data into a summary report"""
+        """Extracts features from the data
+        - most common gesture
+        - mean and standard deviation using a batch size of 100 samples
+           - accelerometer
+           - heading
+           - temperature
+        """
         print('analyze')
+
         print(data)
         return []
+
+    def combine(data):
+        print('combine')
+        # does nothing for now
+        return data
 
 if __name__ == '__main__':
     service = NutrientMicroservice()

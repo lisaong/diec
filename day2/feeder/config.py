@@ -11,7 +11,7 @@ DATA_COLUMNS = ['ts_ms', 'gest', 'accX_mg', 'accY_mg',
 
 DATA_TYPES = [int, str, int, int, int, int, int]
 
-WINDOW_SIZE = os.getenv('FEEDER_DATA_WINDOW_SIZE', 1000)
+BUFFER_SIZE = os.getenv('FEEDER_DATA_BUFFER_SIZE', 1000)
 
 # https://microbit-micropython.readthedocs.io/en/latest/tutorials/gestures.html
 GESTURES = {'up', 'down', 'left', 'right',
