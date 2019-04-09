@@ -8,7 +8,7 @@
 # Author: Lisa Ong, NUS/ISS
 #
 
-from collections import deque
+from collections import deque, Counter
 from dask.multiprocessing import get
 from itertools import islice
 from functools import reduce
@@ -45,10 +45,12 @@ class NutrientMicroservice(MqttMicroservice):
         data = get(self.dsk, 'combine')
 
         # determine nutrient profile based on bird and sensor data
-        profile = get_nutrient_profile(payload['id'], data)
-        
-        # create iota transaction
-        self.publish_message('iota', profile)
+        if data:
+            profile = self.get_nutrient_profile(payload['id'], data)
+
+            # create iota transaction
+            if profile:
+                self.publish_message('iota', profile)
 
     def on_stream(self, payload):
         # a fixed size deque automatically discards items at the opposite end if full
@@ -71,7 +73,7 @@ class NutrientMicroservice(MqttMicroservice):
             'clean-2': (NutrientMicroservice.clean, 'load-2'),
             'analyze-1': (NutrientMicroservice.analyze, 'clean-1'),
             'analyze-2': (NutrientMicroservice.analyze, 'clean-2'),
-            'combine': (NutrientMicroservice.combine, ['analyze-%d' % i for i in range(1, 2)])
+            'combine': (NutrientMicroservice.combine, ['analyze-%d' % i for i in range(1, 2)]),
         }
 
         # Run the service
@@ -107,7 +109,9 @@ class NutrientMicroservice(MqttMicroservice):
             ld = {k: [dic[k] for dic in window] for k in window[0]}
 
             results.append({
-                'gest_common': mode(ld['gest'])
+                # if no most common value, will return any of the
+                # most common. Returns a list of tuples [('shake', 5)]
+                'gest_common': Counter(ld['gest']).most_common(1)[0]
             })
 
             # compute mean and std
@@ -122,10 +126,29 @@ class NutrientMicroservice(MqttMicroservice):
         print('combine')
         return reduce(lambda x, y: x + y, data)
 
-    def get_nutrient_profile(id, data):
+    def get_nutrient_profile(self, id, data):
         """Applies a simple heuristic to determine nutrient profile"""
-        print(id)
-        return {}
+        # dosages in mg (note: not actual dosages)
+        base_plan = {
+            'vitamin A': 50,
+            'vitamin D3': 10,
+            'omega-3': 30,
+            'omega-6': 13,
+            'lysine': 15
+        }
+
+        result = {}
+
+        # TODO: fingerprinting using sensor data instead
+        # of this naive approach
+        last_gest = data[-1]['gest_common'] # (gesture, count)
+        if (id == '123' and last_gest[0] == 'left' or
+            id == '456' and last_gest[0] == 'right'):
+            result = base_plan
+            result['id'] = id
+            print(result)
+
+        return result
 
 if __name__ == '__main__':
     service = NutrientMicroservice()
