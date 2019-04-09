@@ -73,8 +73,14 @@ class NutrientMicroservice(MqttMicroservice):
             'clean-2': (NutrientMicroservice.clean, 'load-2'),
             'analyze-1': (NutrientMicroservice.analyze, 'clean-1'),
             'analyze-2': (NutrientMicroservice.analyze, 'clean-2'),
-            'combine': (NutrientMicroservice.combine, ['analyze-%d' % i for i in range(1, 2)]),
+            'combine': (NutrientMicroservice.combine, ['analyze-1', 'analyze-2']),
         }
+
+        # pip install graphviz
+        # Download: https://graphviz.gitlab.io/download/
+        #
+        # from dask import visualize
+        # visualize(self.dsk, filename='dask.pdf')
 
         # Run the service
         MqttMicroservice.run(self)
