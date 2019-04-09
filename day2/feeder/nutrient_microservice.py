@@ -65,12 +65,12 @@ class NutrientMicroservice(MqttMicroservice):
         batch_size = config.BUFFER_SIZE // 2
         self.dsk = {
             'load-1': (NutrientMicroservice.load, self.data_queue, 0, batch_size),
-            'load-2': (NutrientMicroservice.load, self.data_queue, batch_size, batch_size),
+            'load-2': (NutrientMicroservice.load, self.data_queue, batch_size*1, batch_size),
             'clean-1': (NutrientMicroservice.clean, 'load-1'),
             'clean-2': (NutrientMicroservice.clean, 'load-2'),
             'analyze-1': (NutrientMicroservice.analyze, 'clean-1'),
             'analyze-2': (NutrientMicroservice.analyze, 'clean-2'),
-            'combine': (NutrientMicroservice.combine, ['analyze-%d' % i for i in [1, 2]])
+            'combine': (NutrientMicroservice.combine, ['analyze-%d' % i for i in range(1, 2)])
         }
 
         # Run the service
