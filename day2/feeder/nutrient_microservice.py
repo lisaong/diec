@@ -41,16 +41,17 @@ class NutrientMicroservice(MqttMicroservice):
     def on_arrival(self, payload):
         # bird has arrived
 
-        # run task graph that computes how much feed is needed
-        print(payload)
-        result = get(self.dsk, 'combine')
-        print(result)
+        # run task graph that processes sensor data
+        data = get(self.dsk, 'combine')
 
+        # determine nutrient profile based on bird and sensor data
+        profile = get_nutrient_profile(payload['id'], data)
+        
         # create iota transaction
-        self.publish_message('iota', result)
+        self.publish_message('iota', profile)
 
     def on_stream(self, payload):
-        # automatically discards items at the opposite end if full
+        # a fixed size deque automatically discards items at the opposite end if full
         self.data_queue.append(payload)
 
         # To see the loop-around, you can set FEEDER_DATA_BUFFER_SIZE
@@ -120,6 +121,11 @@ class NutrientMicroservice(MqttMicroservice):
         """Combines all the different lists into 1 list"""
         print('combine')
         return reduce(lambda x, y: x + y, data)
+
+    def get_nutrient_profile(id, data):
+        """Applies a simple heuristic to determine nutrient profile"""
+        print(id)
+        return {}
 
 if __name__ == '__main__':
     service = NutrientMicroservice()
