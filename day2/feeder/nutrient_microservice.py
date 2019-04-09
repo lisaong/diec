@@ -8,7 +8,13 @@
 # Author: Lisa Ong, NUS/ISS
 #
 
-import json
+from collections import deque, Counter
+from dask.multiprocessing import get
+from itertools import islice
+from functools import reduce
+
+# numpy is too heavyweight, use statistics library
+from statistics import mean, mode, stdev
 
 import config
 from base_microservices import *
@@ -20,51 +26,129 @@ class NutrientMicroservice(MqttMicroservice):
             'stream'
         ]
 
-        self.data = None
-        self.window_size = config.WINDOW_SIZE
+        # queue to hold samples
+        self.data_queue = deque(maxlen=config.BUFFER_SIZE)
 
         MqttMicroservice.__init__(self, channels)
 
-    def on_message(self, msg):
+    def on_message(self, topic, payload):
         """Specialised message handler for this service"""
-
-        # JSON requires doublequotes instead of singlequotes
-        payload = json.loads(msg.payload.replace(b"'", b'"'))
-
-        if 'arrival' in msg.topic:
+        if 'arrival' in topic:
             self.on_arrival(payload)
         else:
             self.on_stream(payload)
 
     def on_arrival(self, payload):
         # bird has arrived
-        # compute how much feed is needed
-        # run task graph
-        # create iota transaction
-        try:
-            self.data.to_csv('test-*.csv', index=False)
-            # self.publish_message('iota', msg.payload)
-            print(payload)
 
-        except Exception as e:
-            # exceptions tend to get swallowed up in callbacks
-            # print them here
-            print('Exception:', e)
+        # run task graph that processes sensor data
+        data = get(self.dsk, 'combine')
+
+        # determine nutrient profile based on bird and sensor data
+        if data:
+            profile = self.get_nutrient_profile(payload['id'], data)
+
+            # create iota transaction
+            if profile:
+                self.publish_message('iota', profile)
 
     def on_stream(self, payload):
-        try:
-            # collect data in a buffer
-            # this data will be processed on arrival
-            pass
-        except Exception as e:
-            print('Exception:', e)
+        # a fixed size deque automatically discards items at the opposite end if full
+        self.data_queue.append(payload)
+
+        # To see the loop-around, you can set FEEDER_DATA_BUFFER_SIZE
+        # to a small number (e.g. 10), and then uncomment this:
+        # print('leftmost entry', self.data_queue[0])
+        # print('rightmost entry', self.data_queue[-1])
 
     def run(self):
-        # initialisation before running the service
-        # setup local cluster
-        # create simple task graph to process the data in parallel
+        """Overrides MqttMicroservice.run with service-specific initialization"""
+        # Create simple task graph to process the data in parallel
+        # https://docs.dask.org/en/latest/custom-graphs.html
+        batch_size = config.BUFFER_SIZE // 2
+        self.dsk = {
+            'load-1': (NutrientMicroservice.load, self.data_queue, 0, batch_size),
+            'load-2': (NutrientMicroservice.load, self.data_queue, batch_size*1, batch_size),
+            'clean-1': (NutrientMicroservice.clean, 'load-1'),
+            'clean-2': (NutrientMicroservice.clean, 'load-2'),
+            'analyze-1': (NutrientMicroservice.analyze, 'clean-1'),
+            'analyze-2': (NutrientMicroservice.analyze, 'clean-2'),
+            'combine': (NutrientMicroservice.combine, ['analyze-%d' % i for i in range(1, 2)]),
+        }
 
-        MqttMicroservice.run()
+        # Run the service
+        MqttMicroservice.run(self)
+
+    def load(queue, offset, batch_size):
+        """Loads batch_size entries from the queue, starting at offset"""
+        print('load: offset', offset)
+        return list(islice(queue, offset, offset+batch_size))
+
+    def clean(data):
+        """Cleans data by removing entries with missing/invalid gestures"""
+        print('clean')
+        return list(filter(lambda x: x['gest'] in config.GESTURES, data))
+
+    def analyze(data):
+        """Extracts features from the data using window size samples
+        - most common gesture
+        - mean and standard deviation
+           - accelerometer
+           - heading
+           - temperature
+        """
+        print('analyze')
+        window_size = 10
+        num_windows = len(data) // window_size
+
+        results = []
+        for i in range(num_windows-1):
+            window = data[i*window_size:(i+1)*window_size]
+
+            # list of dictionaries => dictionary of lists
+            ld = {k: [dic[k] for dic in window] for k in window[0]}
+
+            results.append({
+                # if no most common value, will return any of the
+                # most common. Returns a list of tuples [('shake', 5)]
+                'gest_common': Counter(ld['gest']).most_common(1)[0]
+            })
+
+            # compute mean and std
+            for k in ['accX_mg', 'accY_mg', 'accZ_mg', 'temp_C', 'head_degN']:
+                results[-1][k + '_mean'] = mean(ld[k])
+                results[-1][k + '_std'] = stdev(ld[k])
+
+        return results
+
+    def combine(data):
+        """Combines all the different lists into 1 list"""
+        print('combine')
+        return reduce(lambda x, y: x + y, data)
+
+    def get_nutrient_profile(self, id, data):
+        """Applies a simple heuristic to determine nutrient profile"""
+        # dosages in mg (note: not actual dosages)
+        base_plan = {
+            'vitamin A': 50,
+            'vitamin D3': 10,
+            'omega-3': 30,
+            'omega-6': 13,
+            'lysine': 15
+        }
+
+        result = {}
+
+        # TODO: fingerprinting using sensor data instead
+        # of this naive approach
+        last_gest = data[-1]['gest_common'] # (gesture, count)
+        if (id == '123' and last_gest[0] == 'left' or
+            id == '456' and last_gest[0] == 'right'):
+            result = base_plan
+            result['id'] = id
+            print(result)
+
+        return result
 
 if __name__ == '__main__':
     service = NutrientMicroservice()
