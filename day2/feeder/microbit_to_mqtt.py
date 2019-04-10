@@ -74,24 +74,27 @@ class SerialToMqttMicroservice(MqttMicroservice):
         """Sends a message to the appropriate MQTT channel"""
         # relative timestamp msec
         timestamp = int(time.time() * 1000) - self.start_time
+        try:
+            data = buffer.decode().strip()
+            fields = data.split(',')
 
-        data = buffer.decode().strip()
-        fields = data.split(',')
+            if len(fields) > 0:
+                if 'arrival' in fields[0] and len(fields) > 1:
+                    # arrival message
+                    message = {'ts': timestamp, 'id': fields[1]}
+                    self.publish_message('arrival', message)
+                else:
+                    # treat as stream message
+                    fields = config.DATA_COLUMNS
+                    values = [timestamp] + data.split(',')
 
-        if len(fields) > 0:
-            if 'arrival' in fields[0] and len(fields) > 1:
-                # arrival message
-                message = {'ts': timestamp, 'id': fields[1]}
-                self.publish_message('arrival', message)
-            else:
-                # treat as stream message
-                fields = config.DATA_COLUMNS
-                values = [timestamp] + data.split(',')
-
-                if len(fields) == len(values): # no missing values
-                    # convert to dictionary, performing type coercion as well
-                    message = {k:d(v) for k, v, d in zip(fields, values, config.DATA_TYPES)}
-                    self.publish_message('stream', message)
+                    if len(fields) == len(values): # no missing values
+                        # convert to dictionary, performing type coercion as well
+                        message = {k:d(v) for k, v, d in zip(fields, values, config.DATA_TYPES)}
+                        self.publish_message('stream', message)
+        except:
+            # decoding error
+            pass
 
     def on_message(self, topic, payload):
         """Overrides MqttMicroservice.on_message"""
