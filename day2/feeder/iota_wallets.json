@@ -1,13 +1,13 @@
 {
-    "wallets":[
-       {
-          "id":"123",
-          "seed":"ADD SENDER SEED HERE"
-       },
-       {
-          "id":"456",
-          "seed":"ADD SENDER SEED HERE"
-       }
-    ],
-    "dispenser": "ADD RECIPIENT ADDRESS HERE"
- }
+   "birds":[
+      {
+         "id":"123",
+         "seed":"ADD SEED HERE"
+      },
+      {
+         "id":"456",
+         "seed":"ADD SEED HERE"
+      }
+   ],
+   "dispenser": "ADD ACCOUNT HERE"
+}
