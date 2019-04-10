@@ -21,6 +21,7 @@ class IotaMicroservice(MqttMicroservice):
     def on_message(self, topic, payload):
         """Specialised message handler for this service"""
         print(topic, payload)
+        self.publish_message('dispenser', 'helloXXXXXXXXX')
 
 if __name__ == '__main__':
     service = IotaMicroservice()
