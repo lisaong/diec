@@ -10,6 +10,7 @@ import sys
 import time
 import asyncio
 import serial_asyncio
+from collections import deque
 
 import config # common configuration
 from base_microservices import *
@@ -35,6 +36,8 @@ class SerialIo(asyncio.Protocol):
             service.send_message(self.buffer)
             self.buffer = b''
 
+        service.write_responses(self.transport)
+
     def connection_lost(self, exc):
         """Implements asyncio.Protocol.connection_lost
         https://docs.python.org/3/library/asyncio-protocol.html
@@ -47,6 +50,9 @@ class SerialToMqttMicroservice(MqttMicroservice):
         channels = [
             'dispenser'
         ]
+
+        # responses to microbit
+        self.responses = deque()
         MqttMicroservice.__init__(self, channels)
 
     def run(self):
@@ -60,7 +66,7 @@ class SerialToMqttMicroservice(MqttMicroservice):
                 self.topic_id, baudrate=BAUDRATE)
 
             # connect to MQTT
-            self.connect()
+            self.connect(start=True)
 
             loop.run_until_complete(coro)
             loop.run_forever()
@@ -99,6 +105,13 @@ class SerialToMqttMicroservice(MqttMicroservice):
     def on_message(self, topic, payload):
         """Overrides MqttMicroservice.on_message"""
         print(topic, payload)
+        self.responses.append(payload)
+
+    def write_responses(self, transport):
+        for r in self.responses:
+            transport.write(r.encode()) # encode to bytes
+            print('response:', r)
+        self.responses.clear()
 
 if __name__=="__main__":
     service = SerialToMqttMicroservice()
