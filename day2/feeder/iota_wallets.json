@@ -1,0 +1,12 @@
+{
+    "wallets":[
+       {
+          "id":"123",
+          "seed":"ADD SEED HERE"
+       },
+       {
+          "id":"456",
+          "seed":"ADD SEED HERE"
+       }
+    ]
+ }

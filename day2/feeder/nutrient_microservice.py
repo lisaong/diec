@@ -136,11 +136,11 @@ class NutrientMicroservice(MqttMicroservice):
         """Applies a simple heuristic to determine nutrient profile"""
         # dosages in mg (note: not actual dosages)
         base_plan = {
-            'vitamin A': 50,
-            'vitamin D3': 10,
-            'omega-3': 30,
-            'omega-6': 13,
-            'lysine': 15
+            'vitamin A': 15,
+            'vitamin D3': 20,
+            'omega-3': 20,
+            'omega-6': 23,
+            'lysine': 18
         }
 
         result = {}
@@ -152,7 +152,6 @@ class NutrientMicroservice(MqttMicroservice):
             id == '456' and last_gest[0] == 'right'):
             result = base_plan
             result['id'] = id
-            print(result)
 
         return result
 
