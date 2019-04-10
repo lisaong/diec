@@ -31,10 +31,9 @@ class SerialIo(asyncio.Protocol):
         https://docs.python.org/3/library/asyncio-protocol.html
         """
         self.buffer = self.buffer + data
-
-        if b'\n' in data:
+        if b'\r\n' in data:
             service.send_message(self.buffer)
-        self.buffer = b''
+            self.buffer = b''
 
     def connection_lost(self, exc):
         """Implements asyncio.Protocol.connection_lost
