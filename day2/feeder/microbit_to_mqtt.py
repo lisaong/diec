@@ -83,7 +83,7 @@ class SerialToMqttMicroservice(MqttMicroservice):
             if 'arrival' in fields[0] and len(fields) > 1:
                 # arrival message
                 message = {'ts': timestamp, 'id': fields[1]}
-                self.publish_message('arrival', str(message))
+                self.publish_message('arrival', message)
             else:
                 # treat as stream message
                 fields = config.DATA_COLUMNS
@@ -92,7 +92,7 @@ class SerialToMqttMicroservice(MqttMicroservice):
                 if len(fields) == len(values): # no missing values
                     # convert to dictionary, performing type coercion as well
                     message = {k:d(v) for k, v, d in zip(fields, values, config.DATA_TYPES)}
-                    self.publish_message('stream', str(message))
+                    self.publish_message('stream', message)
 
     def on_message(self, topic, payload):
         """Overrides MqttMicroservice.on_message"""

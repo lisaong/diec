@@ -55,7 +55,7 @@ class MqttMicroservice:
     def publish_message(self, channel, msg):
         """Publishes a message to an MQTT topic
         """
-        print('published', msg)
+        print('pub:', msg)
         publish.single(self.topic_id + '/' + channel,
             payload=json.dumps(msg), retain=False,
             hostname=self.hostname, port=self.port,
