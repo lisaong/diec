@@ -36,7 +36,7 @@ class IotaMicroservice(MqttMicroservice):
         # conduct iota transaction
         bundle_hash = self.do_transaction(payload['id'], cost)
         if bundle_hash:
-            self.publish_message('dispenser', bundle_hash)
+            self.publish_message('dispenser', str(bundle_hash))
 
     def compute_cost(self, payload):
         nutrients = {v for k, v in payload.items() if k not in ('id')}
