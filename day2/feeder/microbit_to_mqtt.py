@@ -66,8 +66,7 @@ class SerialToMqttMicroservice(MqttMicroservice):
                 self.topic_id, baudrate=BAUDRATE)
 
             # connect to MQTT
-            self.connect(start=True)
-
+            self.connect(loop_forever=False)
             loop.run_until_complete(coro)
             loop.run_forever()
 
