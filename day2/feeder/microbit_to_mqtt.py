@@ -8,68 +8,97 @@
 import os
 import sys
 import time
-import argparse
-import json
-import config
-import paho.mqtt.client as mqtt
-import paho.mqtt.publish as publish
-import serial
+import asyncio
+import serial_asyncio
 
-SERIAL_BAUDRATE = 115200
+import config # common configuration
+from base_microservices import *
 
-def send_event(args, subtopic, message):
-    # ensure that message is a string
-    print(message)
-    topic = args.serial_port
+BAUDRATE = 115200
+service = None # global to give SerialIo access to the service
 
-    publish.single(topic + '/' + subtopic, payload=str(message),
-       retain=False, hostname=args.hostname, port=args.port,
-       protocol=mqtt.MQTTv311)
+class SerialIo(asyncio.Protocol):
+    def connection_made(self, transport):
+        """Implements asyncio.Protocol.connection_made()
+        https://docs.python.org/3/library/asyncio-protocol.html
+        """
+        self.transport = transport
+        self.buffer = b''
+        print('port opened', transport)
 
-def send_arrival(args, timestamp, id):
-    message = {'ts': timestamp, 'id': id}
-    send_event(args, 'arrival', message)
+    def data_received(self, data):
+        """Implements asyncio.Protocol.data_received
+        https://docs.python.org/3/library/asyncio-protocol.html
+        """
+        self.buffer = self.buffer + data
 
-def send_data(args, timestamp, data):
-    fields = config.DATA_COLUMNS
-    values = [timestamp] + data.split(',')
+        if b'\n' in data:
+            service.send_message(self.buffer)
+        self.buffer = b''
 
-    if len(fields) == len(values): # no missing values
-        # convert to dictionary, performing type coercion as well
-        message = {k:d(v) for k, v, d in zip(fields, values, config.DATA_TYPES)}
-        send_event(args, 'stream', message)
+    def connection_lost(self, exc):
+        """Implements asyncio.Protocol.connection_lost
+        https://docs.python.org/3/library/asyncio-protocol.html
+        """
+        print('port closed')
+        self.transport.loop.stop()
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Relays micro:bit events to MQTT')
-    parser.add_argument('serial_port', type=str,
-        help='Micro:bit serial port, e.g. /dev/ttyACM0 or COM4')
-    parser.add_argument('--hostname', type=str, default='localhost',
-        help='MQTT broker hostname, defaults to TCP localhost')
-    parser.add_argument('--port', type=int, default=1883, help='MQTT broker port, defaults to 1883')
+class SerialToMqttMicroservice(MqttMicroservice):
+    def __init__(self):
+        channels = [
+            'dispenser'
+        ]
+        MqttMicroservice.__init__(self, channels)
 
-    args = parser.parse_args()
-    if args.hostname is None:
-       args.hostname = 'localhost'
-    if args.port is None:
-        args.port = 1883
+    def run(self):
+        """Overrides MqttMicroservice.run"""
+        self.start_time = int(time.time() * 1000)
 
-    s = serial.Serial(args.serial_port)
-    s.baudrate = SERIAL_BAUDRATE
-    start = int(time.time() * 1000)
+        try:
+            # connect to serial
+            loop = asyncio.get_event_loop()
+            coro = serial_asyncio.create_serial_connection(loop, SerialIo,
+                self.topic_id, baudrate=BAUDRATE)
 
-    while True:
-        data = s.readline()
-        timestamp = int(time.time() * 1000) - start # relative timestamp msec
+            # connect to MQTT
+            self.connect()
 
-        # minimal processing for simplicity and flexibility
-        data = data.decode().strip()
+            loop.run_until_complete(coro)
+            loop.run_forever()
+
+        finally:
+            # disconnect from MQTT
+            self.disconnect()
+            loop.close()
+
+    def send_message(self, buffer):
+        """Sends a message to the appropriate MQTT channel"""
+        # relative timestamp msec
+        timestamp = int(time.time() * 1000) - self.start_time
+
+        data = buffer.decode().strip()
         fields = data.split(',')
 
         if len(fields) > 0:
             if 'arrival' in fields[0] and len(fields) > 1:
                 # arrival message
-                send_arrival(args, timestamp, fields[1])
+                message = {'ts': timestamp, 'id': fields[1]}
+                self.publish_message('arrival', str(message))
             else:
                 # treat as stream message
-                send_data(args, timestamp, data)
+                fields = config.DATA_COLUMNS
+                values = [timestamp] + data.split(',')
 
+                if len(fields) == len(values): # no missing values
+                    # convert to dictionary, performing type coercion as well
+                    message = {k:d(v) for k, v, d in zip(fields, values, config.DATA_TYPES)}
+                    self.publish_message('stream', str(message))
+
+    def on_message(self, topic, payload):
+        """Overrides MqttMicroservice.on_message"""
+        print(topic, payload)
+
+if __name__=="__main__":
+    service = SerialToMqttMicroservice()
+    service.parse_args('Serial to MQTT Microservice')
+    service.run()

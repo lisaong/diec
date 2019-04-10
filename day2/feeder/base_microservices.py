@@ -55,19 +55,26 @@ class MqttMicroservice:
     def publish_message(self, channel, msg):
         """Publishes a message to an MQTT topic
         """
+        print('published', msg)
         publish.single(self.topic_id + '/' + channel,
             payload=json.dumps(msg), retain=False,
             hostname=self.hostname, port=self.port,
             protocol=mqtt.MQTTv311)
 
+    def connect(self):
+        self.client.connect(self.hostname, self.port)
+
+    def disconnect(self):
+        self.client.disconnect()
+
     def run(self):
         """Called to run the service
         """
         try:
-            self.client.connect(self.hostname, self.port)
+            self.connect()
             self.client.loop_forever()
         finally:
-            self.client.disconnect() # cleanly disconnect
+            self.disconnect() # cleanly disconnect
 
     def parse_args(self, description):
         parser = argparse.ArgumentParser(description=description)
