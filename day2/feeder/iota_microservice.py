@@ -27,25 +27,34 @@ class IotaMicroservice(MqttMicroservice):
         MqttMicroservice.__init__(self, channels)
         
         # unit test
-        # self.on_message('test', {'vitamin A': 50, 'vitamin D3': 10, 'omega-3': 30, 'omega-6': 13, 'lysine': 15, 'id': '456'})
+        self.on_message('test', {'vitamin A': 50, 'vitamin D3': 10, 'omega-3': 30, 'omega-6': 13, 'lysine': 15, 'id': '123'})
 
     def on_message(self, topic, payload):
         """Specialised message handler for this service"""
         print(topic, payload)
 
-        price = self.compute_price(payload)
-        print(price)
+        cost = self.compute_cost(payload)
+        print(cost)
 
-        # initiate iota transaction
-        transaction_hash = do_transaction(payload['id'], price)
+        # conduct iota transaction
+        bundle_hash = self.do_transaction(payload['id'], cost)
+        if bundle_hash:
+            self.publish_message('dispenser', bundle_hash)
 
-        # self.publish_message('dispenser', 'helloXXXXXXXXX')
-
-    def compute_price(self, payload):
+    def compute_cost(self, payload):
         nutrients = {v for k, v in payload.items() if k not in ('id')}
 
         # naive way - add all the numbers up
         return reduce(lambda x, y: x + y, nutrients)
+
+    def do_transaction(self, id, cost):
+        result = None
+        for sender in self.wallets['birds']:
+            if sender['id'] == id:
+                bundle_hash = iota_client.do_transaction(sender['seed'],
+                    self.wallets['dispenser'], cost, message=id)
+                break
+        return bundle_hash
 
 if __name__ == '__main__':
     service = IotaMicroservice()

@@ -119,7 +119,7 @@ def do_transaction(sender_seed_str, recipient_str, amount, message=None):
     for tx in sent_bundle['bundle']:
         print("\n")
         pprint(vars(tx))
-
+    return sent_bundle['bundle'].hash
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='IOTA client script for workshop')
