@@ -6,6 +6,11 @@
 # https://github.com/Hribek25/IOTA101
 # https://medium.com/coinmonks/integrating-physical-devices-with-iota-83f4e00cc5bb
 
+import sys
+if sys.version_info >= (3, 7):
+    print('Python 3.7 is not supported for IOTA, please use Python 3.6')
+    exit(-1)
+
 import iota
 from iota.crypto.addresses import AddressGenerator
 from iota.crypto.types import Seed

@@ -13,6 +13,10 @@ import json
 import config # common configuration
 from base_microservices import *
 
+import sys
+sys.path.append('..')
+import iota_client
+
 class IotaMicroservice(MqttMicroservice):
     def __init__(self):
         channels = [
@@ -33,6 +37,7 @@ class IotaMicroservice(MqttMicroservice):
         print(price)
 
         # initiate iota transaction
+        transaction_hash = do_transaction(payload['id'], price)
 
         # self.publish_message('dispenser', 'helloXXXXXXXXX')
 
