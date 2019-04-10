@@ -61,21 +61,27 @@ class MqttMicroservice:
             hostname=self.hostname, port=self.port,
             protocol=mqtt.MQTTv311)
 
-    def connect(self, start=False):
+    def connect(self, loop_forever=False):
+        """Connect to the MQTT broker
+        """
         self.client.connect(self.hostname, self.port)
-        if start:
-            # https://www.eclipse.org/paho/clients/python/docs/#network-loop
+
+        # https://www.eclipse.org/paho/clients/python/docs/#network-loop
+        if loop_forever:
+            self.client.loop_forever()
+        else:
             self.client.loop_start()
 
     def disconnect(self):
+        """Disconnect from the MQTT broker
+        """
         self.client.disconnect()
 
     def run(self):
         """Called to run the service
         """
         try:
-            self.connect()
-            self.client.loop_forever()
+            self.connect(loop_forever=True)
         finally:
             self.disconnect() # cleanly disconnect
 
