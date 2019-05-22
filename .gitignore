@@ -108,3 +108,6 @@ venv.bak/
 
 test-*.csv
 iota_wallets.json
+
+models/
+data/
