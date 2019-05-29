@@ -30,6 +30,9 @@ limitations under the License.
 
 using namespace tflite;
 
+// Custom Operator Declarations
+TfLiteRegistration* Register_RandomStandardNormal();
+
 #define TFLITE_MINIMAL_CHECK(x)                              \
   if (!(x)) {                                                \
     fprintf(stderr, "Error at %s:%d\n", __FILE__, __LINE__); \
@@ -50,6 +53,10 @@ int main(int argc, char* argv[]) {
 
   // Build the interpreter
   tflite::ops::builtin::BuiltinOpResolver resolver;
+
+  // Register custom operators
+  resolver.AddCustom("RandomStandardNormal", Register_RandomStandardNormal());
+
   InterpreterBuilder builder(*model, resolver);
   std::unique_ptr<Interpreter> interpreter;
   builder(&interpreter);
