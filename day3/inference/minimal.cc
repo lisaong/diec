@@ -22,15 +22,11 @@ limitations under the License.
 // from disk and perform inference. There is no data being loaded
 // that is up to you to add as a user.
 //
-// NOTE: Do not add any dependencies to this that cannot be built with
-// the minimal makefile. This example must remain trivial to build with
-// the minimal build tool.
-//
 // Usage: minimal <tflite model>
 
 using namespace tflite;
 
-// Custom Operator Declarations
+// Custom operator declarations
 TfLiteRegistration* Register_RandomStandardNormal();
 
 #define TFLITE_MINIMAL_CHECK(x)                              \
@@ -61,6 +57,9 @@ int main(int argc, char* argv[]) {
   std::unique_ptr<Interpreter> interpreter;
   builder(&interpreter);
   TFLITE_MINIMAL_CHECK(interpreter != nullptr);
+
+  printf("=== Pre-allocate Interpreter State ===\n");
+  tflite::PrintInterpreterState(interpreter.get());
 
   // Allocate tensor buffers.
   TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
