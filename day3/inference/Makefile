@@ -48,13 +48,14 @@ LIBS := \
 
 LIBFLAGS :=
 
-EXECUTABLE_SRCS := minimal.cc
+EXECUTABLE_SRCS := \
+randomstandardnormal.cc \
+minimal.cc
 
 # File names of the intermediate files target compilation generates.
 EXECUTABLE_OBJS := $(addprefix $(OBJDIR), $(EXECUTABLE_SRCS:.cc=.o))
 
 .PHONY: clean
-
 
 # The target that's compiled if there's no command-line arguments.
 all: $(EXECUTABLE_NAME)
