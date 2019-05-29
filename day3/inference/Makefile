@@ -60,6 +60,11 @@ EXECUTABLE_OBJS := $(addprefix $(OBJDIR), $(EXECUTABLE_SRCS:.cc=.o))
 # The target that's compiled if there's no command-line arguments.
 all: $(EXECUTABLE_NAME)
 
+# Usage: make debug
+# Then: gdb --args executable_name arg1 arg2
+debug: CXXFLAGS += -DDEBUG -g
+debug: $(EXECUTABLE_NAME)
+
 # Rules for target compilation.
 
 $(EXECUTABLE_NAME): $(EXECUTABLE_OBJS) $(TFLITE_LIBS)
