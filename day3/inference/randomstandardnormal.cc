@@ -1,49 +1,81 @@
 /* Implementation of the RandomStandardNormal custom operator
 
    https://www.tensorflow.org/lite/guide/ops_custom
+
+   References:
+       tensorflow/lite/kernels/sparse_to_dense.cc
 */
 
-#include <cstdio>
-#include "tensorflow/lite/interpreter.h"
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/kernels/kernel_util.h"
-#include "tensorflow/lite/model.h"
+#include "tensorflow/lite/kernels/internal/tensor.h"
+
+/* Outputs random values from a normal distribution.
+
+  The generated values will have mean 0 and standard deviation 1.
+
+  Arguments:
+     shape: The shape of the output tensor.
+
+  Returns A tensor of the specified shape filled with random normal values.
+*/
+
+using namespace tflite;
+
+template <typename T>
+TfLiteStatus Resize(TfLiteContext* context, const TfLiteTensor* output_shape,
+                    TfLiteTensor* output) {
+  const int output_dimensions = NumElements(output_shape);
+  TfLiteIntArray* output_shape_array = TfLiteIntArrayCreate(output_dimensions);
+  for (int i = 0; i < output_dimensions; ++i) {
+    output_shape_array->data[i] = GetTensorData<T>(output_shape)[i];
+  }
+
+  return context->ResizeTensor(context, output, output_shape_array);
+}
+
+TfLiteStatus ResizeOutputShape(TfLiteContext* context,
+                               const TfLiteTensor* output_shape,
+                               TfLiteTensor* output) {
+  if (output_shape->type == kTfLiteInt32) {
+    return Resize<int32_t>(context, output_shape, output);
+  } else if (output_shape->type == kTfLiteInt64) {
+    return Resize<int64_t>(context, output_shape, output);
+  } else {
+    context->ReportError(context, "Shape type %d not supported.",
+                         output_shape->type);
+    return kTfLiteError;
+  }
+}
 
 TfLiteStatus RandomStandardNormal_Prepare(TfLiteContext* context, TfLiteNode* node) {
-  using namespace tflite;
   TF_LITE_ENSURE_EQ(context, NumInputs(node), 1);
   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
 
-  const TfLiteTensor* input = GetInput(context, node, 0);
+  const TfLiteTensor* shape = GetInput(context, node, 0);
   TfLiteTensor* output = GetOutput(context, node, 0);
 
-  int num_dims = NumDimensions(input);
+  // Input will contain the shape of the output
+  TF_LITE_ENSURE_EQ(context, NumDimensions(shape), 1);
+  TF_LITE_ENSURE(context, shape->type == kTfLiteInt32 ||
+                          shape->type == kTfLiteInt64);
 
-  TfLiteIntArray* output_size = TfLiteIntArrayCreate(num_dims);
-  for (int i=0; i<num_dims; ++i) {
-    output_size->data[i] = input->dims->data[i];
-  }
-
-  return context->ResizeTensor(context, output, output_size);
+  // Output shape is not known until Eval, postpone allocation
+  SetTensorToDynamic(output);
+  return kTfLiteOk;
 }
 
 TfLiteStatus RandomStandardNormal_Eval(TfLiteContext* context, TfLiteNode* node) {
-  using namespace tflite;
-  const TfLiteTensor* input = GetInput(context, node,0);
-  TfLiteTensor* output = GetOutput(context, node,0);
+  const TfLiteTensor* shape = GetInput(context, node, 0);
+  TfLiteTensor* output = GetOutput(context, node, 0);
 
-  float* input_data = input->data.f;
-  float* output_data = output->data.f;
+  TF_LITE_ENSURE_OK(context, ResizeOutputShape(context, shape, output));
 
-  size_t count = 1;
-  int num_dims = NumDimensions(input);
-  for (int i = 0; i < num_dims; ++i) {
-    count *= input->dims->data[i];
-  }
+  //float* output_data = output->data.f; // TODO: fix
 
-  for (size_t i=0; i<count; ++i) {
-    output_data[i] = input_data[i]; // TODO: fix
-  }
+  //for (size_t i=0; i<count; ++i) {
+  //  output_data[i] = input_data[i];
+  //}
   return kTfLiteOk;
 }
 

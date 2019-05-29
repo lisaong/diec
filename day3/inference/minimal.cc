@@ -63,8 +63,8 @@ int main(int argc, char* argv[]) {
 
   // Allocate tensor buffers.
   TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
-  printf("=== Pre-invoke Interpreter State ===\n");
-  tflite::PrintInterpreterState(interpreter.get());
+  // printf("=== Pre-invoke Interpreter State ===\n");
+  // tflite::PrintInterpreterState(interpreter.get());
 
   // Fill input buffers
   // TODO(user): Insert code to fill input tensors
