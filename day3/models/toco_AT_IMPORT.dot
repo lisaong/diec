@@ -218,6 +218,10 @@ digraph Computegraph {
 	 "decoder/dense_5/BiasAdd" -> "op00042" [penwidth=0.500000, weight=1.000000];
 	 "op00042" -> "decoder/dense_5/Sigmoid" [penwidth=0.500000, weight=1.000000];
 }
+=filled, fillcolor="#DB4437", fontcolor = "#FFFFFFDD"];
+	 "decoder/dense_5/BiasAdd" -> "op00042" [penwidth=0.500000, weight=1.000000];
+	 "op00042" -> "decoder/dense_5/Sigmoid" [penwidth=0.500000, weight=1.000000];
+}
  [label="Logistic", shape=box, style=filled, fillcolor="#DB4437", fontcolor = "#FFFFFFDD"];
 	 "decoder/dense_5/BiasAdd" -> "op00042" [penwidth=0.500000, weight=1.000000];
 	 "op00042" -> "decoder/dense_5/Sigmoid" [penwidth=0.500000, weight=1.000000];
