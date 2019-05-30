@@ -49,6 +49,7 @@ LIBS := \
 LIBFLAGS :=
 
 EXECUTABLE_SRCS := \
+datasource.cc \
 randomstandardnormal.cc \
 minimal.cc
 
