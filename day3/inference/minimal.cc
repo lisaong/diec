@@ -38,19 +38,17 @@ TfLiteRegistration* Register_RandomStandardNormal();
 
 void fill_input_buffers(const tflite::Interpreter* interpreter){
   auto inputs = interpreter->inputs();
-  TFLITE_MINIMAL_CHECK(inputs.size() == 1);
+  TFLITE_MINIMAL_CHECK(inputs.size() == 1); // 1 input
 
   const int input_index = inputs[0];
   auto input_tensor = interpreter->tensor(input_index);
   auto input_data = interpreter->typed_tensor<float>(input_index);
 
-  // We know the dimensions of the model input
-  auto input_dims = input_tensor->dims;
-  TFLITE_MINIMAL_CHECK(input_dims->size == 2);
-  TFLITE_MINIMAL_CHECK(input_dims->data[0] == 1);
-  TFLITE_MINIMAL_CHECK(input_dims->data[1] == 50);
+  auto input_shape = input_tensor->dims; // batch_size, 50
+  TFLITE_MINIMAL_CHECK(input_shape->data[1] == 50);
 
-  // TODO
+  // TODO: memcpy
+
 }
 
 int main(int argc, char* argv[]) {
