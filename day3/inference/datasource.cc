@@ -6,7 +6,8 @@ namespace datasource {
 
 std::vector<std::vector<float>> GetData(int rows)
 {
-
+    std::vector<std::vector<float>> result;
+    return result;
 }
 
 }
