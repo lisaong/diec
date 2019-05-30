@@ -35,6 +35,24 @@ TfLiteRegistration* Register_RandomStandardNormal();
     exit(1);                                                 \
   }
 
+
+void fill_input_buffers(const tflite::Interpreter* interpreter){
+  auto inputs = interpreter->inputs();
+  TFLITE_MINIMAL_CHECK(inputs.size() == 1);
+
+  const int input_index = inputs[0];
+  auto input_tensor = interpreter->tensor(input_index);
+  auto input_data = interpreter->typed_tensor<float>(input_index);
+
+  // We know the dimensions of the model input
+  auto input_dims = input_tensor->dims;
+  TFLITE_MINIMAL_CHECK(input_dims->size == 2);
+  TFLITE_MINIMAL_CHECK(input_dims->data[0] == 1);
+  TFLITE_MINIMAL_CHECK(input_dims->data[1] == 50);
+
+  // TODO
+}
+
 int main(int argc, char* argv[]) {
   if(argc != 2) {
     fprintf(stderr, "minimal <tflite model>\n");
@@ -51,23 +69,25 @@ int main(int argc, char* argv[]) {
   tflite::ops::builtin::BuiltinOpResolver resolver;
 
   // Register custom operators
-  resolver.AddCustom("RandomStandardNormal", Register_RandomStandardNormal());
+  resolver.AddCustom("RandomStandardNormal",
+      Register_RandomStandardNormal());
 
   InterpreterBuilder builder(*model, resolver);
   std::unique_ptr<Interpreter> interpreter;
   builder(&interpreter);
   TFLITE_MINIMAL_CHECK(interpreter != nullptr);
 
-  printf("=== Pre-allocate Interpreter State ===\n");
-  tflite::PrintInterpreterState(interpreter.get());
+  // printf("=== Pre-allocate Interpreter State ===\n");
+  // tflite::PrintInterpreterState(interpreter.get());
 
   // Allocate tensor buffers.
   TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
-  // printf("=== Pre-invoke Interpreter State ===\n");
-  // tflite::PrintInterpreterState(interpreter.get());
+
+  printf("=== Pre-invoke Interpreter State ===\n");
+  tflite::PrintInterpreterState(interpreter.get());
 
   // Fill input buffers
-  // TODO(user): Insert code to fill input tensors
+  fill_input_buffers(interpreter.get());
 
   // Run inference
   TFLITE_MINIMAL_CHECK(interpreter->Invoke() == kTfLiteOk);
