@@ -22,15 +22,13 @@ vector<vector<float>> GetData(int rows)
     fin.open(kTestDataFile, fstream::in);
 
     vector<float> row;
-    string line, word, temp;
+    string line, word;
 
-    fin >> temp; // skip the header
+    fin >> line; // skip the header
     int count = 0;
 
-    while (fin >> temp && count < rows) {
+    while (fin >> line && count < rows) {
         row.clear();
-
-        getline(fin, line);
 
         stringstream s(line);
 
