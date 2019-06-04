@@ -51,8 +51,12 @@ void fill_input_buffers(const tflite::Interpreter* interpreter){
   float* input = const_cast<float*>(interpreter->typed_input_tensor<float>(input_index));
 
   // Fill `input`
-  std::memcpy(reinterpret_cast<void*>(input), data.data(),
-      data.size() * sizeof(float));
+  //for (size_t i=0; i<data.size(); i++) {
+  //    input[i] = data[i];
+  //}
+  input[0] = 0;
+  //std::memcpy(reinterpret_cast<void*>(input), data.data(),
+  //    data.size() * sizeof(float));
 }
 
 int main(int argc, char* argv[]) {
