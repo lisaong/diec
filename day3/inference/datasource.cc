@@ -14,30 +14,25 @@ using namespace std;
 
 namespace datasource {
 
-vector<vector<float>> GetData(int rows)
+vector<float> GetData(int rows)
 {
-    vector<std::vector<float>> result;
+    vector<float> result;
 
     fstream fin;
     fin.open(kTestDataFile, fstream::in);
 
-    vector<float> row;
-    string line, word;
-
+    string line;
     fin >> line; // skip the header
-    int count = 0;
 
-    while (fin >> line && count < rows) {
-        row.clear();
-
+    while (fin >> line && rows > 0) {
         stringstream s(line);
+        string word;
 
         while(getline(s, word, ',')) {
-            row.push_back(stof(word));
+            result.push_back(stof(word));
         }
 
-        result.push_back(row);
-        count++;
+        rows--;
     }
 
     return result;

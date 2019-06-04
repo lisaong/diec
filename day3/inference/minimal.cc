@@ -18,6 +18,7 @@ limitations under the License.
 #include "tensorflow/lite/model.h"
 #include "tensorflow/lite/optional_debug_tools.h"
 
+#include <vector>
 #include "datasource.h"
 
 // This is an example that is minimal to read a model
@@ -25,8 +26,6 @@ limitations under the License.
 // that is up to you to add as a user.
 //
 // Usage: minimal <tflite model>
-
-using namespace tflite;
 
 // Custom operator declarations
 TfLiteRegistration* Register_RandomStandardNormal();
@@ -42,12 +41,18 @@ void fill_input_buffers(const tflite::Interpreter* interpreter){
   TFLITE_MINIMAL_CHECK(inputs.size() == 1); // 1 input
 
   const int input_index = inputs[0];
-  auto input_tensor = interpreter->tensor(input_index);
-  auto input_shape = input_tensor->dims;
+  auto input_shape = interpreter->tensor(input_index)->dims;
   TFLITE_MINIMAL_CHECK(input_shape->data[1] == 50); // (batch_size, 50)
 
-  auto data = datasource::GetData(/*rows=*/10);
-  // TODO: write to tensor
+  // Read first few rows of data
+  std::vector<float> data = datasource::GetData(/*rows=*/1);
+
+  // Should not need this cast according to interpreter.h
+  float* input = const_cast<float*>(interpreter->typed_input_tensor<float>(input_index));
+
+  // Fill `input`
+  std::memcpy(reinterpret_cast<void*>(input), data.data(),
+      data.size() * sizeof(float));
 }
 
 int main(int argc, char* argv[]) {
@@ -69,8 +74,8 @@ int main(int argc, char* argv[]) {
   resolver.AddCustom("RandomStandardNormal",
       Register_RandomStandardNormal());
 
-  InterpreterBuilder builder(*model, resolver);
-  std::unique_ptr<Interpreter> interpreter;
+  tflite::InterpreterBuilder builder(*model, resolver);
+  std::unique_ptr<tflite::Interpreter> interpreter;
   builder(&interpreter);
   TFLITE_MINIMAL_CHECK(interpreter != nullptr);
 
@@ -92,7 +97,9 @@ int main(int argc, char* argv[]) {
   tflite::PrintInterpreterState(interpreter.get());
 
   // Read output buffers
-  // TODO(user): Insert getting data out code.
+  const int output_index = interpreter->outputs()[0];
+  auto output_dims = interpreter->tensor(output_index)->dims;
+  float* output = interpreter->typed_output_tensor<float>(0);
 
   return 0;
 }
