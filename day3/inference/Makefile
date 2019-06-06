@@ -69,16 +69,16 @@ debug: $(EXECUTABLE_NAME)
 # Rules for target compilation.
 
 $(EXECUTABLE_NAME): $(EXECUTABLE_OBJS) $(TFLITE_LIBS)
-    @mkdir -p $(dir $@)
-    $(CXX) $(CXXFLAGS) $(INCLUDES) \
-    -o $(EXECUTABLE_NAME) $(EXECUTABLE_OBJS) \
-    $(LIBFLAGS) $(LIB_PATH) $(LDFLAGS) $(LIBS)
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) \
+	-o $(EXECUTABLE_NAME) $(EXECUTABLE_OBJS) \
+	$(LIBFLAGS) $(LIB_PATH) $(LDFLAGS) $(LIBS)
 
 # Matches on C++ source files.
 $(OBJDIR)%.o: %.cc
-    @mkdir -p $(dir $@)
-    $(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 # Gets rid of all generated files.
 clean:
-    rm -rf $(GENDIR)
+	rm -rf $(GENDIR)
