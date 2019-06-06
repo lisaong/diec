@@ -6,6 +6,6 @@
 
 namespace datasource {
 
-std::vector<float> GetData(int rows);
+std::vector<float> GetData(int offset, int rows);
 
 }

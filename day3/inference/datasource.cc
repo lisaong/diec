@@ -14,7 +14,7 @@ using namespace std;
 
 namespace datasource {
 
-vector<float> GetData(int rows)
+vector<float> GetData(int offset, int rows)
 {
     vector<float> result;
 
@@ -22,17 +22,16 @@ vector<float> GetData(int rows)
     fin.open(kTestDataFile, fstream::in);
 
     string line;
-    fin >> line; // skip the header
 
-    while (fin >> line && rows > 0) {
+    while (fin >> line && offset-- > 0); // skip rows
+
+    while (fin >> line && rows-- > 0) {
         stringstream s(line);
         string word;
 
         while(getline(s, word, ',')) {
             result.push_back(stof(word));
         }
-
-        rows--;
     }
 
     return result;

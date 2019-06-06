@@ -36,35 +36,53 @@ TfLiteRegistration* Register_RandomStandardNormal();
     exit(1);                                                 \
   }
 
-void fill_input_buffers(const tflite::Interpreter* interpreter){
+void fillInputBuffers(const tflite::Interpreter* interpreter, int offset){
   auto inputs = interpreter->inputs();
   TFLITE_MINIMAL_CHECK(inputs.size() == 1); // 1 input
 
-  const int input_index = inputs[0];
-  auto input_shape = interpreter->tensor(input_index)->dims;
-  TFLITE_MINIMAL_CHECK(input_shape->data[1] == 50); // (batch_size, 50)
+  auto inputShape = interpreter->tensor(inputs[0])->dims;
+  TFLITE_MINIMAL_CHECK(inputShape->data[1] == 50); // (batch_size, 50)
 
-  // Read first few rows of data
-  std::vector<float> data = datasource::GetData(/*rows=*/1);
+  // Read one row of data
+  std::vector<float> data = datasource::GetData(/*offset=*/offset, /*rows=*/1);
 
+  // Note: typed_input_tensor() uses an indexing from 0 to inputs().size(), not
+  // the subgraph's tensor index
   // Should not need this cast according to interpreter.h
-  float* input = const_cast<float*>(interpreter->typed_input_tensor<float>(input_index));
+  auto input = const_cast<float*>(interpreter->typed_input_tensor<float>(0));
+
+  printf("\n\n=== Input ===\n");
+  for (const auto &x : data){
+     printf("%.4f ", x);
+  }
+  printf("\n");
 
   // Fill `input`
-  //for (size_t i=0; i<data.size(); i++) {
-  //    input[i] = data[i];
-  //}
-  input[0] = 0;
-  //std::memcpy(reinterpret_cast<void*>(input), data.data(),
-  //    data.size() * sizeof(float));
+  std::memcpy(reinterpret_cast<void*>(input), data.data(),
+     data.size() * sizeof(float));
+}
+
+void readOutput(const tflite::Interpreter* interpreter){
+  auto outputs = interpreter->outputs();
+  TFLITE_MINIMAL_CHECK(outputs.size() == 1); // 1 output
+
+  auto outputShape = interpreter->tensor(outputs[0])->dims;
+  TFLITE_MINIMAL_CHECK(outputShape->data[1] == 50); // (batch_size, 50)
+
+  auto output = interpreter->typed_output_tensor<float>(0);
+  for (size_t i=0; i<outputShape->data[1]; ++i) {
+     printf("%.4f ", output[i]);
+  }
+  printf("\n");
 }
 
 int main(int argc, char* argv[]) {
-  if(argc != 2) {
-    fprintf(stderr, "minimal <tflite model>\n");
+  if(argc != 3) {
+    fprintf(stderr, "minimal <tflite model> <test data offset>\n");
     return 1;
   }
   const char* filename = argv[1];
+  const int dataOffset = atoi(argv[2]);
 
   // Load model
   std::unique_ptr<tflite::FlatBufferModel> model =
@@ -83,9 +101,6 @@ int main(int argc, char* argv[]) {
   builder(&interpreter);
   TFLITE_MINIMAL_CHECK(interpreter != nullptr);
 
-  // printf("=== Pre-allocate Interpreter State ===\n");
-  // tflite::PrintInterpreterState(interpreter.get());
-
   // Allocate tensor buffers.
   TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
 
@@ -93,7 +108,7 @@ int main(int argc, char* argv[]) {
   tflite::PrintInterpreterState(interpreter.get());
 
   // Fill input buffers
-  fill_input_buffers(interpreter.get());
+  fillInputBuffers(interpreter.get(), dataOffset);
 
   // Run inference
   TFLITE_MINIMAL_CHECK(interpreter->Invoke() == kTfLiteOk);
@@ -101,9 +116,8 @@ int main(int argc, char* argv[]) {
   tflite::PrintInterpreterState(interpreter.get());
 
   // Read output buffers
-  const int output_index = interpreter->outputs()[0];
-  auto output_dims = interpreter->tensor(output_index)->dims;
-  float* output = interpreter->typed_output_tensor<float>(0);
+  printf("\n\n=== Prediction ===\n");
+  readOutput(interpreter.get());
 
   return 0;
 }
