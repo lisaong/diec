@@ -20,15 +20,14 @@ limitations under the License.
 
 #include <vector>
 #include "datasource.h"
+#include "randomstandardnormal.h"
+#include "loss.h"
 
 // This is an example that is minimal to read a model
 // from disk and perform inference. There is no data being loaded
 // that is up to you to add as a user.
 //
 // Usage: minimal <tflite model>
-
-// Custom operator declarations
-TfLiteRegistration* Register_RandomStandardNormal();
 
 #define TFLITE_MINIMAL_CHECK(x)                              \
   if (!(x)) {                                                \
@@ -140,6 +139,9 @@ int main(int argc, char* argv[]) {
 
   // Read output buffers
   PrintOutput(interpreter.get());
+
+  // Get the loss
+  VaeLoss(interpreter.get());
 
   return 0;
 }

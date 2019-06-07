@@ -51,6 +51,7 @@ LIBFLAGS :=
 EXECUTABLE_SRCS := \
 datasource.cc \
 randomstandardnormal.cc \
+loss.cc \
 minimal.cc
 
 # File names of the intermediate files target compilation generates.
