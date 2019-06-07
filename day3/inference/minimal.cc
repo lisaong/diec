@@ -36,7 +36,7 @@ TfLiteRegistration* Register_RandomStandardNormal();
     exit(1);                                                 \
   }
 
-void FillInputBuffers(const tflite::Interpreter* interpreter,
+void FillInputBuffers(tflite::Interpreter* interpreter,
   int offset, int rows){
 
   auto inputs = interpreter->inputs();
@@ -64,8 +64,12 @@ void FillInputBuffers(const tflite::Interpreter* interpreter,
   auto input = const_cast<float*>(interpreter->typed_input_tensor<float>(0));
 
   printf("\n\n=== Input (%d, %d) ===\n", rows, columns);
+  int i = 0;
   for (const auto &x : data){
      printf("%.4f ", x);
+     if (++i % columns == 0) {
+        printf("\n");
+     }
   }
   printf("\n");
 
