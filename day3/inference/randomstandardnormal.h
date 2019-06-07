@@ -4,4 +4,4 @@
 
 #include "tensorflow/lite/interpreter.h"
 
-tflite::TfLiteRegistration* Register_RandomStandardNormal();
+TfLiteRegistration* Register_RandomStandardNormal();
