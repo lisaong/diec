@@ -40,8 +40,8 @@ void fillInputBuffers(const tflite::Interpreter* interpreter, int offset){
   auto inputs = interpreter->inputs();
   TFLITE_MINIMAL_CHECK(inputs.size() == 1); // 1 input
 
-  auto inputShape = interpreter->tensor(inputs[0])->dims;
-  TFLITE_MINIMAL_CHECK(inputShape->data[1] == 50); // (batch_size, 50)
+  auto input_shape = interpreter->tensor(inputs[0])->dims;
+  TFLITE_MINIMAL_CHECK(input_shape->data[1] == 50); // (batch_size, 50)
 
   // Read one row of data
   std::vector<float> data = datasource::GetData(/*offset=*/offset, /*rows=*/1);
@@ -66,11 +66,11 @@ void readOutput(const tflite::Interpreter* interpreter){
   auto outputs = interpreter->outputs();
   TFLITE_MINIMAL_CHECK(outputs.size() == 1); // 1 output
 
-  auto outputShape = interpreter->tensor(outputs[0])->dims;
-  TFLITE_MINIMAL_CHECK(outputShape->data[1] == 50); // (batch_size, 50)
+  auto output_shape = interpreter->tensor(outputs[0])->dims;
+  TFLITE_MINIMAL_CHECK(output_shape->data[1] == 50); // (batch_size, 50)
 
   auto output = interpreter->typed_output_tensor<float>(0);
-  for (size_t i=0; i<outputShape->data[1]; ++i) {
+  for (size_t i=0; i<output_shape->data[1]; ++i) {
      printf("%.4f ", output[i]);
   }
   printf("\n");

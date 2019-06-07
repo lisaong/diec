@@ -10,6 +10,8 @@
 #include "tensorflow/lite/kernels/kernel_util.h"
 #include "tensorflow/lite/kernels/internal/tensor.h"
 
+#include <random>
+
 /* Outputs random values from a normal distribution.
 
   The generated values will have mean 0 and standard deviation 1.
@@ -62,6 +64,7 @@ TfLiteStatus RandomStandardNormal_Prepare(TfLiteContext* context, TfLiteNode* no
 
   // Output shape is not known until Eval, postpone allocation
   SetTensorToDynamic(output);
+
   return kTfLiteOk;
 }
 
@@ -71,11 +74,23 @@ TfLiteStatus RandomStandardNormal_Eval(TfLiteContext* context, TfLiteNode* node)
 
   TF_LITE_ENSURE_OK(context, ResizeOutputShape(context, shape, output));
 
-  //float* output_data = output->data.f; // TODO: fix
+  // Initialise random number generator
+  std::random_device rd{};
+  std::mt19937 gen(rd());
+  std::normal_distribution<> nd{0,1};
 
-  //for (size_t i=0; i<count; ++i) {
-  //  output_data[i] = input_data[i];
-  //}
+  // Compute dimensions
+  auto output_shape = output->dims;
+  int output_elements = 1;
+  for (int i=0; i<output_shape->size; ++i) {
+     output_elements *= output_shape->data[i];
+  }
+
+  float* output_data = output->data.f;
+
+  for (int i=0; i<output_elements; ++i) {
+    output_data[i] = nd(gen);
+  }
   return kTfLiteOk;
 }
 
