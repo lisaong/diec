@@ -85,14 +85,14 @@ TfLiteStatus RandomStandardNormal_Eval(TfLiteContext* context, TfLiteNode* node)
 
   // Compute dimensions
   auto output_shape = output->dims;
-  int output_elements = 1;
+  int num_elements = 1;
   for (int i=0; i<output_shape->size; ++i) {
-     output_elements *= output_shape->data[i];
+     num_elements *= output_shape->data[i];
   }
 
   float* output_data = output->data.f;
 
-  for (int i=0; i<output_elements; ++i) {
+  for (int i=0; i<num_elements; ++i) {
     // Randomly sample from normal distribution
     output_data[i] = nd(gen);
   }
