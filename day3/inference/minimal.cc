@@ -92,7 +92,7 @@ void PrintOutput(const tflite::Interpreter* interpreter){
   printf("\n\n=== Output (%d, %d) ===\n", rows, columns);
   for (int i=0; i<rows; ++i) {
     for (int j=0; j<columns; ++j) {
-     printf("%.4f ", output[j]);
+     printf("%.4f ", output[i*columns + j]);
     }
     printf("\n");
   }
