@@ -23,8 +23,8 @@ EXECUTABLE_NAME := $(BINDIR)/minimal
 
 # Settings for the target compiler.
 CXX := gcc
-OPTFLAGS := -O0
-CXXFLAGS := --std=c++11 $(OPTFLAGS)
+OPTFLAGS := -O2
+CXXFLAGS := --std=c++11
 LDFLAGS := \
 -L/usr/local/lib \
 -L$(TFLITE_DIR)/lib \
@@ -63,6 +63,7 @@ all: $(EXECUTABLE_NAME)
 
 # Usage: make debug
 # Then: gdb --args executable_name arg1 arg2
+debug: OPTFLAGS := -O0
 debug: CXXFLAGS += -DDEBUG -g
 debug: $(EXECUTABLE_NAME)
 
@@ -70,14 +71,14 @@ debug: $(EXECUTABLE_NAME)
 
 $(EXECUTABLE_NAME): $(EXECUTABLE_OBJS) $(TFLITE_LIBS)
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) \
+	$(CXX) $(CXXFLAGS) $(OPTFLAGS) $(INCLUDES) \
 	-o $(EXECUTABLE_NAME) $(EXECUTABLE_OBJS) \
 	$(LIBFLAGS) $(LIB_PATH) $(LDFLAGS) $(LIBS)
 
 # Matches on C++ source files.
 $(OBJDIR)%.o: %.cc
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(OPTFLAGS) $(INCLUDES) -c $< -o $@
 
 # Gets rid of all generated files.
 clean:
