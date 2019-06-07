@@ -4,6 +4,8 @@
 
    References:
        tensorflow/lite/kernels/sparse_to_dense.cc
+       https://www.tensorflow.org/api_docs/python/tf/keras/backend/random_normal
+
 */
 
 #include "tensorflow/lite/kernels/register.h"
@@ -77,6 +79,8 @@ TfLiteStatus RandomStandardNormal_Eval(TfLiteContext* context, TfLiteNode* node)
   // Initialise random number generator
   std::random_device rd{};
   std::mt19937 gen(rd());
+
+  // Normal distribution with mean 0 and stddev 1
   std::normal_distribution<> nd{0,1};
 
   // Compute dimensions
@@ -89,6 +93,7 @@ TfLiteStatus RandomStandardNormal_Eval(TfLiteContext* context, TfLiteNode* node)
   float* output_data = output->data.f;
 
   for (int i=0; i<output_elements; ++i) {
+    // Randomly sample from normal distribution
     output_data[i] = nd(gen);
   }
   return kTfLiteOk;
