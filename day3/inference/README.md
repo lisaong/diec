@@ -160,7 +160,7 @@ This is useful for troubleshooting the custom operations.
 
 ```
 make debug
-gdb --args ./gen/bin/minimal ../models/converted_model.customops.tflite
+gdb --args ./gen/bin/minimal ../models/converted_model.customops.tflite 100 5
 ```
 
-https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf
+GDB cheatsheet: https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf
