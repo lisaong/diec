@@ -20,7 +20,7 @@ std::tuple<float * /*data*/, int /*rows*/, int /*columns*/> FillInputBuffer(
     tflite::Interpreter *interpreter,
     const std::vector<float> &data, int rows);
 
-std::tuple<float* /*data*/, int /*rows*/, int /*columns*/> GetOutput(
+std::tuple<const float* /*data*/, int /*rows*/, int /*columns*/> GetOutput(
     const tflite::Interpreter* interpreter);
 
 std::vector<float> Loss(tflite::Interpreter* interpreter);

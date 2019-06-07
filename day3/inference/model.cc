@@ -1,6 +1,9 @@
 /**
  * Implements input, output, and loss calculation for the model
  */
+
+#include <cstring>
+
 #include "model.h"
 
 namespace model
@@ -19,8 +22,8 @@ std::tuple<float * /*data*/, int /*rows*/, int /*columns*/> GetInputs(
 
     // Note: typed_input_tensor() uses an indexing from 0 to inputs().size(), not
     // the subgraph's tensor index
-    // Should not need this cast according to interpreter.h 
-    auto input_buffer = const_cast<float*>(interpreter->typed_input_tensor<float>(0));
+    // Should not need this cast according to interpreter.h
+    float* input_buffer = const_cast<float*>(interpreter->typed_input_tensor<float>(0));
     return std::make_tuple(input_buffer, batch_size, columns);
 }
 
@@ -41,6 +44,9 @@ std::tuple<float * /*data*/, int /*rows*/, int /*columns*/> FillInputBuffer(
 
         // Reallocate all tensors to match input batch size
         interpreter->AllocateTensors();
+
+        // Update pointer after resize / reallocation
+        input_buffer = const_cast<float*>(interpreter->typed_input_tensor<float>(0));
     }
 
     // Fill `input`
@@ -50,7 +56,7 @@ std::tuple<float * /*data*/, int /*rows*/, int /*columns*/> FillInputBuffer(
     return std::make_tuple(input_buffer, rows, columns);
 }
 
-std::tuple<float * /*data*/, int /*rows*/, int /*columns*/> GetOutputs(
+std::tuple<const float * /*data*/, int /*rows*/, int /*columns*/> GetOutput(
     const tflite::Interpreter *interpreter)
 {
     auto outputs = interpreter->outputs();
@@ -61,7 +67,7 @@ std::tuple<float * /*data*/, int /*rows*/, int /*columns*/> GetOutputs(
     const auto columns = output_shape->data[1];
     TFLITE_MINIMAL_CHECK(columns == 50);
 
-    auto output_buffer = interpreter->typed_output_tensor<float>(0);
+    const float* output_buffer = interpreter->typed_output_tensor<float>(0);
     return std::make_tuple(output_buffer, rows, columns);
 }
 

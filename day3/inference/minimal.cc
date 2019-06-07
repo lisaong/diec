@@ -76,7 +76,9 @@ int main(int argc, char *argv[])
     std::vector<float> data = datasource::GetData(offset, rows);
 
     // Fill input buffers
-    std::tie(input_buffer, input_rows, input_columns) = model::FillInputBuffers(
+    float *input_buffer = nullptr;
+    int input_rows, input_columns = 0;
+    std::tie(input_buffer, input_rows, input_columns) = model::FillInputBuffer(
         interpreter.get(), data, rows);
 
     printf("\n\n=== Input (%d, %d) ===\n", input_rows, input_columns);
@@ -91,7 +93,7 @@ int main(int argc, char *argv[])
     tflite::PrintInterpreterState(interpreter.get());
 
     // Read output buffers
-    float *output_data = nullptr;
+    const float *output_buffer = nullptr;
     int output_rows, output_columns = 0;
     std::tie(output_buffer, output_rows, output_columns) = model::GetOutput(
         interpreter.get());
@@ -101,7 +103,7 @@ int main(int argc, char *argv[])
 
     // Get the loss
     auto losses = model::Loss(interpreter.get());
-    for (const auto &x : loss)
+    for (const auto &x : losses)
     {
         printf("%.4f ", x);
     }
