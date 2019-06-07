@@ -8,11 +8,12 @@
 #include <sstream>
 #include <fstream>
 
-const char* kTestDataFile = "test.csv";
+const char *kTestDataFile = "test.csv";
 
 using namespace std;
 
-namespace datasource {
+namespace datasource
+{
 
 vector<float> GetData(int offset, int rows)
 {
@@ -23,13 +24,16 @@ vector<float> GetData(int offset, int rows)
 
     string line;
 
-    while (fin >> line && offset-- > 0); // skip rows
+    while (fin >> line && offset-- > 0)
+        ; // skip rows
 
-    while (fin >> line && rows-- > 0) {
+    while (fin >> line && rows-- > 0)
+    {
         stringstream s(line);
         string word;
 
-        while(getline(s, word, ',')) {
+        while (getline(s, word, ','))
+        {
             result.push_back(stof(word));
         }
     }
@@ -37,4 +41,4 @@ vector<float> GetData(int offset, int rows)
     return result;
 }
 
-}
+} // namespace datasource

@@ -20,6 +20,8 @@ limitations under the License.
 
 #include <vector>
 #include "datasource.h"
+#include "randomstandardnormal.h"
+#include "model.h"
 
 // This is an example that is minimal to read a model
 // from disk and perform inference. There is no data being loaded
@@ -27,119 +29,84 @@ limitations under the License.
 //
 // Usage: minimal <tflite model>
 
-// Custom operator declarations
-TfLiteRegistration* Register_RandomStandardNormal();
-
-#define TFLITE_MINIMAL_CHECK(x)                              \
-  if (!(x)) {                                                \
-    fprintf(stderr, "Error at %s:%d\n", __FILE__, __LINE__); \
-    exit(1);                                                 \
-  }
-
-void FillInputBuffers(tflite::Interpreter* interpreter,
-  int offset, int rows){
-
-  auto inputs = interpreter->inputs();
-  TFLITE_MINIMAL_CHECK(inputs.size() == 1); // 1 input
-
-  auto input_shape = interpreter->tensor(inputs[0])->dims; // (batch_size, 50)
-  const auto batch_size = input_shape->data[0];
-  const auto columns = input_shape->data[1];
-  TFLITE_MINIMAL_CHECK(columns == 50);
-
-  // Read data
-  std::vector<float> data = datasource::GetData(offset, rows);
-
-  if (rows != batch_size) {
-    // Resize input tensor to match input batch size
-    interpreter->ResizeInputTensor(inputs[0], {rows, columns});
-
-    // Reallocate all tensors to match input batch size
-    interpreter->AllocateTensors();
-  }
-
-  // Note: typed_input_tensor() uses an indexing from 0 to inputs().size(), not
-  // the subgraph's tensor index
-  // Should not need this cast according to interpreter.h
-  auto input = const_cast<float*>(interpreter->typed_input_tensor<float>(0));
-
-  printf("\n\n=== Input (%d, %d) ===\n", rows, columns);
-  int i = 0;
-  for (const auto &x : data){
-     printf("%.4f ", x);
-     if (++i % columns == 0) {
+void PrintBuffer(const float *buffer, int rows, int columns)
+{
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < columns; ++j)
+        {
+            printf("%.4f ", buffer[i * columns + j]);
+        }
         printf("\n");
-     }
-  }
-  printf("\n");
-
-  // Fill `input`
-  std::memcpy(reinterpret_cast<void*>(input), data.data(),
-     data.size() * sizeof(float));
-}
-
-void PrintOutput(const tflite::Interpreter* interpreter){
-  auto outputs = interpreter->outputs();
-  TFLITE_MINIMAL_CHECK(outputs.size() == 1); // 1 output
-
-  auto output_shape = interpreter->tensor(outputs[0])->dims;
-  const auto rows = output_shape->data[0];
-  const auto columns = output_shape->data[1];
-  TFLITE_MINIMAL_CHECK(columns == 50);
-
-  auto output = interpreter->typed_output_tensor<float>(0);
-
-  printf("\n\n=== Output (%d, %d) ===\n", rows, columns);
-  for (int i=0; i<rows; ++i) {
-    for (int j=0; j<columns; ++j) {
-     printf("%.4f ", output[i*columns + j]);
     }
-    printf("\n");
-  }
 }
 
-int main(int argc, char* argv[]) {
-  if(argc != 4) {
-    fprintf(stderr, "minimal <tflite model> <test data offset> <test data rows>\n");
-    return 1;
-  }
-  const char* filename = argv[1];
-  const int offset = atoi(argv[2]);
-  const int rows = atoi(argv[3]);
+int main(int argc, char *argv[])
+{
+    if (argc != 4)
+    {
+        fprintf(stderr, "minimal <tflite model> <test data offset> <test data rows>\n");
+        return 1;
+    }
+    const char *filename = argv[1];
+    const int offset = atoi(argv[2]);
+    const int rows = atoi(argv[3]);
 
-  // Load model
-  std::unique_ptr<tflite::FlatBufferModel> model =
-      tflite::FlatBufferModel::BuildFromFile(filename);
-  TFLITE_MINIMAL_CHECK(model != nullptr);
+    // Load model
+    std::unique_ptr<tflite::FlatBufferModel> model =
+        tflite::FlatBufferModel::BuildFromFile(filename);
+    TFLITE_MINIMAL_CHECK(model != nullptr);
 
-  // Build the interpreter
-  tflite::ops::builtin::BuiltinOpResolver resolver;
+    // Build the interpreter
+    tflite::ops::builtin::BuiltinOpResolver resolver;
 
-  // Register custom operators
-  resolver.AddCustom("RandomStandardNormal",
-      Register_RandomStandardNormal());
+    // Register custom operators
+    resolver.AddCustom("RandomStandardNormal",
+                       Register_RandomStandardNormal());
 
-  tflite::InterpreterBuilder builder(*model, resolver);
-  std::unique_ptr<tflite::Interpreter> interpreter;
-  builder(&interpreter);
-  TFLITE_MINIMAL_CHECK(interpreter != nullptr);
+    tflite::InterpreterBuilder builder(*model, resolver);
+    std::unique_ptr<tflite::Interpreter> interpreter;
+    builder(&interpreter);
+    TFLITE_MINIMAL_CHECK(interpreter != nullptr);
 
-  // Allocate tensor buffers.
-  TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
+    // Allocate tensor buffers.
+    TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
 
-  // Fill input buffers
-  FillInputBuffers(interpreter.get(), offset, rows);
+    // Get data
+    std::vector<float> data = datasource::GetData(offset, rows);
 
-  printf("=== Pre-invoke Interpreter State ===\n");
-  tflite::PrintInterpreterState(interpreter.get());
+    // Fill input buffers
+    float *input_buffer = nullptr;
+    int input_rows, input_columns = 0;
+    std::tie(input_buffer, input_rows, input_columns) = model::FillInputBuffer(
+        interpreter.get(), data, rows);
 
-  // Run inference
-  TFLITE_MINIMAL_CHECK(interpreter->Invoke() == kTfLiteOk);
-  printf("\n\n=== Post-invoke Interpreter State ===\n");
-  tflite::PrintInterpreterState(interpreter.get());
+    printf("\n\n=== Input (%d, %d) ===\n", input_rows, input_columns);
+    PrintBuffer(input_buffer, input_rows, input_columns);
 
-  // Read output buffers
-  PrintOutput(interpreter.get());
+    printf("=== Pre-invoke Interpreter State ===\n");
+    tflite::PrintInterpreterState(interpreter.get());
 
-  return 0;
+    // Run inference
+    TFLITE_MINIMAL_CHECK(interpreter->Invoke() == kTfLiteOk);
+    printf("\n\n=== Post-invoke Interpreter State ===\n");
+    tflite::PrintInterpreterState(interpreter.get());
+
+    // Read output buffers
+    const float *output_buffer = nullptr;
+    int output_rows, output_columns = 0;
+    std::tie(output_buffer, output_rows, output_columns) = model::GetOutput(
+        interpreter.get());
+
+    printf("\n\n=== Output (%d, %d) ===\n", output_rows, output_columns);
+    PrintBuffer(output_buffer, output_rows, output_columns);
+
+    // Get the loss
+    auto losses = model::Loss(interpreter.get());
+    for (const auto &x : losses)
+    {
+        printf("%.4f ", x);
+    }
+
+    return 0;
 }
