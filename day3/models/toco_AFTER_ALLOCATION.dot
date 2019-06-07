@@ -93,6 +93,9 @@ digraph Computegraph {
 	 "decoder/dense_5/BiasAdd" -> "op00013" [penwidth=0.500000, weight=1.000000];
 	 "op00013" -> "decoder/dense_5/Sigmoid" [penwidth=0.500000, weight=1.000000];
 }
+1.000000];
+	 "op00013" -> "decoder/dense_5/Sigmoid" [penwidth=0.500000, weight=1.000000];
+}
 /BiasAdd" -> "op00013" [penwidth=0.500000, weight=1.000000];
 	 "op00013" -> "decoder/dense_5/Sigmoid" [penwidth=0.500000, weight=1.000000];
 }

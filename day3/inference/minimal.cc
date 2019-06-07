@@ -18,13 +18,14 @@ limitations under the License.
 #include "tensorflow/lite/model.h"
 #include "tensorflow/lite/optional_debug_tools.h"
 
+#include <vector>
+#include "datasource.h"
+
 // This is an example that is minimal to read a model
 // from disk and perform inference. There is no data being loaded
 // that is up to you to add as a user.
 //
 // Usage: minimal <tflite model>
-
-using namespace tflite;
 
 // Custom operator declarations
 TfLiteRegistration* Register_RandomStandardNormal();
@@ -35,12 +36,53 @@ TfLiteRegistration* Register_RandomStandardNormal();
     exit(1);                                                 \
   }
 
+void fillInputBuffers(const tflite::Interpreter* interpreter, int offset){
+  auto inputs = interpreter->inputs();
+  TFLITE_MINIMAL_CHECK(inputs.size() == 1); // 1 input
+
+  auto input_shape = interpreter->tensor(inputs[0])->dims;
+  TFLITE_MINIMAL_CHECK(input_shape->data[1] == 50); // (batch_size, 50)
+
+  // Read one row of data
+  std::vector<float> data = datasource::GetData(/*offset=*/offset, /*rows=*/1);
+
+  // Note: typed_input_tensor() uses an indexing from 0 to inputs().size(), not
+  // the subgraph's tensor index
+  // Should not need this cast according to interpreter.h
+  auto input = const_cast<float*>(interpreter->typed_input_tensor<float>(0));
+
+  printf("\n\n=== Input ===\n");
+  for (const auto &x : data){
+     printf("%.4f ", x);
+  }
+  printf("\n");
+
+  // Fill `input`
+  std::memcpy(reinterpret_cast<void*>(input), data.data(),
+     data.size() * sizeof(float));
+}
+
+void readOutput(const tflite::Interpreter* interpreter){
+  auto outputs = interpreter->outputs();
+  TFLITE_MINIMAL_CHECK(outputs.size() == 1); // 1 output
+
+  auto output_shape = interpreter->tensor(outputs[0])->dims;
+  TFLITE_MINIMAL_CHECK(output_shape->data[1] == 50); // (batch_size, 50)
+
+  auto output = interpreter->typed_output_tensor<float>(0);
+  for (size_t i=0; i<output_shape->data[1]; ++i) {
+     printf("%.4f ", output[i]);
+  }
+  printf("\n");
+}
+
 int main(int argc, char* argv[]) {
-  if(argc != 2) {
-    fprintf(stderr, "minimal <tflite model>\n");
+  if(argc != 3) {
+    fprintf(stderr, "minimal <tflite model> <test data offset>\n");
     return 1;
   }
   const char* filename = argv[1];
+  const int dataOffset = atoi(argv[2]);
 
   // Load model
   std::unique_ptr<tflite::FlatBufferModel> model =
@@ -51,23 +93,22 @@ int main(int argc, char* argv[]) {
   tflite::ops::builtin::BuiltinOpResolver resolver;
 
   // Register custom operators
-  resolver.AddCustom("RandomStandardNormal", Register_RandomStandardNormal());
+  resolver.AddCustom("RandomStandardNormal",
+      Register_RandomStandardNormal());
 
-  InterpreterBuilder builder(*model, resolver);
-  std::unique_ptr<Interpreter> interpreter;
+  tflite::InterpreterBuilder builder(*model, resolver);
+  std::unique_ptr<tflite::Interpreter> interpreter;
   builder(&interpreter);
   TFLITE_MINIMAL_CHECK(interpreter != nullptr);
 
-  printf("=== Pre-allocate Interpreter State ===\n");
-  tflite::PrintInterpreterState(interpreter.get());
-
   // Allocate tensor buffers.
   TFLITE_MINIMAL_CHECK(interpreter->AllocateTensors() == kTfLiteOk);
-  // printf("=== Pre-invoke Interpreter State ===\n");
-  // tflite::PrintInterpreterState(interpreter.get());
+
+  printf("=== Pre-invoke Interpreter State ===\n");
+  tflite::PrintInterpreterState(interpreter.get());
 
   // Fill input buffers
-  // TODO(user): Insert code to fill input tensors
+  fillInputBuffers(interpreter.get(), dataOffset);
 
   // Run inference
   TFLITE_MINIMAL_CHECK(interpreter->Invoke() == kTfLiteOk);
@@ -75,7 +116,8 @@ int main(int argc, char* argv[]) {
   tflite::PrintInterpreterState(interpreter.get());
 
   // Read output buffers
-  // TODO(user): Insert getting data out code.
+  printf("\n\n=== Prediction ===\n");
+  readOutput(interpreter.get());
 
   return 0;
 }

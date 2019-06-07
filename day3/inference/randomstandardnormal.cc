@@ -4,11 +4,15 @@
 
    References:
        tensorflow/lite/kernels/sparse_to_dense.cc
+       https://www.tensorflow.org/api_docs/python/tf/keras/backend/random_normal
+
 */
 
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/kernels/kernel_util.h"
 #include "tensorflow/lite/kernels/internal/tensor.h"
+
+#include <random>
 
 /* Outputs random values from a normal distribution.
 
@@ -62,6 +66,7 @@ TfLiteStatus RandomStandardNormal_Prepare(TfLiteContext* context, TfLiteNode* no
 
   // Output shape is not known until Eval, postpone allocation
   SetTensorToDynamic(output);
+
   return kTfLiteOk;
 }
 
@@ -71,11 +76,26 @@ TfLiteStatus RandomStandardNormal_Eval(TfLiteContext* context, TfLiteNode* node)
 
   TF_LITE_ENSURE_OK(context, ResizeOutputShape(context, shape, output));
 
-  //float* output_data = output->data.f; // TODO: fix
+  // Initialise random number generator
+  std::random_device rd{};
+  std::mt19937 gen(rd());
 
-  //for (size_t i=0; i<count; ++i) {
-  //  output_data[i] = input_data[i];
-  //}
+  // Normal distribution with mean 0 and stddev 1
+  std::normal_distribution<> nd{0,1};
+
+  // Compute dimensions
+  auto output_shape = output->dims;
+  int output_elements = 1;
+  for (int i=0; i<output_shape->size; ++i) {
+     output_elements *= output_shape->data[i];
+  }
+
+  float* output_data = output->data.f;
+
+  for (int i=0; i<output_elements; ++i) {
+    // Randomly sample from normal distribution
+    output_data[i] = nd(gen);
+  }
   return kTfLiteOk;
 }
 
