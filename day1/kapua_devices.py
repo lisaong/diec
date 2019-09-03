@@ -32,13 +32,15 @@ def add_devices(api_client, account_id, device_names):
         for device_name in device_names:
             # Step 2
             # Create a DeviceCreator request from the swagger_client to contain device information
+            # Set client_id to the device_name
+            # Set display_name to the device_name
+            # Set other optional properties
             <YOUR CODE HERE>
-
 
             # Step 3
             # Pass the DeviceCreator request to the DevicesApi instance’s device_create method
+            # Use account_id as the scope_id
             <YOUR CODE HERE>
-
 
             print(f'Created device: {api_response.display_name}')
 
@@ -50,7 +52,7 @@ def delete_devices(api_client, account_id, device_names):
     try:
         for device_name in device_names:    
             api_response = api_instance.device_simple_query(account_id,
-                client_id='fake_device_' + device_name)
+                client_id=device_name)
 
             if len(api_response.items) > 0:
                 api_instance.device_delete(account_id, api_response.items[0].id)
