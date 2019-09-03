@@ -24,14 +24,22 @@ def list_devices(api_client, account_id):
         print(f'Exception when calling API: {e}')
 
 def add_devices(api_client, account_id, device_names):
-    api_instance = swagger_client.DevicesApi(api_client)
+    # Step 1
+    # Get a DevicesApi instance from the swagger_client
+    <YOUR CODE HERE>
+
     try:
         for device_name in device_names:
-            # Create dummy devices with some fake properties
-            body = swagger_client.DeviceCreator(client_id='fake_device_' + device_name,
-                display_name=device_name, model_name=device_name,
-                serial_number=random.randint(1, 1000), status='ENABLED')
-            api_response = api_instance.device_create(account_id, body)
+            # Step 2
+            # Create a DeviceCreator request from the swagger_client to contain device information
+            <YOUR CODE HERE>
+
+
+            # Step 3
+            # Pass the DeviceCreator request to the DevicesApi instance’s device_create method
+            <YOUR CODE HERE>
+
+
             print(f'Created device: {api_response.display_name}')
 
     except ApiException as e:
