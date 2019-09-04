@@ -31,58 +31,68 @@ class AccountCreator(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'expiration_date': 'datetime',
+        'organization_name': 'str',
+        'organization_person_name': 'str',
+        'organization_email': 'str',
+        'organization_phone_number': 'str',
         'organization_address_line1': 'str',
         'organization_address_line2': 'str',
         'organization_city': 'str',
         'organization_zip_post_code': 'str',
         'organization_state_province_county': 'str',
         'organization_country': 'str',
-        'expiration_date': 'datetime',
-        'organization_name': 'str',
-        'organization_person_name': 'str',
-        'organization_email': 'str',
-        'organization_phone_number': 'str',
         'name': 'str',
         'entity_attributes': 'dict(str, str)',
         'scope_id': 'str'
     }
 
     attribute_map = {
+        'expiration_date': 'expirationDate',
+        'organization_name': 'organizationName',
+        'organization_person_name': 'organizationPersonName',
+        'organization_email': 'organizationEmail',
+        'organization_phone_number': 'organizationPhoneNumber',
         'organization_address_line1': 'organizationAddressLine1',
         'organization_address_line2': 'organizationAddressLine2',
         'organization_city': 'organizationCity',
         'organization_zip_post_code': 'organizationZipPostCode',
         'organization_state_province_county': 'organizationStateProvinceCounty',
         'organization_country': 'organizationCountry',
-        'expiration_date': 'expirationDate',
-        'organization_name': 'organizationName',
-        'organization_person_name': 'organizationPersonName',
-        'organization_email': 'organizationEmail',
-        'organization_phone_number': 'organizationPhoneNumber',
         'name': 'name',
         'entity_attributes': 'entityAttributes',
         'scope_id': 'scopeId'
     }
 
-    def __init__(self, organization_address_line1=None, organization_address_line2=None, organization_city=None, organization_zip_post_code=None, organization_state_province_county=None, organization_country=None, expiration_date=None, organization_name=None, organization_person_name=None, organization_email=None, organization_phone_number=None, name=None, entity_attributes=None, scope_id=None):  # noqa: E501
+    def __init__(self, expiration_date=None, organization_name=None, organization_person_name=None, organization_email=None, organization_phone_number=None, organization_address_line1=None, organization_address_line2=None, organization_city=None, organization_zip_post_code=None, organization_state_province_county=None, organization_country=None, name=None, entity_attributes=None, scope_id=None):  # noqa: E501
         """AccountCreator - a model defined in Swagger"""  # noqa: E501
 
+        self._expiration_date = None
+        self._organization_name = None
+        self._organization_person_name = None
+        self._organization_email = None
+        self._organization_phone_number = None
         self._organization_address_line1 = None
         self._organization_address_line2 = None
         self._organization_city = None
         self._organization_zip_post_code = None
         self._organization_state_province_county = None
         self._organization_country = None
-        self._expiration_date = None
-        self._organization_name = None
-        self._organization_person_name = None
-        self._organization_email = None
-        self._organization_phone_number = None
         self._name = None
         self._entity_attributes = None
         self._scope_id = None
         self.discriminator = None
 
+        if expiration_date is not None:
+            self.expiration_date = expiration_date
+        if organization_name is not None:
+            self.organization_name = organization_name
+        if organization_person_name is not None:
+            self.organization_person_name = organization_person_name
+        if organization_email is not None:
+            self.organization_email = organization_email
+        if organization_phone_number is not None:
+            self.organization_phone_number = organization_phone_number
         if organization_address_line1 is not None:
             self.organization_address_line1 = organization_address_line1
         if organization_address_line2 is not None:
@@ -95,22 +105,117 @@ class AccountCreator(object):
             self.organization_state_province_county = organization_state_province_county
         if organization_country is not None:
             self.organization_country = organization_country
-        if expiration_date is not None:
-            self.expiration_date = expiration_date
-        if organization_name is not None:
-            self.organization_name = organization_name
-        if organization_person_name is not None:
-            self.organization_person_name = organization_person_name
-        if organization_email is not None:
-            self.organization_email = organization_email
-        if organization_phone_number is not None:
-            self.organization_phone_number = organization_phone_number
         if name is not None:
             self.name = name
         if entity_attributes is not None:
             self.entity_attributes = entity_attributes
         if scope_id is not None:
             self.scope_id = scope_id
+
+    @property
+    def expiration_date(self):
+        """Gets the expiration_date of this AccountCreator.  # noqa: E501
+
+
+        :return: The expiration_date of this AccountCreator.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._expiration_date
+
+    @expiration_date.setter
+    def expiration_date(self, expiration_date):
+        """Sets the expiration_date of this AccountCreator.
+
+
+        :param expiration_date: The expiration_date of this AccountCreator.  # noqa: E501
+        :type: datetime
+        """
+
+        self._expiration_date = expiration_date
+
+    @property
+    def organization_name(self):
+        """Gets the organization_name of this AccountCreator.  # noqa: E501
+
+
+        :return: The organization_name of this AccountCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._organization_name
+
+    @organization_name.setter
+    def organization_name(self, organization_name):
+        """Sets the organization_name of this AccountCreator.
+
+
+        :param organization_name: The organization_name of this AccountCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._organization_name = organization_name
+
+    @property
+    def organization_person_name(self):
+        """Gets the organization_person_name of this AccountCreator.  # noqa: E501
+
+
+        :return: The organization_person_name of this AccountCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._organization_person_name
+
+    @organization_person_name.setter
+    def organization_person_name(self, organization_person_name):
+        """Sets the organization_person_name of this AccountCreator.
+
+
+        :param organization_person_name: The organization_person_name of this AccountCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._organization_person_name = organization_person_name
+
+    @property
+    def organization_email(self):
+        """Gets the organization_email of this AccountCreator.  # noqa: E501
+
+
+        :return: The organization_email of this AccountCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._organization_email
+
+    @organization_email.setter
+    def organization_email(self, organization_email):
+        """Sets the organization_email of this AccountCreator.
+
+
+        :param organization_email: The organization_email of this AccountCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._organization_email = organization_email
+
+    @property
+    def organization_phone_number(self):
+        """Gets the organization_phone_number of this AccountCreator.  # noqa: E501
+
+
+        :return: The organization_phone_number of this AccountCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._organization_phone_number
+
+    @organization_phone_number.setter
+    def organization_phone_number(self, organization_phone_number):
+        """Sets the organization_phone_number of this AccountCreator.
+
+
+        :param organization_phone_number: The organization_phone_number of this AccountCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._organization_phone_number = organization_phone_number
 
     @property
     def organization_address_line1(self):
@@ -237,111 +342,6 @@ class AccountCreator(object):
         """
 
         self._organization_country = organization_country
-
-    @property
-    def expiration_date(self):
-        """Gets the expiration_date of this AccountCreator.  # noqa: E501
-
-
-        :return: The expiration_date of this AccountCreator.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._expiration_date
-
-    @expiration_date.setter
-    def expiration_date(self, expiration_date):
-        """Sets the expiration_date of this AccountCreator.
-
-
-        :param expiration_date: The expiration_date of this AccountCreator.  # noqa: E501
-        :type: datetime
-        """
-
-        self._expiration_date = expiration_date
-
-    @property
-    def organization_name(self):
-        """Gets the organization_name of this AccountCreator.  # noqa: E501
-
-
-        :return: The organization_name of this AccountCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._organization_name
-
-    @organization_name.setter
-    def organization_name(self, organization_name):
-        """Sets the organization_name of this AccountCreator.
-
-
-        :param organization_name: The organization_name of this AccountCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._organization_name = organization_name
-
-    @property
-    def organization_person_name(self):
-        """Gets the organization_person_name of this AccountCreator.  # noqa: E501
-
-
-        :return: The organization_person_name of this AccountCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._organization_person_name
-
-    @organization_person_name.setter
-    def organization_person_name(self, organization_person_name):
-        """Sets the organization_person_name of this AccountCreator.
-
-
-        :param organization_person_name: The organization_person_name of this AccountCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._organization_person_name = organization_person_name
-
-    @property
-    def organization_email(self):
-        """Gets the organization_email of this AccountCreator.  # noqa: E501
-
-
-        :return: The organization_email of this AccountCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._organization_email
-
-    @organization_email.setter
-    def organization_email(self, organization_email):
-        """Sets the organization_email of this AccountCreator.
-
-
-        :param organization_email: The organization_email of this AccountCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._organization_email = organization_email
-
-    @property
-    def organization_phone_number(self):
-        """Gets the organization_phone_number of this AccountCreator.  # noqa: E501
-
-
-        :return: The organization_phone_number of this AccountCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._organization_phone_number
-
-    @organization_phone_number.setter
-    def organization_phone_number(self, organization_phone_number):
-        """Sets the organization_phone_number of this AccountCreator.
-
-
-        :param organization_phone_number: The organization_phone_number of this AccountCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._organization_phone_number = organization_phone_number
 
     @property
     def name(self):

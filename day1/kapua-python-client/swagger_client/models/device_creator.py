@@ -34,12 +34,12 @@ class DeviceCreator(object):
         'os_version': 'str',
         'serial_number': 'str',
         'display_name': 'str',
+        'group_id': 'str',
+        'status': 'str',
         'client_id': 'str',
         'model_name': 'str',
-        'model_id': 'str',
-        'status': 'str',
-        'group_id': 'str',
         'firmware_version': 'str',
+        'model_id': 'str',
         'bios_version': 'str',
         'jvm_version': 'str',
         'application_framework_version': 'str',
@@ -66,12 +66,12 @@ class DeviceCreator(object):
         'os_version': 'osVersion',
         'serial_number': 'serialNumber',
         'display_name': 'displayName',
+        'group_id': 'groupId',
+        'status': 'status',
         'client_id': 'clientId',
         'model_name': 'modelName',
-        'model_id': 'modelId',
-        'status': 'status',
-        'group_id': 'groupId',
         'firmware_version': 'firmwareVersion',
+        'model_id': 'modelId',
         'bios_version': 'biosVersion',
         'jvm_version': 'jvmVersion',
         'application_framework_version': 'applicationFrameworkVersion',
@@ -94,18 +94,18 @@ class DeviceCreator(object):
         'scope_id': 'scopeId'
     }
 
-    def __init__(self, os_version=None, serial_number=None, display_name=None, client_id=None, model_name=None, model_id=None, status=None, group_id=None, firmware_version=None, bios_version=None, jvm_version=None, application_framework_version=None, connection_interface=None, connection_ip=None, accept_encoding=None, application_identifiers=None, connection_id=None, last_event_id=None, imei=None, imsi=None, iccid=None, osgi_framework_version=None, custom_attribute1=None, custom_attribute2=None, custom_attribute3=None, custom_attribute4=None, custom_attribute5=None, entity_attributes=None, scope_id=None):  # noqa: E501
+    def __init__(self, os_version=None, serial_number=None, display_name=None, group_id=None, status=None, client_id=None, model_name=None, firmware_version=None, model_id=None, bios_version=None, jvm_version=None, application_framework_version=None, connection_interface=None, connection_ip=None, accept_encoding=None, application_identifiers=None, connection_id=None, last_event_id=None, imei=None, imsi=None, iccid=None, osgi_framework_version=None, custom_attribute1=None, custom_attribute2=None, custom_attribute3=None, custom_attribute4=None, custom_attribute5=None, entity_attributes=None, scope_id=None):  # noqa: E501
         """DeviceCreator - a model defined in Swagger"""  # noqa: E501
 
         self._os_version = None
         self._serial_number = None
         self._display_name = None
+        self._group_id = None
+        self._status = None
         self._client_id = None
         self._model_name = None
-        self._model_id = None
-        self._status = None
-        self._group_id = None
         self._firmware_version = None
+        self._model_id = None
         self._bios_version = None
         self._jvm_version = None
         self._application_framework_version = None
@@ -134,18 +134,18 @@ class DeviceCreator(object):
             self.serial_number = serial_number
         if display_name is not None:
             self.display_name = display_name
+        if group_id is not None:
+            self.group_id = group_id
+        if status is not None:
+            self.status = status
         if client_id is not None:
             self.client_id = client_id
         if model_name is not None:
             self.model_name = model_name
-        if model_id is not None:
-            self.model_id = model_id
-        if status is not None:
-            self.status = status
-        if group_id is not None:
-            self.group_id = group_id
         if firmware_version is not None:
             self.firmware_version = firmware_version
+        if model_id is not None:
+            self.model_id = model_id
         if bios_version is not None:
             self.bios_version = bios_version
         if jvm_version is not None:
@@ -251,6 +251,54 @@ class DeviceCreator(object):
         self._display_name = display_name
 
     @property
+    def group_id(self):
+        """Gets the group_id of this DeviceCreator.  # noqa: E501
+
+
+        :return: The group_id of this DeviceCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._group_id
+
+    @group_id.setter
+    def group_id(self, group_id):
+        """Sets the group_id of this DeviceCreator.
+
+
+        :param group_id: The group_id of this DeviceCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._group_id = group_id
+
+    @property
+    def status(self):
+        """Gets the status of this DeviceCreator.  # noqa: E501
+
+
+        :return: The status of this DeviceCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this DeviceCreator.
+
+
+        :param status: The status of this DeviceCreator.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["ENABLED", "DISABLED"]  # noqa: E501
+        if status not in allowed_values:
+            raise ValueError(
+                "Invalid value for `status` ({0}), must be one of {1}"  # noqa: E501
+                .format(status, allowed_values)
+            )
+
+        self._status = status
+
+    @property
     def client_id(self):
         """Gets the client_id of this DeviceCreator.  # noqa: E501
 
@@ -293,75 +341,6 @@ class DeviceCreator(object):
         self._model_name = model_name
 
     @property
-    def model_id(self):
-        """Gets the model_id of this DeviceCreator.  # noqa: E501
-
-
-        :return: The model_id of this DeviceCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._model_id
-
-    @model_id.setter
-    def model_id(self, model_id):
-        """Sets the model_id of this DeviceCreator.
-
-
-        :param model_id: The model_id of this DeviceCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._model_id = model_id
-
-    @property
-    def status(self):
-        """Gets the status of this DeviceCreator.  # noqa: E501
-
-
-        :return: The status of this DeviceCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._status
-
-    @status.setter
-    def status(self, status):
-        """Sets the status of this DeviceCreator.
-
-
-        :param status: The status of this DeviceCreator.  # noqa: E501
-        :type: str
-        """
-        allowed_values = ["ENABLED", "DISABLED"]  # noqa: E501
-        if status not in allowed_values:
-            raise ValueError(
-                "Invalid value for `status` ({0}), must be one of {1}"  # noqa: E501
-                .format(status, allowed_values)
-            )
-
-        self._status = status
-
-    @property
-    def group_id(self):
-        """Gets the group_id of this DeviceCreator.  # noqa: E501
-
-
-        :return: The group_id of this DeviceCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._group_id
-
-    @group_id.setter
-    def group_id(self, group_id):
-        """Sets the group_id of this DeviceCreator.
-
-
-        :param group_id: The group_id of this DeviceCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._group_id = group_id
-
-    @property
     def firmware_version(self):
         """Gets the firmware_version of this DeviceCreator.  # noqa: E501
 
@@ -381,6 +360,27 @@ class DeviceCreator(object):
         """
 
         self._firmware_version = firmware_version
+
+    @property
+    def model_id(self):
+        """Gets the model_id of this DeviceCreator.  # noqa: E501
+
+
+        :return: The model_id of this DeviceCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._model_id
+
+    @model_id.setter
+    def model_id(self, model_id):
+        """Sets the model_id of this DeviceCreator.
+
+
+        :param model_id: The model_id of this DeviceCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._model_id = model_id
 
     @property
     def bios_version(self):

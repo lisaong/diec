@@ -32,20 +32,20 @@ class Credential(object):
     """
     swagger_types = {
         'status': 'str',
-        'user_id': 'str',
         'expiration_date': 'datetime',
         'lockout_reset': 'datetime',
         'first_login_failure': 'datetime',
         'login_failures_reset': 'datetime',
         'login_failures': 'int',
         'credential_type': 'str',
+        'user_id': 'str',
         'credential_key': 'str',
         'type': 'str',
-        'modified_on': 'datetime',
-        'modified_by': 'str',
         'optlock': 'int',
         'entity_attributes': 'dict(str, str)',
         'entity_properties': 'dict(str, str)',
+        'modified_on': 'datetime',
+        'modified_by': 'str',
         'scope_id': 'str',
         'id': 'str',
         'created_on': 'datetime',
@@ -54,44 +54,44 @@ class Credential(object):
 
     attribute_map = {
         'status': 'status',
-        'user_id': 'userId',
         'expiration_date': 'expirationDate',
         'lockout_reset': 'lockoutReset',
         'first_login_failure': 'firstLoginFailure',
         'login_failures_reset': 'loginFailuresReset',
         'login_failures': 'loginFailures',
         'credential_type': 'credentialType',
+        'user_id': 'userId',
         'credential_key': 'credentialKey',
         'type': 'type',
-        'modified_on': 'modifiedOn',
-        'modified_by': 'modifiedBy',
         'optlock': 'optlock',
         'entity_attributes': 'entityAttributes',
         'entity_properties': 'entityProperties',
+        'modified_on': 'modifiedOn',
+        'modified_by': 'modifiedBy',
         'scope_id': 'scopeId',
         'id': 'id',
         'created_on': 'createdOn',
         'created_by': 'createdBy'
     }
 
-    def __init__(self, status=None, user_id=None, expiration_date=None, lockout_reset=None, first_login_failure=None, login_failures_reset=None, login_failures=None, credential_type=None, credential_key=None, type=None, modified_on=None, modified_by=None, optlock=None, entity_attributes=None, entity_properties=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
+    def __init__(self, status=None, expiration_date=None, lockout_reset=None, first_login_failure=None, login_failures_reset=None, login_failures=None, credential_type=None, user_id=None, credential_key=None, type=None, optlock=None, entity_attributes=None, entity_properties=None, modified_on=None, modified_by=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
         """Credential - a model defined in Swagger"""  # noqa: E501
 
         self._status = None
-        self._user_id = None
         self._expiration_date = None
         self._lockout_reset = None
         self._first_login_failure = None
         self._login_failures_reset = None
         self._login_failures = None
         self._credential_type = None
+        self._user_id = None
         self._credential_key = None
         self._type = None
-        self._modified_on = None
-        self._modified_by = None
         self._optlock = None
         self._entity_attributes = None
         self._entity_properties = None
+        self._modified_on = None
+        self._modified_by = None
         self._scope_id = None
         self._id = None
         self._created_on = None
@@ -100,8 +100,6 @@ class Credential(object):
 
         if status is not None:
             self.status = status
-        if user_id is not None:
-            self.user_id = user_id
         if expiration_date is not None:
             self.expiration_date = expiration_date
         if lockout_reset is not None:
@@ -114,20 +112,22 @@ class Credential(object):
             self.login_failures = login_failures
         if credential_type is not None:
             self.credential_type = credential_type
+        if user_id is not None:
+            self.user_id = user_id
         if credential_key is not None:
             self.credential_key = credential_key
         if type is not None:
             self.type = type
-        if modified_on is not None:
-            self.modified_on = modified_on
-        if modified_by is not None:
-            self.modified_by = modified_by
         if optlock is not None:
             self.optlock = optlock
         if entity_attributes is not None:
             self.entity_attributes = entity_attributes
         if entity_properties is not None:
             self.entity_properties = entity_properties
+        if modified_on is not None:
+            self.modified_on = modified_on
+        if modified_by is not None:
+            self.modified_by = modified_by
         if scope_id is not None:
             self.scope_id = scope_id
         if id is not None:
@@ -163,27 +163,6 @@ class Credential(object):
             )
 
         self._status = status
-
-    @property
-    def user_id(self):
-        """Gets the user_id of this Credential.  # noqa: E501
-
-
-        :return: The user_id of this Credential.  # noqa: E501
-        :rtype: str
-        """
-        return self._user_id
-
-    @user_id.setter
-    def user_id(self, user_id):
-        """Sets the user_id of this Credential.
-
-
-        :param user_id: The user_id of this Credential.  # noqa: E501
-        :type: str
-        """
-
-        self._user_id = user_id
 
     @property
     def expiration_date(self):
@@ -318,6 +297,27 @@ class Credential(object):
         self._credential_type = credential_type
 
     @property
+    def user_id(self):
+        """Gets the user_id of this Credential.  # noqa: E501
+
+
+        :return: The user_id of this Credential.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, user_id):
+        """Sets the user_id of this Credential.
+
+
+        :param user_id: The user_id of this Credential.  # noqa: E501
+        :type: str
+        """
+
+        self._user_id = user_id
+
+    @property
     def credential_key(self):
         """Gets the credential_key of this Credential.  # noqa: E501
 
@@ -358,48 +358,6 @@ class Credential(object):
         """
 
         self._type = type
-
-    @property
-    def modified_on(self):
-        """Gets the modified_on of this Credential.  # noqa: E501
-
-
-        :return: The modified_on of this Credential.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._modified_on
-
-    @modified_on.setter
-    def modified_on(self, modified_on):
-        """Sets the modified_on of this Credential.
-
-
-        :param modified_on: The modified_on of this Credential.  # noqa: E501
-        :type: datetime
-        """
-
-        self._modified_on = modified_on
-
-    @property
-    def modified_by(self):
-        """Gets the modified_by of this Credential.  # noqa: E501
-
-
-        :return: The modified_by of this Credential.  # noqa: E501
-        :rtype: str
-        """
-        return self._modified_by
-
-    @modified_by.setter
-    def modified_by(self, modified_by):
-        """Sets the modified_by of this Credential.
-
-
-        :param modified_by: The modified_by of this Credential.  # noqa: E501
-        :type: str
-        """
-
-        self._modified_by = modified_by
 
     @property
     def optlock(self):
@@ -463,6 +421,48 @@ class Credential(object):
         """
 
         self._entity_properties = entity_properties
+
+    @property
+    def modified_on(self):
+        """Gets the modified_on of this Credential.  # noqa: E501
+
+
+        :return: The modified_on of this Credential.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._modified_on
+
+    @modified_on.setter
+    def modified_on(self, modified_on):
+        """Sets the modified_on of this Credential.
+
+
+        :param modified_on: The modified_on of this Credential.  # noqa: E501
+        :type: datetime
+        """
+
+        self._modified_on = modified_on
+
+    @property
+    def modified_by(self):
+        """Gets the modified_by of this Credential.  # noqa: E501
+
+
+        :return: The modified_by of this Credential.  # noqa: E501
+        :rtype: str
+        """
+        return self._modified_by
+
+    @modified_by.setter
+    def modified_by(self, modified_by):
+        """Sets the modified_by of this Credential.
+
+
+        :param modified_by: The modified_by of this Credential.  # noqa: E501
+        :type: str
+        """
+
+        self._modified_by = modified_by
 
     @property
     def scope_id(self):

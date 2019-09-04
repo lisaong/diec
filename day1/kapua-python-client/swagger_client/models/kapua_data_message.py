@@ -37,9 +37,9 @@ class KapuaDataMessage(object):
     swagger_types = {
         'position': 'KapuaPosition',
         'scope_id': 'str',
+        'id': 'str',
         'payload': 'KapuaDataPayload',
         'client_id': 'str',
-        'id': 'str',
         'device_id': 'str',
         'received_on': 'datetime',
         'sent_on': 'datetime',
@@ -50,9 +50,9 @@ class KapuaDataMessage(object):
     attribute_map = {
         'position': 'position',
         'scope_id': 'scopeId',
+        'id': 'id',
         'payload': 'payload',
         'client_id': 'clientId',
-        'id': 'id',
         'device_id': 'deviceId',
         'received_on': 'receivedOn',
         'sent_on': 'sentOn',
@@ -60,14 +60,14 @@ class KapuaDataMessage(object):
         'channel': 'channel'
     }
 
-    def __init__(self, position=None, scope_id=None, payload=None, client_id=None, id=None, device_id=None, received_on=None, sent_on=None, captured_on=None, channel=None):  # noqa: E501
+    def __init__(self, position=None, scope_id=None, id=None, payload=None, client_id=None, device_id=None, received_on=None, sent_on=None, captured_on=None, channel=None):  # noqa: E501
         """KapuaDataMessage - a model defined in Swagger"""  # noqa: E501
 
         self._position = None
         self._scope_id = None
+        self._id = None
         self._payload = None
         self._client_id = None
-        self._id = None
         self._device_id = None
         self._received_on = None
         self._sent_on = None
@@ -79,12 +79,12 @@ class KapuaDataMessage(object):
             self.position = position
         if scope_id is not None:
             self.scope_id = scope_id
+        if id is not None:
+            self.id = id
         if payload is not None:
             self.payload = payload
         if client_id is not None:
             self.client_id = client_id
-        if id is not None:
-            self.id = id
         if device_id is not None:
             self.device_id = device_id
         if received_on is not None:
@@ -139,6 +139,27 @@ class KapuaDataMessage(object):
         self._scope_id = scope_id
 
     @property
+    def id(self):
+        """Gets the id of this KapuaDataMessage.  # noqa: E501
+
+
+        :return: The id of this KapuaDataMessage.  # noqa: E501
+        :rtype: str
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        """Sets the id of this KapuaDataMessage.
+
+
+        :param id: The id of this KapuaDataMessage.  # noqa: E501
+        :type: str
+        """
+
+        self._id = id
+
+    @property
     def payload(self):
         """Gets the payload of this KapuaDataMessage.  # noqa: E501
 
@@ -179,27 +200,6 @@ class KapuaDataMessage(object):
         """
 
         self._client_id = client_id
-
-    @property
-    def id(self):
-        """Gets the id of this KapuaDataMessage.  # noqa: E501
-
-
-        :return: The id of this KapuaDataMessage.  # noqa: E501
-        :rtype: str
-        """
-        return self._id
-
-    @id.setter
-    def id(self, id):
-        """Sets the id of this KapuaDataMessage.
-
-
-        :param id: The id of this KapuaDataMessage.  # noqa: E501
-        :type: str
-        """
-
-        self._id = id
 
     @property
     def device_id(self):

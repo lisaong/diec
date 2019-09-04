@@ -36,8 +36,8 @@ class EndpointInfoCreator(object):
         'schema': 'str',
         'port': 'int',
         'secure': 'bool',
-        'dns': 'str',
         'usages': 'list[EndpointUsage]',
+        'dns': 'str',
         'scope_id': 'str'
     }
 
@@ -45,19 +45,19 @@ class EndpointInfoCreator(object):
         'schema': 'schema',
         'port': 'port',
         'secure': 'secure',
-        'dns': 'dns',
         'usages': 'usages',
+        'dns': 'dns',
         'scope_id': 'scopeId'
     }
 
-    def __init__(self, schema=None, port=None, secure=None, dns=None, usages=None, scope_id=None):  # noqa: E501
+    def __init__(self, schema=None, port=None, secure=None, usages=None, dns=None, scope_id=None):  # noqa: E501
         """EndpointInfoCreator - a model defined in Swagger"""  # noqa: E501
 
         self._schema = None
         self._port = None
         self._secure = None
-        self._dns = None
         self._usages = None
+        self._dns = None
         self._scope_id = None
         self.discriminator = None
 
@@ -67,10 +67,10 @@ class EndpointInfoCreator(object):
             self.port = port
         if secure is not None:
             self.secure = secure
-        if dns is not None:
-            self.dns = dns
         if usages is not None:
             self.usages = usages
+        if dns is not None:
+            self.dns = dns
         if scope_id is not None:
             self.scope_id = scope_id
 
@@ -138,27 +138,6 @@ class EndpointInfoCreator(object):
         self._secure = secure
 
     @property
-    def dns(self):
-        """Gets the dns of this EndpointInfoCreator.  # noqa: E501
-
-
-        :return: The dns of this EndpointInfoCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._dns
-
-    @dns.setter
-    def dns(self, dns):
-        """Sets the dns of this EndpointInfoCreator.
-
-
-        :param dns: The dns of this EndpointInfoCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._dns = dns
-
-    @property
     def usages(self):
         """Gets the usages of this EndpointInfoCreator.  # noqa: E501
 
@@ -178,6 +157,27 @@ class EndpointInfoCreator(object):
         """
 
         self._usages = usages
+
+    @property
+    def dns(self):
+        """Gets the dns of this EndpointInfoCreator.  # noqa: E501
+
+
+        :return: The dns of this EndpointInfoCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._dns
+
+    @dns.setter
+    def dns(self, dns):
+        """Sets the dns of this EndpointInfoCreator.
+
+
+        :param dns: The dns of this EndpointInfoCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._dns = dns
 
     @property
     def scope_id(self):

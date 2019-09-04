@@ -36,14 +36,14 @@ class EndpointInfo(object):
         'schema': 'str',
         'port': 'int',
         'secure': 'bool',
-        'dns': 'str',
         'usages': 'list[EndpointUsage]',
+        'dns': 'str',
         'type': 'str',
-        'modified_on': 'datetime',
-        'modified_by': 'str',
         'optlock': 'int',
         'entity_attributes': 'dict(str, str)',
         'entity_properties': 'dict(str, str)',
+        'modified_on': 'datetime',
+        'modified_by': 'str',
         'scope_id': 'str',
         'id': 'str',
         'created_on': 'datetime',
@@ -54,34 +54,34 @@ class EndpointInfo(object):
         'schema': 'schema',
         'port': 'port',
         'secure': 'secure',
-        'dns': 'dns',
         'usages': 'usages',
+        'dns': 'dns',
         'type': 'type',
-        'modified_on': 'modifiedOn',
-        'modified_by': 'modifiedBy',
         'optlock': 'optlock',
         'entity_attributes': 'entityAttributes',
         'entity_properties': 'entityProperties',
+        'modified_on': 'modifiedOn',
+        'modified_by': 'modifiedBy',
         'scope_id': 'scopeId',
         'id': 'id',
         'created_on': 'createdOn',
         'created_by': 'createdBy'
     }
 
-    def __init__(self, schema=None, port=None, secure=None, dns=None, usages=None, type=None, modified_on=None, modified_by=None, optlock=None, entity_attributes=None, entity_properties=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
+    def __init__(self, schema=None, port=None, secure=None, usages=None, dns=None, type=None, optlock=None, entity_attributes=None, entity_properties=None, modified_on=None, modified_by=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
         """EndpointInfo - a model defined in Swagger"""  # noqa: E501
 
         self._schema = None
         self._port = None
         self._secure = None
-        self._dns = None
         self._usages = None
+        self._dns = None
         self._type = None
-        self._modified_on = None
-        self._modified_by = None
         self._optlock = None
         self._entity_attributes = None
         self._entity_properties = None
+        self._modified_on = None
+        self._modified_by = None
         self._scope_id = None
         self._id = None
         self._created_on = None
@@ -94,22 +94,22 @@ class EndpointInfo(object):
             self.port = port
         if secure is not None:
             self.secure = secure
-        if dns is not None:
-            self.dns = dns
         if usages is not None:
             self.usages = usages
+        if dns is not None:
+            self.dns = dns
         if type is not None:
             self.type = type
-        if modified_on is not None:
-            self.modified_on = modified_on
-        if modified_by is not None:
-            self.modified_by = modified_by
         if optlock is not None:
             self.optlock = optlock
         if entity_attributes is not None:
             self.entity_attributes = entity_attributes
         if entity_properties is not None:
             self.entity_properties = entity_properties
+        if modified_on is not None:
+            self.modified_on = modified_on
+        if modified_by is not None:
+            self.modified_by = modified_by
         if scope_id is not None:
             self.scope_id = scope_id
         if id is not None:
@@ -183,27 +183,6 @@ class EndpointInfo(object):
         self._secure = secure
 
     @property
-    def dns(self):
-        """Gets the dns of this EndpointInfo.  # noqa: E501
-
-
-        :return: The dns of this EndpointInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._dns
-
-    @dns.setter
-    def dns(self, dns):
-        """Sets the dns of this EndpointInfo.
-
-
-        :param dns: The dns of this EndpointInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._dns = dns
-
-    @property
     def usages(self):
         """Gets the usages of this EndpointInfo.  # noqa: E501
 
@@ -225,6 +204,27 @@ class EndpointInfo(object):
         self._usages = usages
 
     @property
+    def dns(self):
+        """Gets the dns of this EndpointInfo.  # noqa: E501
+
+
+        :return: The dns of this EndpointInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._dns
+
+    @dns.setter
+    def dns(self, dns):
+        """Sets the dns of this EndpointInfo.
+
+
+        :param dns: The dns of this EndpointInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._dns = dns
+
+    @property
     def type(self):
         """Gets the type of this EndpointInfo.  # noqa: E501
 
@@ -244,48 +244,6 @@ class EndpointInfo(object):
         """
 
         self._type = type
-
-    @property
-    def modified_on(self):
-        """Gets the modified_on of this EndpointInfo.  # noqa: E501
-
-
-        :return: The modified_on of this EndpointInfo.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._modified_on
-
-    @modified_on.setter
-    def modified_on(self, modified_on):
-        """Sets the modified_on of this EndpointInfo.
-
-
-        :param modified_on: The modified_on of this EndpointInfo.  # noqa: E501
-        :type: datetime
-        """
-
-        self._modified_on = modified_on
-
-    @property
-    def modified_by(self):
-        """Gets the modified_by of this EndpointInfo.  # noqa: E501
-
-
-        :return: The modified_by of this EndpointInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._modified_by
-
-    @modified_by.setter
-    def modified_by(self, modified_by):
-        """Sets the modified_by of this EndpointInfo.
-
-
-        :param modified_by: The modified_by of this EndpointInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._modified_by = modified_by
 
     @property
     def optlock(self):
@@ -349,6 +307,48 @@ class EndpointInfo(object):
         """
 
         self._entity_properties = entity_properties
+
+    @property
+    def modified_on(self):
+        """Gets the modified_on of this EndpointInfo.  # noqa: E501
+
+
+        :return: The modified_on of this EndpointInfo.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._modified_on
+
+    @modified_on.setter
+    def modified_on(self, modified_on):
+        """Sets the modified_on of this EndpointInfo.
+
+
+        :param modified_on: The modified_on of this EndpointInfo.  # noqa: E501
+        :type: datetime
+        """
+
+        self._modified_on = modified_on
+
+    @property
+    def modified_by(self):
+        """Gets the modified_by of this EndpointInfo.  # noqa: E501
+
+
+        :return: The modified_by of this EndpointInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._modified_by
+
+    @modified_by.setter
+    def modified_by(self, modified_by):
+        """Sets the modified_by of this EndpointInfo.
+
+
+        :param modified_by: The modified_by of this EndpointInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._modified_by = modified_by
 
     @property
     def scope_id(self):

@@ -32,9 +32,9 @@ class UserCreator(object):
     """
     swagger_types = {
         'display_name': 'str',
+        'expiration_date': 'datetime',
         'email': 'str',
         'phone_number': 'str',
-        'expiration_date': 'datetime',
         'user_type': 'str',
         'external_id': 'str',
         'user_status': 'str',
@@ -45,9 +45,9 @@ class UserCreator(object):
 
     attribute_map = {
         'display_name': 'displayName',
+        'expiration_date': 'expirationDate',
         'email': 'email',
         'phone_number': 'phoneNumber',
-        'expiration_date': 'expirationDate',
         'user_type': 'userType',
         'external_id': 'externalId',
         'user_status': 'userStatus',
@@ -56,13 +56,13 @@ class UserCreator(object):
         'scope_id': 'scopeId'
     }
 
-    def __init__(self, display_name=None, email=None, phone_number=None, expiration_date=None, user_type=None, external_id=None, user_status=None, name=None, entity_attributes=None, scope_id=None):  # noqa: E501
+    def __init__(self, display_name=None, expiration_date=None, email=None, phone_number=None, user_type=None, external_id=None, user_status=None, name=None, entity_attributes=None, scope_id=None):  # noqa: E501
         """UserCreator - a model defined in Swagger"""  # noqa: E501
 
         self._display_name = None
+        self._expiration_date = None
         self._email = None
         self._phone_number = None
-        self._expiration_date = None
         self._user_type = None
         self._external_id = None
         self._user_status = None
@@ -73,12 +73,12 @@ class UserCreator(object):
 
         if display_name is not None:
             self.display_name = display_name
+        if expiration_date is not None:
+            self.expiration_date = expiration_date
         if email is not None:
             self.email = email
         if phone_number is not None:
             self.phone_number = phone_number
-        if expiration_date is not None:
-            self.expiration_date = expiration_date
         if user_type is not None:
             self.user_type = user_type
         if external_id is not None:
@@ -112,6 +112,27 @@ class UserCreator(object):
         """
 
         self._display_name = display_name
+
+    @property
+    def expiration_date(self):
+        """Gets the expiration_date of this UserCreator.  # noqa: E501
+
+
+        :return: The expiration_date of this UserCreator.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._expiration_date
+
+    @expiration_date.setter
+    def expiration_date(self, expiration_date):
+        """Sets the expiration_date of this UserCreator.
+
+
+        :param expiration_date: The expiration_date of this UserCreator.  # noqa: E501
+        :type: datetime
+        """
+
+        self._expiration_date = expiration_date
 
     @property
     def email(self):
@@ -154,27 +175,6 @@ class UserCreator(object):
         """
 
         self._phone_number = phone_number
-
-    @property
-    def expiration_date(self):
-        """Gets the expiration_date of this UserCreator.  # noqa: E501
-
-
-        :return: The expiration_date of this UserCreator.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._expiration_date
-
-    @expiration_date.setter
-    def expiration_date(self, expiration_date):
-        """Sets the expiration_date of this UserCreator.
-
-
-        :param expiration_date: The expiration_date of this UserCreator.  # noqa: E501
-        :type: datetime
-        """
-
-        self._expiration_date = expiration_date
 
     @property
     def user_type(self):

@@ -31,67 +31,46 @@ class CredentialCreator(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'user_id': 'str',
         'expiration_date': 'datetime',
         'credential_type': 'str',
-        'credential_status': 'str',
+        'user_id': 'str',
         'credential_key': 'str',
+        'credential_status': 'str',
         'scope_id': 'str'
     }
 
     attribute_map = {
-        'user_id': 'userId',
         'expiration_date': 'expirationDate',
         'credential_type': 'credentialType',
-        'credential_status': 'credentialStatus',
+        'user_id': 'userId',
         'credential_key': 'credentialKey',
+        'credential_status': 'credentialStatus',
         'scope_id': 'scopeId'
     }
 
-    def __init__(self, user_id=None, expiration_date=None, credential_type=None, credential_status=None, credential_key=None, scope_id=None):  # noqa: E501
+    def __init__(self, expiration_date=None, credential_type=None, user_id=None, credential_key=None, credential_status=None, scope_id=None):  # noqa: E501
         """CredentialCreator - a model defined in Swagger"""  # noqa: E501
 
-        self._user_id = None
         self._expiration_date = None
         self._credential_type = None
-        self._credential_status = None
+        self._user_id = None
         self._credential_key = None
+        self._credential_status = None
         self._scope_id = None
         self.discriminator = None
 
-        if user_id is not None:
-            self.user_id = user_id
         if expiration_date is not None:
             self.expiration_date = expiration_date
         if credential_type is not None:
             self.credential_type = credential_type
-        if credential_status is not None:
-            self.credential_status = credential_status
+        if user_id is not None:
+            self.user_id = user_id
         if credential_key is not None:
             self.credential_key = credential_key
+        if credential_status is not None:
+            self.credential_status = credential_status
         if scope_id is not None:
             self.scope_id = scope_id
-
-    @property
-    def user_id(self):
-        """Gets the user_id of this CredentialCreator.  # noqa: E501
-
-
-        :return: The user_id of this CredentialCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._user_id
-
-    @user_id.setter
-    def user_id(self, user_id):
-        """Sets the user_id of this CredentialCreator.
-
-
-        :param user_id: The user_id of this CredentialCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._user_id = user_id
 
     @property
     def expiration_date(self):
@@ -142,6 +121,48 @@ class CredentialCreator(object):
         self._credential_type = credential_type
 
     @property
+    def user_id(self):
+        """Gets the user_id of this CredentialCreator.  # noqa: E501
+
+
+        :return: The user_id of this CredentialCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, user_id):
+        """Sets the user_id of this CredentialCreator.
+
+
+        :param user_id: The user_id of this CredentialCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._user_id = user_id
+
+    @property
+    def credential_key(self):
+        """Gets the credential_key of this CredentialCreator.  # noqa: E501
+
+
+        :return: The credential_key of this CredentialCreator.  # noqa: E501
+        :rtype: str
+        """
+        return self._credential_key
+
+    @credential_key.setter
+    def credential_key(self, credential_key):
+        """Sets the credential_key of this CredentialCreator.
+
+
+        :param credential_key: The credential_key of this CredentialCreator.  # noqa: E501
+        :type: str
+        """
+
+        self._credential_key = credential_key
+
+    @property
     def credential_status(self):
         """Gets the credential_status of this CredentialCreator.  # noqa: E501
 
@@ -167,27 +188,6 @@ class CredentialCreator(object):
             )
 
         self._credential_status = credential_status
-
-    @property
-    def credential_key(self):
-        """Gets the credential_key of this CredentialCreator.  # noqa: E501
-
-
-        :return: The credential_key of this CredentialCreator.  # noqa: E501
-        :rtype: str
-        """
-        return self._credential_key
-
-    @credential_key.setter
-    def credential_key(self, credential_key):
-        """Sets the credential_key of this CredentialCreator.
-
-
-        :param credential_key: The credential_key of this CredentialCreator.  # noqa: E501
-        :type: str
-        """
-
-        self._credential_key = credential_key
 
     @property
     def scope_id(self):

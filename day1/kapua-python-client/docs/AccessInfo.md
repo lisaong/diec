@@ -5,11 +5,11 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **user_id** | **str** |  | [optional] 
 **type** | **str** |  | [optional] 
-**modified_on** | **datetime** |  | [optional] 
-**modified_by** | **str** |  | [optional] 
 **optlock** | **int** |  | [optional] 
 **entity_attributes** | **dict(str, str)** |  | [optional] 
 **entity_properties** | **dict(str, str)** |  | [optional] 
+**modified_on** | **datetime** |  | [optional] 
+**modified_by** | **str** |  | [optional] 
 **scope_id** | **str** |  | [optional] 
 **id** | **str** |  | [optional] 
 **created_on** | **datetime** |  | [optional] 

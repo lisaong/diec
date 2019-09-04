@@ -33,16 +33,16 @@ class AccessToken(object):
     swagger_types = {
         'user_id': 'str',
         'token_id': 'str',
-        'expires_on': 'datetime',
         'refresh_token': 'str',
         'refresh_expires_on': 'datetime',
         'invalidated_on': 'datetime',
+        'expires_on': 'datetime',
         'type': 'str',
-        'modified_on': 'datetime',
-        'modified_by': 'str',
         'optlock': 'int',
         'entity_attributes': 'dict(str, str)',
         'entity_properties': 'dict(str, str)',
+        'modified_on': 'datetime',
+        'modified_by': 'str',
         'scope_id': 'str',
         'id': 'str',
         'created_on': 'datetime',
@@ -52,37 +52,37 @@ class AccessToken(object):
     attribute_map = {
         'user_id': 'userId',
         'token_id': 'tokenId',
-        'expires_on': 'expiresOn',
         'refresh_token': 'refreshToken',
         'refresh_expires_on': 'refreshExpiresOn',
         'invalidated_on': 'invalidatedOn',
+        'expires_on': 'expiresOn',
         'type': 'type',
-        'modified_on': 'modifiedOn',
-        'modified_by': 'modifiedBy',
         'optlock': 'optlock',
         'entity_attributes': 'entityAttributes',
         'entity_properties': 'entityProperties',
+        'modified_on': 'modifiedOn',
+        'modified_by': 'modifiedBy',
         'scope_id': 'scopeId',
         'id': 'id',
         'created_on': 'createdOn',
         'created_by': 'createdBy'
     }
 
-    def __init__(self, user_id=None, token_id=None, expires_on=None, refresh_token=None, refresh_expires_on=None, invalidated_on=None, type=None, modified_on=None, modified_by=None, optlock=None, entity_attributes=None, entity_properties=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
+    def __init__(self, user_id=None, token_id=None, refresh_token=None, refresh_expires_on=None, invalidated_on=None, expires_on=None, type=None, optlock=None, entity_attributes=None, entity_properties=None, modified_on=None, modified_by=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
         """AccessToken - a model defined in Swagger"""  # noqa: E501
 
         self._user_id = None
         self._token_id = None
-        self._expires_on = None
         self._refresh_token = None
         self._refresh_expires_on = None
         self._invalidated_on = None
+        self._expires_on = None
         self._type = None
-        self._modified_on = None
-        self._modified_by = None
         self._optlock = None
         self._entity_attributes = None
         self._entity_properties = None
+        self._modified_on = None
+        self._modified_by = None
         self._scope_id = None
         self._id = None
         self._created_on = None
@@ -93,26 +93,26 @@ class AccessToken(object):
             self.user_id = user_id
         if token_id is not None:
             self.token_id = token_id
-        if expires_on is not None:
-            self.expires_on = expires_on
         if refresh_token is not None:
             self.refresh_token = refresh_token
         if refresh_expires_on is not None:
             self.refresh_expires_on = refresh_expires_on
         if invalidated_on is not None:
             self.invalidated_on = invalidated_on
+        if expires_on is not None:
+            self.expires_on = expires_on
         if type is not None:
             self.type = type
-        if modified_on is not None:
-            self.modified_on = modified_on
-        if modified_by is not None:
-            self.modified_by = modified_by
         if optlock is not None:
             self.optlock = optlock
         if entity_attributes is not None:
             self.entity_attributes = entity_attributes
         if entity_properties is not None:
             self.entity_properties = entity_properties
+        if modified_on is not None:
+            self.modified_on = modified_on
+        if modified_by is not None:
+            self.modified_by = modified_by
         if scope_id is not None:
             self.scope_id = scope_id
         if id is not None:
@@ -163,27 +163,6 @@ class AccessToken(object):
         """
 
         self._token_id = token_id
-
-    @property
-    def expires_on(self):
-        """Gets the expires_on of this AccessToken.  # noqa: E501
-
-
-        :return: The expires_on of this AccessToken.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._expires_on
-
-    @expires_on.setter
-    def expires_on(self, expires_on):
-        """Sets the expires_on of this AccessToken.
-
-
-        :param expires_on: The expires_on of this AccessToken.  # noqa: E501
-        :type: datetime
-        """
-
-        self._expires_on = expires_on
 
     @property
     def refresh_token(self):
@@ -249,6 +228,27 @@ class AccessToken(object):
         self._invalidated_on = invalidated_on
 
     @property
+    def expires_on(self):
+        """Gets the expires_on of this AccessToken.  # noqa: E501
+
+
+        :return: The expires_on of this AccessToken.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._expires_on
+
+    @expires_on.setter
+    def expires_on(self, expires_on):
+        """Sets the expires_on of this AccessToken.
+
+
+        :param expires_on: The expires_on of this AccessToken.  # noqa: E501
+        :type: datetime
+        """
+
+        self._expires_on = expires_on
+
+    @property
     def type(self):
         """Gets the type of this AccessToken.  # noqa: E501
 
@@ -268,48 +268,6 @@ class AccessToken(object):
         """
 
         self._type = type
-
-    @property
-    def modified_on(self):
-        """Gets the modified_on of this AccessToken.  # noqa: E501
-
-
-        :return: The modified_on of this AccessToken.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._modified_on
-
-    @modified_on.setter
-    def modified_on(self, modified_on):
-        """Sets the modified_on of this AccessToken.
-
-
-        :param modified_on: The modified_on of this AccessToken.  # noqa: E501
-        :type: datetime
-        """
-
-        self._modified_on = modified_on
-
-    @property
-    def modified_by(self):
-        """Gets the modified_by of this AccessToken.  # noqa: E501
-
-
-        :return: The modified_by of this AccessToken.  # noqa: E501
-        :rtype: str
-        """
-        return self._modified_by
-
-    @modified_by.setter
-    def modified_by(self, modified_by):
-        """Sets the modified_by of this AccessToken.
-
-
-        :param modified_by: The modified_by of this AccessToken.  # noqa: E501
-        :type: str
-        """
-
-        self._modified_by = modified_by
 
     @property
     def optlock(self):
@@ -373,6 +331,48 @@ class AccessToken(object):
         """
 
         self._entity_properties = entity_properties
+
+    @property
+    def modified_on(self):
+        """Gets the modified_on of this AccessToken.  # noqa: E501
+
+
+        :return: The modified_on of this AccessToken.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._modified_on
+
+    @modified_on.setter
+    def modified_on(self, modified_on):
+        """Sets the modified_on of this AccessToken.
+
+
+        :param modified_on: The modified_on of this AccessToken.  # noqa: E501
+        :type: datetime
+        """
+
+        self._modified_on = modified_on
+
+    @property
+    def modified_by(self):
+        """Gets the modified_by of this AccessToken.  # noqa: E501
+
+
+        :return: The modified_by of this AccessToken.  # noqa: E501
+        :rtype: str
+        """
+        return self._modified_by
+
+    @modified_by.setter
+    def modified_by(self, modified_by):
+        """Sets the modified_by of this AccessToken.
+
+
+        :param modified_by: The modified_by of this AccessToken.  # noqa: E501
+        :type: str
+        """
+
+        self._modified_by = modified_by
 
     @property
     def scope_id(self):

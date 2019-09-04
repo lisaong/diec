@@ -33,93 +33,51 @@ class MetricInfoListResult(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'next_key': 'object',
-        'total_count': 'int',
         'items': 'list[MetricInfo]',
         'limit_exceeded': 'bool',
         'first_item': 'MetricInfo',
+        'next_key': 'object',
+        'total_count': 'int',
         'empty': 'bool',
         'size': 'int'
     }
 
     attribute_map = {
-        'next_key': 'nextKey',
-        'total_count': 'totalCount',
         'items': 'items',
         'limit_exceeded': 'limitExceeded',
         'first_item': 'firstItem',
+        'next_key': 'nextKey',
+        'total_count': 'totalCount',
         'empty': 'empty',
         'size': 'size'
     }
 
-    def __init__(self, next_key=None, total_count=None, items=None, limit_exceeded=None, first_item=None, empty=None, size=None):  # noqa: E501
+    def __init__(self, items=None, limit_exceeded=None, first_item=None, next_key=None, total_count=None, empty=None, size=None):  # noqa: E501
         """MetricInfoListResult - a model defined in Swagger"""  # noqa: E501
 
-        self._next_key = None
-        self._total_count = None
         self._items = None
         self._limit_exceeded = None
         self._first_item = None
+        self._next_key = None
+        self._total_count = None
         self._empty = None
         self._size = None
         self.discriminator = None
 
-        if next_key is not None:
-            self.next_key = next_key
-        if total_count is not None:
-            self.total_count = total_count
         if items is not None:
             self.items = items
         if limit_exceeded is not None:
             self.limit_exceeded = limit_exceeded
         if first_item is not None:
             self.first_item = first_item
+        if next_key is not None:
+            self.next_key = next_key
+        if total_count is not None:
+            self.total_count = total_count
         if empty is not None:
             self.empty = empty
         if size is not None:
             self.size = size
-
-    @property
-    def next_key(self):
-        """Gets the next_key of this MetricInfoListResult.  # noqa: E501
-
-
-        :return: The next_key of this MetricInfoListResult.  # noqa: E501
-        :rtype: object
-        """
-        return self._next_key
-
-    @next_key.setter
-    def next_key(self, next_key):
-        """Sets the next_key of this MetricInfoListResult.
-
-
-        :param next_key: The next_key of this MetricInfoListResult.  # noqa: E501
-        :type: object
-        """
-
-        self._next_key = next_key
-
-    @property
-    def total_count(self):
-        """Gets the total_count of this MetricInfoListResult.  # noqa: E501
-
-
-        :return: The total_count of this MetricInfoListResult.  # noqa: E501
-        :rtype: int
-        """
-        return self._total_count
-
-    @total_count.setter
-    def total_count(self, total_count):
-        """Sets the total_count of this MetricInfoListResult.
-
-
-        :param total_count: The total_count of this MetricInfoListResult.  # noqa: E501
-        :type: int
-        """
-
-        self._total_count = total_count
 
     @property
     def items(self):
@@ -183,6 +141,48 @@ class MetricInfoListResult(object):
         """
 
         self._first_item = first_item
+
+    @property
+    def next_key(self):
+        """Gets the next_key of this MetricInfoListResult.  # noqa: E501
+
+
+        :return: The next_key of this MetricInfoListResult.  # noqa: E501
+        :rtype: object
+        """
+        return self._next_key
+
+    @next_key.setter
+    def next_key(self, next_key):
+        """Sets the next_key of this MetricInfoListResult.
+
+
+        :param next_key: The next_key of this MetricInfoListResult.  # noqa: E501
+        :type: object
+        """
+
+        self._next_key = next_key
+
+    @property
+    def total_count(self):
+        """Gets the total_count of this MetricInfoListResult.  # noqa: E501
+
+
+        :return: The total_count of this MetricInfoListResult.  # noqa: E501
+        :rtype: int
+        """
+        return self._total_count
+
+    @total_count.setter
+    def total_count(self, total_count):
+        """Sets the total_count of this MetricInfoListResult.
+
+
+        :param total_count: The total_count of this MetricInfoListResult.  # noqa: E501
+        :type: int
+        """
+
+        self._total_count = total_count
 
     @property
     def empty(self):

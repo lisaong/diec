@@ -31,57 +31,36 @@ class KapuaTicon(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'other_attributes': 'dict(str, str)',
         'any': 'list[object]',
         'resource': 'str',
+        'other_attributes': 'dict(str, str)',
         'size': 'int'
     }
 
     attribute_map = {
-        'other_attributes': 'otherAttributes',
         'any': 'any',
         'resource': 'resource',
+        'other_attributes': 'otherAttributes',
         'size': 'size'
     }
 
-    def __init__(self, other_attributes=None, any=None, resource=None, size=None):  # noqa: E501
+    def __init__(self, any=None, resource=None, other_attributes=None, size=None):  # noqa: E501
         """KapuaTicon - a model defined in Swagger"""  # noqa: E501
 
-        self._other_attributes = None
         self._any = None
         self._resource = None
+        self._other_attributes = None
         self._size = None
         self.discriminator = None
 
-        if other_attributes is not None:
-            self.other_attributes = other_attributes
         if any is not None:
             self.any = any
         if resource is not None:
             self.resource = resource
+        if other_attributes is not None:
+            self.other_attributes = other_attributes
         if size is not None:
             self.size = size
-
-    @property
-    def other_attributes(self):
-        """Gets the other_attributes of this KapuaTicon.  # noqa: E501
-
-
-        :return: The other_attributes of this KapuaTicon.  # noqa: E501
-        :rtype: dict(str, str)
-        """
-        return self._other_attributes
-
-    @other_attributes.setter
-    def other_attributes(self, other_attributes):
-        """Sets the other_attributes of this KapuaTicon.
-
-
-        :param other_attributes: The other_attributes of this KapuaTicon.  # noqa: E501
-        :type: dict(str, str)
-        """
-
-        self._other_attributes = other_attributes
 
     @property
     def any(self):
@@ -124,6 +103,27 @@ class KapuaTicon(object):
         """
 
         self._resource = resource
+
+    @property
+    def other_attributes(self):
+        """Gets the other_attributes of this KapuaTicon.  # noqa: E501
+
+
+        :return: The other_attributes of this KapuaTicon.  # noqa: E501
+        :rtype: dict(str, str)
+        """
+        return self._other_attributes
+
+    @other_attributes.setter
+    def other_attributes(self, other_attributes):
+        """Sets the other_attributes of this KapuaTicon.
+
+
+        :param other_attributes: The other_attributes of this KapuaTicon.  # noqa: E501
+        :type: dict(str, str)
+        """
+
+        self._other_attributes = other_attributes
 
     @property
     def size(self):

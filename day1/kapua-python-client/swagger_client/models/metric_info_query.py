@@ -37,35 +37,35 @@ class MetricInfoQuery(object):
     swagger_types = {
         'limit': 'int',
         'scope_id': 'KapuaId',
+        'fetch_attributes': 'list[str]',
+        'predicate': 'StorablePredicate',
         'ask_total_count': 'bool',
         'fetch_style': 'str',
         'sort_fields': 'list[SortField]',
-        'fetch_attributes': 'list[str]',
-        'predicate': 'StorablePredicate',
         'offset': 'int'
     }
 
     attribute_map = {
         'limit': 'limit',
         'scope_id': 'scopeId',
+        'fetch_attributes': 'fetchAttributes',
+        'predicate': 'predicate',
         'ask_total_count': 'askTotalCount',
         'fetch_style': 'fetchStyle',
         'sort_fields': 'sortFields',
-        'fetch_attributes': 'fetchAttributes',
-        'predicate': 'predicate',
         'offset': 'offset'
     }
 
-    def __init__(self, limit=None, scope_id=None, ask_total_count=None, fetch_style=None, sort_fields=None, fetch_attributes=None, predicate=None, offset=None):  # noqa: E501
+    def __init__(self, limit=None, scope_id=None, fetch_attributes=None, predicate=None, ask_total_count=None, fetch_style=None, sort_fields=None, offset=None):  # noqa: E501
         """MetricInfoQuery - a model defined in Swagger"""  # noqa: E501
 
         self._limit = None
         self._scope_id = None
+        self._fetch_attributes = None
+        self._predicate = None
         self._ask_total_count = None
         self._fetch_style = None
         self._sort_fields = None
-        self._fetch_attributes = None
-        self._predicate = None
         self._offset = None
         self.discriminator = None
 
@@ -73,16 +73,16 @@ class MetricInfoQuery(object):
             self.limit = limit
         if scope_id is not None:
             self.scope_id = scope_id
+        if fetch_attributes is not None:
+            self.fetch_attributes = fetch_attributes
+        if predicate is not None:
+            self.predicate = predicate
         if ask_total_count is not None:
             self.ask_total_count = ask_total_count
         if fetch_style is not None:
             self.fetch_style = fetch_style
         if sort_fields is not None:
             self.sort_fields = sort_fields
-        if fetch_attributes is not None:
-            self.fetch_attributes = fetch_attributes
-        if predicate is not None:
-            self.predicate = predicate
         if offset is not None:
             self.offset = offset
 
@@ -127,6 +127,48 @@ class MetricInfoQuery(object):
         """
 
         self._scope_id = scope_id
+
+    @property
+    def fetch_attributes(self):
+        """Gets the fetch_attributes of this MetricInfoQuery.  # noqa: E501
+
+
+        :return: The fetch_attributes of this MetricInfoQuery.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._fetch_attributes
+
+    @fetch_attributes.setter
+    def fetch_attributes(self, fetch_attributes):
+        """Sets the fetch_attributes of this MetricInfoQuery.
+
+
+        :param fetch_attributes: The fetch_attributes of this MetricInfoQuery.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._fetch_attributes = fetch_attributes
+
+    @property
+    def predicate(self):
+        """Gets the predicate of this MetricInfoQuery.  # noqa: E501
+
+
+        :return: The predicate of this MetricInfoQuery.  # noqa: E501
+        :rtype: StorablePredicate
+        """
+        return self._predicate
+
+    @predicate.setter
+    def predicate(self, predicate):
+        """Sets the predicate of this MetricInfoQuery.
+
+
+        :param predicate: The predicate of this MetricInfoQuery.  # noqa: E501
+        :type: StorablePredicate
+        """
+
+        self._predicate = predicate
 
     @property
     def ask_total_count(self):
@@ -196,48 +238,6 @@ class MetricInfoQuery(object):
         """
 
         self._sort_fields = sort_fields
-
-    @property
-    def fetch_attributes(self):
-        """Gets the fetch_attributes of this MetricInfoQuery.  # noqa: E501
-
-
-        :return: The fetch_attributes of this MetricInfoQuery.  # noqa: E501
-        :rtype: list[str]
-        """
-        return self._fetch_attributes
-
-    @fetch_attributes.setter
-    def fetch_attributes(self, fetch_attributes):
-        """Sets the fetch_attributes of this MetricInfoQuery.
-
-
-        :param fetch_attributes: The fetch_attributes of this MetricInfoQuery.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._fetch_attributes = fetch_attributes
-
-    @property
-    def predicate(self):
-        """Gets the predicate of this MetricInfoQuery.  # noqa: E501
-
-
-        :return: The predicate of this MetricInfoQuery.  # noqa: E501
-        :rtype: StorablePredicate
-        """
-        return self._predicate
-
-    @predicate.setter
-    def predicate(self, predicate):
-        """Sets the predicate of this MetricInfoQuery.
-
-
-        :param predicate: The predicate of this MetricInfoQuery.  # noqa: E501
-        :type: StorablePredicate
-        """
-
-        self._predicate = predicate
 
     @property
     def offset(self):

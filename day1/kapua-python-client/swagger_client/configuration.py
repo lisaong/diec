@@ -40,7 +40,7 @@ class Configuration(object):
             return
 
         # Default Base url
-        self.host = "http://localhost:8081/v1"
+        self.host = "http://ec2-3-91-15-248.compute-1.amazonaws.com:8081/v1"
         # Temp file folder for downloading files
         self.temp_folder_path = None
 

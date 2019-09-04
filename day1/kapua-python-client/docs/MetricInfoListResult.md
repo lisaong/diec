@@ -3,11 +3,11 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**next_key** | **object** |  | [optional] 
-**total_count** | **int** |  | [optional] 
 **items** | [**list[MetricInfo]**](MetricInfo.md) |  | [optional] 
 **limit_exceeded** | **bool** |  | [optional] 
 **first_item** | [**MetricInfo**](MetricInfo.md) |  | [optional] 
+**next_key** | **object** |  | [optional] 
+**total_count** | **int** |  | [optional] 
 **empty** | **bool** |  | [optional] 
 **size** | **int** |  | [optional] 
 

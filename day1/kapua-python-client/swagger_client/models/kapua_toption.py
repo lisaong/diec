@@ -31,57 +31,57 @@ class KapuaToption(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'label': 'str',
-        'other_attributes': 'dict(str, str)',
         'any': 'list[object]',
+        'other_attributes': 'dict(str, str)',
+        'label': 'str',
         'value': 'str'
     }
 
     attribute_map = {
-        'label': 'label',
-        'other_attributes': 'otherAttributes',
         'any': 'any',
+        'other_attributes': 'otherAttributes',
+        'label': 'label',
         'value': 'value'
     }
 
-    def __init__(self, label=None, other_attributes=None, any=None, value=None):  # noqa: E501
+    def __init__(self, any=None, other_attributes=None, label=None, value=None):  # noqa: E501
         """KapuaToption - a model defined in Swagger"""  # noqa: E501
 
-        self._label = None
-        self._other_attributes = None
         self._any = None
+        self._other_attributes = None
+        self._label = None
         self._value = None
         self.discriminator = None
 
-        if label is not None:
-            self.label = label
-        if other_attributes is not None:
-            self.other_attributes = other_attributes
         if any is not None:
             self.any = any
+        if other_attributes is not None:
+            self.other_attributes = other_attributes
+        if label is not None:
+            self.label = label
         if value is not None:
             self.value = value
 
     @property
-    def label(self):
-        """Gets the label of this KapuaToption.  # noqa: E501
+    def any(self):
+        """Gets the any of this KapuaToption.  # noqa: E501
 
 
-        :return: The label of this KapuaToption.  # noqa: E501
-        :rtype: str
+        :return: The any of this KapuaToption.  # noqa: E501
+        :rtype: list[object]
         """
-        return self._label
+        return self._any
 
-    @label.setter
-    def label(self, label):
-        """Sets the label of this KapuaToption.
+    @any.setter
+    def any(self, any):
+        """Sets the any of this KapuaToption.
 
 
-        :param label: The label of this KapuaToption.  # noqa: E501
-        :type: str
+        :param any: The any of this KapuaToption.  # noqa: E501
+        :type: list[object]
         """
 
-        self._label = label
+        self._any = any
 
     @property
     def other_attributes(self):
@@ -105,25 +105,25 @@ class KapuaToption(object):
         self._other_attributes = other_attributes
 
     @property
-    def any(self):
-        """Gets the any of this KapuaToption.  # noqa: E501
+    def label(self):
+        """Gets the label of this KapuaToption.  # noqa: E501
 
 
-        :return: The any of this KapuaToption.  # noqa: E501
-        :rtype: list[object]
+        :return: The label of this KapuaToption.  # noqa: E501
+        :rtype: str
         """
-        return self._any
+        return self._label
 
-    @any.setter
-    def any(self, any):
-        """Sets the any of this KapuaToption.
+    @label.setter
+    def label(self, label):
+        """Sets the label of this KapuaToption.
 
 
-        :param any: The any of this KapuaToption.  # noqa: E501
-        :type: list[object]
+        :param label: The label of this KapuaToption.  # noqa: E501
+        :type: str
         """
 
-        self._any = any
+        self._label = label
 
     @property
     def value(self):

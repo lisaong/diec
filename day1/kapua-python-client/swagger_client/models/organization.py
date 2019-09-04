@@ -33,41 +33,41 @@ class Organization(object):
     swagger_types = {
         'country': 'str',
         'person_name': 'str',
+        'state_province_county': 'str',
         'email': 'str',
         'phone_number': 'str',
         'address_line1': 'str',
         'address_line2': 'str',
         'zip_post_code': 'str',
         'city': 'str',
-        'state_province_county': 'str',
         'name': 'str'
     }
 
     attribute_map = {
         'country': 'country',
         'person_name': 'personName',
+        'state_province_county': 'stateProvinceCounty',
         'email': 'email',
         'phone_number': 'phoneNumber',
         'address_line1': 'addressLine1',
         'address_line2': 'addressLine2',
         'zip_post_code': 'zipPostCode',
         'city': 'city',
-        'state_province_county': 'stateProvinceCounty',
         'name': 'name'
     }
 
-    def __init__(self, country=None, person_name=None, email=None, phone_number=None, address_line1=None, address_line2=None, zip_post_code=None, city=None, state_province_county=None, name=None):  # noqa: E501
+    def __init__(self, country=None, person_name=None, state_province_county=None, email=None, phone_number=None, address_line1=None, address_line2=None, zip_post_code=None, city=None, name=None):  # noqa: E501
         """Organization - a model defined in Swagger"""  # noqa: E501
 
         self._country = None
         self._person_name = None
+        self._state_province_county = None
         self._email = None
         self._phone_number = None
         self._address_line1 = None
         self._address_line2 = None
         self._zip_post_code = None
         self._city = None
-        self._state_province_county = None
         self._name = None
         self.discriminator = None
 
@@ -75,6 +75,8 @@ class Organization(object):
             self.country = country
         if person_name is not None:
             self.person_name = person_name
+        if state_province_county is not None:
+            self.state_province_county = state_province_county
         if email is not None:
             self.email = email
         if phone_number is not None:
@@ -87,8 +89,6 @@ class Organization(object):
             self.zip_post_code = zip_post_code
         if city is not None:
             self.city = city
-        if state_province_county is not None:
-            self.state_province_county = state_province_county
         if name is not None:
             self.name = name
 
@@ -133,6 +133,27 @@ class Organization(object):
         """
 
         self._person_name = person_name
+
+    @property
+    def state_province_county(self):
+        """Gets the state_province_county of this Organization.  # noqa: E501
+
+
+        :return: The state_province_county of this Organization.  # noqa: E501
+        :rtype: str
+        """
+        return self._state_province_county
+
+    @state_province_county.setter
+    def state_province_county(self, state_province_county):
+        """Sets the state_province_county of this Organization.
+
+
+        :param state_province_county: The state_province_county of this Organization.  # noqa: E501
+        :type: str
+        """
+
+        self._state_province_county = state_province_county
 
     @property
     def email(self):
@@ -259,27 +280,6 @@ class Organization(object):
         """
 
         self._city = city
-
-    @property
-    def state_province_county(self):
-        """Gets the state_province_county of this Organization.  # noqa: E501
-
-
-        :return: The state_province_county of this Organization.  # noqa: E501
-        :rtype: str
-        """
-        return self._state_province_county
-
-    @state_province_county.setter
-    def state_province_county(self, state_province_county):
-        """Sets the state_province_county of this Organization.
-
-
-        :param state_province_county: The state_province_county of this Organization.  # noqa: E501
-        :type: str
-        """
-
-        self._state_province_county = state_province_county
 
     @property
     def name(self):

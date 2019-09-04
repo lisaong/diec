@@ -40,47 +40,47 @@ class DatastoreMessage(object):
         'position': 'KapuaPosition',
         'scope_id': 'str',
         'timestamp': 'datetime',
+        'id': 'str',
         'payload': 'KapuaPayload',
         'client_id': 'str',
-        'id': 'str',
-        'datastore_id': 'StorableId',
         'device_id': 'KapuaId',
         'received_on': 'datetime',
         'sent_on': 'datetime',
         'captured_on': 'datetime',
-        'channel': 'KapuaDataChannel'
+        'channel': 'KapuaDataChannel',
+        'datastore_id': 'StorableId'
     }
 
     attribute_map = {
         'position': 'position',
         'scope_id': 'scopeId',
         'timestamp': 'timestamp',
+        'id': 'id',
         'payload': 'payload',
         'client_id': 'clientId',
-        'id': 'id',
-        'datastore_id': 'datastoreId',
         'device_id': 'deviceId',
         'received_on': 'receivedOn',
         'sent_on': 'sentOn',
         'captured_on': 'capturedOn',
-        'channel': 'channel'
+        'channel': 'channel',
+        'datastore_id': 'datastoreId'
     }
 
-    def __init__(self, position=None, scope_id=None, timestamp=None, payload=None, client_id=None, id=None, datastore_id=None, device_id=None, received_on=None, sent_on=None, captured_on=None, channel=None):  # noqa: E501
+    def __init__(self, position=None, scope_id=None, timestamp=None, id=None, payload=None, client_id=None, device_id=None, received_on=None, sent_on=None, captured_on=None, channel=None, datastore_id=None):  # noqa: E501
         """DatastoreMessage - a model defined in Swagger"""  # noqa: E501
 
         self._position = None
         self._scope_id = None
         self._timestamp = None
+        self._id = None
         self._payload = None
         self._client_id = None
-        self._id = None
-        self._datastore_id = None
         self._device_id = None
         self._received_on = None
         self._sent_on = None
         self._captured_on = None
         self._channel = None
+        self._datastore_id = None
         self.discriminator = None
 
         if position is not None:
@@ -89,14 +89,12 @@ class DatastoreMessage(object):
             self.scope_id = scope_id
         if timestamp is not None:
             self.timestamp = timestamp
+        if id is not None:
+            self.id = id
         if payload is not None:
             self.payload = payload
         if client_id is not None:
             self.client_id = client_id
-        if id is not None:
-            self.id = id
-        if datastore_id is not None:
-            self.datastore_id = datastore_id
         if device_id is not None:
             self.device_id = device_id
         if received_on is not None:
@@ -107,6 +105,8 @@ class DatastoreMessage(object):
             self.captured_on = captured_on
         if channel is not None:
             self.channel = channel
+        if datastore_id is not None:
+            self.datastore_id = datastore_id
 
     @property
     def position(self):
@@ -172,6 +172,27 @@ class DatastoreMessage(object):
         self._timestamp = timestamp
 
     @property
+    def id(self):
+        """Gets the id of this DatastoreMessage.  # noqa: E501
+
+
+        :return: The id of this DatastoreMessage.  # noqa: E501
+        :rtype: str
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        """Sets the id of this DatastoreMessage.
+
+
+        :param id: The id of this DatastoreMessage.  # noqa: E501
+        :type: str
+        """
+
+        self._id = id
+
+    @property
     def payload(self):
         """Gets the payload of this DatastoreMessage.  # noqa: E501
 
@@ -212,48 +233,6 @@ class DatastoreMessage(object):
         """
 
         self._client_id = client_id
-
-    @property
-    def id(self):
-        """Gets the id of this DatastoreMessage.  # noqa: E501
-
-
-        :return: The id of this DatastoreMessage.  # noqa: E501
-        :rtype: str
-        """
-        return self._id
-
-    @id.setter
-    def id(self, id):
-        """Sets the id of this DatastoreMessage.
-
-
-        :param id: The id of this DatastoreMessage.  # noqa: E501
-        :type: str
-        """
-
-        self._id = id
-
-    @property
-    def datastore_id(self):
-        """Gets the datastore_id of this DatastoreMessage.  # noqa: E501
-
-
-        :return: The datastore_id of this DatastoreMessage.  # noqa: E501
-        :rtype: StorableId
-        """
-        return self._datastore_id
-
-    @datastore_id.setter
-    def datastore_id(self, datastore_id):
-        """Sets the datastore_id of this DatastoreMessage.
-
-
-        :param datastore_id: The datastore_id of this DatastoreMessage.  # noqa: E501
-        :type: StorableId
-        """
-
-        self._datastore_id = datastore_id
 
     @property
     def device_id(self):
@@ -359,6 +338,27 @@ class DatastoreMessage(object):
         """
 
         self._channel = channel
+
+    @property
+    def datastore_id(self):
+        """Gets the datastore_id of this DatastoreMessage.  # noqa: E501
+
+
+        :return: The datastore_id of this DatastoreMessage.  # noqa: E501
+        :rtype: StorableId
+        """
+        return self._datastore_id
+
+    @datastore_id.setter
+    def datastore_id(self, datastore_id):
+        """Sets the datastore_id of this DatastoreMessage.
+
+
+        :param datastore_id: The datastore_id of this DatastoreMessage.  # noqa: E501
+        :type: StorableId
+        """
+
+        self._datastore_id = datastore_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

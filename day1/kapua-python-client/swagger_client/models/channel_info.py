@@ -34,8 +34,8 @@ class ChannelInfo(object):
     """
     swagger_types = {
         'scope_id': 'str',
-        'client_id': 'str',
         'id': 'StorableId',
+        'client_id': 'str',
         'first_message_id': 'StorableId',
         'first_message_on': 'datetime',
         'last_message_id': 'StorableId',
@@ -45,8 +45,8 @@ class ChannelInfo(object):
 
     attribute_map = {
         'scope_id': 'scopeId',
-        'client_id': 'clientId',
         'id': 'id',
+        'client_id': 'clientId',
         'first_message_id': 'firstMessageId',
         'first_message_on': 'firstMessageOn',
         'last_message_id': 'lastMessageId',
@@ -54,12 +54,12 @@ class ChannelInfo(object):
         'name': 'name'
     }
 
-    def __init__(self, scope_id=None, client_id=None, id=None, first_message_id=None, first_message_on=None, last_message_id=None, last_message_on=None, name=None):  # noqa: E501
+    def __init__(self, scope_id=None, id=None, client_id=None, first_message_id=None, first_message_on=None, last_message_id=None, last_message_on=None, name=None):  # noqa: E501
         """ChannelInfo - a model defined in Swagger"""  # noqa: E501
 
         self._scope_id = None
-        self._client_id = None
         self._id = None
+        self._client_id = None
         self._first_message_id = None
         self._first_message_on = None
         self._last_message_id = None
@@ -69,10 +69,10 @@ class ChannelInfo(object):
 
         if scope_id is not None:
             self.scope_id = scope_id
-        if client_id is not None:
-            self.client_id = client_id
         if id is not None:
             self.id = id
+        if client_id is not None:
+            self.client_id = client_id
         if first_message_id is not None:
             self.first_message_id = first_message_id
         if first_message_on is not None:
@@ -106,27 +106,6 @@ class ChannelInfo(object):
         self._scope_id = scope_id
 
     @property
-    def client_id(self):
-        """Gets the client_id of this ChannelInfo.  # noqa: E501
-
-
-        :return: The client_id of this ChannelInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._client_id
-
-    @client_id.setter
-    def client_id(self, client_id):
-        """Sets the client_id of this ChannelInfo.
-
-
-        :param client_id: The client_id of this ChannelInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._client_id = client_id
-
-    @property
     def id(self):
         """Gets the id of this ChannelInfo.  # noqa: E501
 
@@ -146,6 +125,27 @@ class ChannelInfo(object):
         """
 
         self._id = id
+
+    @property
+    def client_id(self):
+        """Gets the client_id of this ChannelInfo.  # noqa: E501
+
+
+        :return: The client_id of this ChannelInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._client_id
+
+    @client_id.setter
+    def client_id(self, client_id):
+        """Sets the client_id of this ChannelInfo.
+
+
+        :param client_id: The client_id of this ChannelInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._client_id = client_id
 
     @property
     def first_message_id(self):

@@ -36,10 +36,10 @@ class DeviceEvent(object):
         'position': 'KapuaPosition',
         'response_code': 'str',
         'resource': 'str',
+        'action': 'str',
         'device_id': 'str',
         'received_on': 'datetime',
         'sent_on': 'datetime',
-        'action': 'str',
         'event_message': 'str',
         'type': 'str',
         'scope_id': 'str',
@@ -52,10 +52,10 @@ class DeviceEvent(object):
         'position': 'position',
         'response_code': 'responseCode',
         'resource': 'resource',
+        'action': 'action',
         'device_id': 'deviceId',
         'received_on': 'receivedOn',
         'sent_on': 'sentOn',
-        'action': 'action',
         'event_message': 'eventMessage',
         'type': 'type',
         'scope_id': 'scopeId',
@@ -64,16 +64,16 @@ class DeviceEvent(object):
         'created_by': 'createdBy'
     }
 
-    def __init__(self, position=None, response_code=None, resource=None, device_id=None, received_on=None, sent_on=None, action=None, event_message=None, type=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
+    def __init__(self, position=None, response_code=None, resource=None, action=None, device_id=None, received_on=None, sent_on=None, event_message=None, type=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
         """DeviceEvent - a model defined in Swagger"""  # noqa: E501
 
         self._position = None
         self._response_code = None
         self._resource = None
+        self._action = None
         self._device_id = None
         self._received_on = None
         self._sent_on = None
-        self._action = None
         self._event_message = None
         self._type = None
         self._scope_id = None
@@ -88,14 +88,14 @@ class DeviceEvent(object):
             self.response_code = response_code
         if resource is not None:
             self.resource = resource
+        if action is not None:
+            self.action = action
         if device_id is not None:
             self.device_id = device_id
         if received_on is not None:
             self.received_on = received_on
         if sent_on is not None:
             self.sent_on = sent_on
-        if action is not None:
-            self.action = action
         if event_message is not None:
             self.event_message = event_message
         if type is not None:
@@ -179,6 +179,33 @@ class DeviceEvent(object):
         self._resource = resource
 
     @property
+    def action(self):
+        """Gets the action of this DeviceEvent.  # noqa: E501
+
+
+        :return: The action of this DeviceEvent.  # noqa: E501
+        :rtype: str
+        """
+        return self._action
+
+    @action.setter
+    def action(self, action):
+        """Sets the action of this DeviceEvent.
+
+
+        :param action: The action of this DeviceEvent.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["READ", "CREATE", "WRITE", "DELETE", "OPTIONS", "EXECUTE"]  # noqa: E501
+        if action not in allowed_values:
+            raise ValueError(
+                "Invalid value for `action` ({0}), must be one of {1}"  # noqa: E501
+                .format(action, allowed_values)
+            )
+
+        self._action = action
+
+    @property
     def device_id(self):
         """Gets the device_id of this DeviceEvent.  # noqa: E501
 
@@ -240,33 +267,6 @@ class DeviceEvent(object):
         """
 
         self._sent_on = sent_on
-
-    @property
-    def action(self):
-        """Gets the action of this DeviceEvent.  # noqa: E501
-
-
-        :return: The action of this DeviceEvent.  # noqa: E501
-        :rtype: str
-        """
-        return self._action
-
-    @action.setter
-    def action(self, action):
-        """Sets the action of this DeviceEvent.
-
-
-        :param action: The action of this DeviceEvent.  # noqa: E501
-        :type: str
-        """
-        allowed_values = ["READ", "CREATE", "WRITE", "DELETE", "OPTIONS", "EXECUTE"]  # noqa: E501
-        if action not in allowed_values:
-            raise ValueError(
-                "Invalid value for `action` ({0}), must be one of {1}"  # noqa: E501
-                .format(action, allowed_values)
-            )
-
-        self._action = action
 
     @property
     def event_message(self):

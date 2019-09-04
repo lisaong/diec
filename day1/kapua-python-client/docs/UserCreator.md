@@ -4,9 +4,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **display_name** | **str** |  | [optional] 
+**expiration_date** | **datetime** |  | [optional] 
 **email** | **str** |  | [optional] 
 **phone_number** | **str** |  | [optional] 
-**expiration_date** | **datetime** |  | [optional] 
 **user_type** | **str** |  | [optional] 
 **external_id** | **str** |  | [optional] 
 **user_status** | **str** |  | [optional] 

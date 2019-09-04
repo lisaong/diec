@@ -32,10 +32,10 @@ class DeviceCommandInput(object):
     """
     swagger_types = {
         'environment': 'list[str]',
-        'timeout': 'int',
-        'body': 'list[str]',
         'password': 'str',
+        'timeout': 'int',
         'arguments': 'list[str]',
+        'body': 'list[str]',
         'command': 'str',
         'working_dir': 'str',
         'run_asynch': 'bool',
@@ -49,10 +49,10 @@ class DeviceCommandInput(object):
 
     attribute_map = {
         'environment': 'environment',
-        'timeout': 'timeout',
-        'body': 'body',
         'password': 'password',
+        'timeout': 'timeout',
         'arguments': 'arguments',
+        'body': 'body',
         'command': 'command',
         'working_dir': 'workingDir',
         'run_asynch': 'runAsynch',
@@ -64,14 +64,14 @@ class DeviceCommandInput(object):
         'type': 'type'
     }
 
-    def __init__(self, environment=None, timeout=None, body=None, password=None, arguments=None, command=None, working_dir=None, run_asynch=None, stdin=None, scope_id=None, id=None, created_on=None, created_by=None, type=None):  # noqa: E501
+    def __init__(self, environment=None, password=None, timeout=None, arguments=None, body=None, command=None, working_dir=None, run_asynch=None, stdin=None, scope_id=None, id=None, created_on=None, created_by=None, type=None):  # noqa: E501
         """DeviceCommandInput - a model defined in Swagger"""  # noqa: E501
 
         self._environment = None
-        self._timeout = None
-        self._body = None
         self._password = None
+        self._timeout = None
         self._arguments = None
+        self._body = None
         self._command = None
         self._working_dir = None
         self._run_asynch = None
@@ -85,14 +85,14 @@ class DeviceCommandInput(object):
 
         if environment is not None:
             self.environment = environment
-        if timeout is not None:
-            self.timeout = timeout
-        if body is not None:
-            self.body = body
         if password is not None:
             self.password = password
+        if timeout is not None:
+            self.timeout = timeout
         if arguments is not None:
             self.arguments = arguments
+        if body is not None:
+            self.body = body
         if command is not None:
             self.command = command
         if working_dir is not None:
@@ -134,48 +134,6 @@ class DeviceCommandInput(object):
         self._environment = environment
 
     @property
-    def timeout(self):
-        """Gets the timeout of this DeviceCommandInput.  # noqa: E501
-
-
-        :return: The timeout of this DeviceCommandInput.  # noqa: E501
-        :rtype: int
-        """
-        return self._timeout
-
-    @timeout.setter
-    def timeout(self, timeout):
-        """Sets the timeout of this DeviceCommandInput.
-
-
-        :param timeout: The timeout of this DeviceCommandInput.  # noqa: E501
-        :type: int
-        """
-
-        self._timeout = timeout
-
-    @property
-    def body(self):
-        """Gets the body of this DeviceCommandInput.  # noqa: E501
-
-
-        :return: The body of this DeviceCommandInput.  # noqa: E501
-        :rtype: list[str]
-        """
-        return self._body
-
-    @body.setter
-    def body(self, body):
-        """Sets the body of this DeviceCommandInput.
-
-
-        :param body: The body of this DeviceCommandInput.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._body = body
-
-    @property
     def password(self):
         """Gets the password of this DeviceCommandInput.  # noqa: E501
 
@@ -197,6 +155,27 @@ class DeviceCommandInput(object):
         self._password = password
 
     @property
+    def timeout(self):
+        """Gets the timeout of this DeviceCommandInput.  # noqa: E501
+
+
+        :return: The timeout of this DeviceCommandInput.  # noqa: E501
+        :rtype: int
+        """
+        return self._timeout
+
+    @timeout.setter
+    def timeout(self, timeout):
+        """Sets the timeout of this DeviceCommandInput.
+
+
+        :param timeout: The timeout of this DeviceCommandInput.  # noqa: E501
+        :type: int
+        """
+
+        self._timeout = timeout
+
+    @property
     def arguments(self):
         """Gets the arguments of this DeviceCommandInput.  # noqa: E501
 
@@ -216,6 +195,27 @@ class DeviceCommandInput(object):
         """
 
         self._arguments = arguments
+
+    @property
+    def body(self):
+        """Gets the body of this DeviceCommandInput.  # noqa: E501
+
+
+        :return: The body of this DeviceCommandInput.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._body
+
+    @body.setter
+    def body(self, body):
+        """Sets the body of this DeviceCommandInput.
+
+
+        :param body: The body of this DeviceCommandInput.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._body = body
 
     @property
     def command(self):

@@ -5,9 +5,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **position** | [**KapuaPosition**](KapuaPosition.md) |  | [optional] 
 **scope_id** | **str** |  | [optional] 
+**id** | **str** |  | [optional] 
 **payload** | [**GenericRequestPayload**](GenericRequestPayload.md) |  | [optional] 
 **client_id** | **str** |  | [optional] 
-**id** | **str** |  | [optional] 
 **device_id** | **str** |  | [optional] 
 **received_on** | **datetime** |  | [optional] 
 **sent_on** | **datetime** |  | [optional] 

@@ -32,19 +32,19 @@ class User(object):
     """
     swagger_types = {
         'display_name': 'str',
-        'email': 'str',
-        'phone_number': 'str',
         'status': 'str',
         'expiration_date': 'datetime',
+        'email': 'str',
+        'phone_number': 'str',
         'user_type': 'str',
         'external_id': 'str',
         'type': 'str',
         'name': 'str',
-        'modified_on': 'datetime',
-        'modified_by': 'str',
         'optlock': 'int',
         'entity_attributes': 'dict(str, str)',
         'entity_properties': 'dict(str, str)',
+        'modified_on': 'datetime',
+        'modified_by': 'str',
         'scope_id': 'str',
         'id': 'str',
         'created_on': 'datetime',
@@ -53,42 +53,42 @@ class User(object):
 
     attribute_map = {
         'display_name': 'displayName',
-        'email': 'email',
-        'phone_number': 'phoneNumber',
         'status': 'status',
         'expiration_date': 'expirationDate',
+        'email': 'email',
+        'phone_number': 'phoneNumber',
         'user_type': 'userType',
         'external_id': 'externalId',
         'type': 'type',
         'name': 'name',
-        'modified_on': 'modifiedOn',
-        'modified_by': 'modifiedBy',
         'optlock': 'optlock',
         'entity_attributes': 'entityAttributes',
         'entity_properties': 'entityProperties',
+        'modified_on': 'modifiedOn',
+        'modified_by': 'modifiedBy',
         'scope_id': 'scopeId',
         'id': 'id',
         'created_on': 'createdOn',
         'created_by': 'createdBy'
     }
 
-    def __init__(self, display_name=None, email=None, phone_number=None, status=None, expiration_date=None, user_type=None, external_id=None, type=None, name=None, modified_on=None, modified_by=None, optlock=None, entity_attributes=None, entity_properties=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
+    def __init__(self, display_name=None, status=None, expiration_date=None, email=None, phone_number=None, user_type=None, external_id=None, type=None, name=None, optlock=None, entity_attributes=None, entity_properties=None, modified_on=None, modified_by=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
         """User - a model defined in Swagger"""  # noqa: E501
 
         self._display_name = None
-        self._email = None
-        self._phone_number = None
         self._status = None
         self._expiration_date = None
+        self._email = None
+        self._phone_number = None
         self._user_type = None
         self._external_id = None
         self._type = None
         self._name = None
-        self._modified_on = None
-        self._modified_by = None
         self._optlock = None
         self._entity_attributes = None
         self._entity_properties = None
+        self._modified_on = None
+        self._modified_by = None
         self._scope_id = None
         self._id = None
         self._created_on = None
@@ -97,14 +97,14 @@ class User(object):
 
         if display_name is not None:
             self.display_name = display_name
-        if email is not None:
-            self.email = email
-        if phone_number is not None:
-            self.phone_number = phone_number
         if status is not None:
             self.status = status
         if expiration_date is not None:
             self.expiration_date = expiration_date
+        if email is not None:
+            self.email = email
+        if phone_number is not None:
+            self.phone_number = phone_number
         if user_type is not None:
             self.user_type = user_type
         if external_id is not None:
@@ -113,16 +113,16 @@ class User(object):
             self.type = type
         if name is not None:
             self.name = name
-        if modified_on is not None:
-            self.modified_on = modified_on
-        if modified_by is not None:
-            self.modified_by = modified_by
         if optlock is not None:
             self.optlock = optlock
         if entity_attributes is not None:
             self.entity_attributes = entity_attributes
         if entity_properties is not None:
             self.entity_properties = entity_properties
+        if modified_on is not None:
+            self.modified_on = modified_on
+        if modified_by is not None:
+            self.modified_by = modified_by
         if scope_id is not None:
             self.scope_id = scope_id
         if id is not None:
@@ -152,48 +152,6 @@ class User(object):
         """
 
         self._display_name = display_name
-
-    @property
-    def email(self):
-        """Gets the email of this User.  # noqa: E501
-
-
-        :return: The email of this User.  # noqa: E501
-        :rtype: str
-        """
-        return self._email
-
-    @email.setter
-    def email(self, email):
-        """Sets the email of this User.
-
-
-        :param email: The email of this User.  # noqa: E501
-        :type: str
-        """
-
-        self._email = email
-
-    @property
-    def phone_number(self):
-        """Gets the phone_number of this User.  # noqa: E501
-
-
-        :return: The phone_number of this User.  # noqa: E501
-        :rtype: str
-        """
-        return self._phone_number
-
-    @phone_number.setter
-    def phone_number(self, phone_number):
-        """Sets the phone_number of this User.
-
-
-        :param phone_number: The phone_number of this User.  # noqa: E501
-        :type: str
-        """
-
-        self._phone_number = phone_number
 
     @property
     def status(self):
@@ -242,6 +200,48 @@ class User(object):
         """
 
         self._expiration_date = expiration_date
+
+    @property
+    def email(self):
+        """Gets the email of this User.  # noqa: E501
+
+
+        :return: The email of this User.  # noqa: E501
+        :rtype: str
+        """
+        return self._email
+
+    @email.setter
+    def email(self, email):
+        """Sets the email of this User.
+
+
+        :param email: The email of this User.  # noqa: E501
+        :type: str
+        """
+
+        self._email = email
+
+    @property
+    def phone_number(self):
+        """Gets the phone_number of this User.  # noqa: E501
+
+
+        :return: The phone_number of this User.  # noqa: E501
+        :rtype: str
+        """
+        return self._phone_number
+
+    @phone_number.setter
+    def phone_number(self, phone_number):
+        """Sets the phone_number of this User.
+
+
+        :param phone_number: The phone_number of this User.  # noqa: E501
+        :type: str
+        """
+
+        self._phone_number = phone_number
 
     @property
     def user_type(self):
@@ -334,48 +334,6 @@ class User(object):
         self._name = name
 
     @property
-    def modified_on(self):
-        """Gets the modified_on of this User.  # noqa: E501
-
-
-        :return: The modified_on of this User.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._modified_on
-
-    @modified_on.setter
-    def modified_on(self, modified_on):
-        """Sets the modified_on of this User.
-
-
-        :param modified_on: The modified_on of this User.  # noqa: E501
-        :type: datetime
-        """
-
-        self._modified_on = modified_on
-
-    @property
-    def modified_by(self):
-        """Gets the modified_by of this User.  # noqa: E501
-
-
-        :return: The modified_by of this User.  # noqa: E501
-        :rtype: str
-        """
-        return self._modified_by
-
-    @modified_by.setter
-    def modified_by(self, modified_by):
-        """Sets the modified_by of this User.
-
-
-        :param modified_by: The modified_by of this User.  # noqa: E501
-        :type: str
-        """
-
-        self._modified_by = modified_by
-
-    @property
     def optlock(self):
         """Gets the optlock of this User.  # noqa: E501
 
@@ -437,6 +395,48 @@ class User(object):
         """
 
         self._entity_properties = entity_properties
+
+    @property
+    def modified_on(self):
+        """Gets the modified_on of this User.  # noqa: E501
+
+
+        :return: The modified_on of this User.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._modified_on
+
+    @modified_on.setter
+    def modified_on(self, modified_on):
+        """Sets the modified_on of this User.
+
+
+        :param modified_on: The modified_on of this User.  # noqa: E501
+        :type: datetime
+        """
+
+        self._modified_on = modified_on
+
+    @property
+    def modified_by(self):
+        """Gets the modified_by of this User.  # noqa: E501
+
+
+        :return: The modified_by of this User.  # noqa: E501
+        :rtype: str
+        """
+        return self._modified_by
+
+    @modified_by.setter
+    def modified_by(self, modified_by):
+        """Sets the modified_by of this User.
+
+
+        :param modified_by: The modified_by of this User.  # noqa: E501
+        :type: str
+        """
+
+        self._modified_by = modified_by
 
     @property
     def scope_id(self):

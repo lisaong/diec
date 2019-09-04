@@ -33,29 +33,29 @@ class DevicePackageDownloadRequest(object):
     swagger_types = {
         'version': 'str',
         'uri': 'str',
-        'install': 'bool',
         'reboot': 'bool',
         'reboot_delay': 'int',
+        'install': 'bool',
         'name': 'str'
     }
 
     attribute_map = {
         'version': 'version',
         'uri': 'uri',
-        'install': 'install',
         'reboot': 'reboot',
         'reboot_delay': 'rebootDelay',
+        'install': 'install',
         'name': 'name'
     }
 
-    def __init__(self, version=None, uri=None, install=None, reboot=None, reboot_delay=None, name=None):  # noqa: E501
+    def __init__(self, version=None, uri=None, reboot=None, reboot_delay=None, install=None, name=None):  # noqa: E501
         """DevicePackageDownloadRequest - a model defined in Swagger"""  # noqa: E501
 
         self._version = None
         self._uri = None
-        self._install = None
         self._reboot = None
         self._reboot_delay = None
+        self._install = None
         self._name = None
         self.discriminator = None
 
@@ -63,12 +63,12 @@ class DevicePackageDownloadRequest(object):
             self.version = version
         if uri is not None:
             self.uri = uri
-        if install is not None:
-            self.install = install
         if reboot is not None:
             self.reboot = reboot
         if reboot_delay is not None:
             self.reboot_delay = reboot_delay
+        if install is not None:
+            self.install = install
         if name is not None:
             self.name = name
 
@@ -115,27 +115,6 @@ class DevicePackageDownloadRequest(object):
         self._uri = uri
 
     @property
-    def install(self):
-        """Gets the install of this DevicePackageDownloadRequest.  # noqa: E501
-
-
-        :return: The install of this DevicePackageDownloadRequest.  # noqa: E501
-        :rtype: bool
-        """
-        return self._install
-
-    @install.setter
-    def install(self, install):
-        """Sets the install of this DevicePackageDownloadRequest.
-
-
-        :param install: The install of this DevicePackageDownloadRequest.  # noqa: E501
-        :type: bool
-        """
-
-        self._install = install
-
-    @property
     def reboot(self):
         """Gets the reboot of this DevicePackageDownloadRequest.  # noqa: E501
 
@@ -176,6 +155,27 @@ class DevicePackageDownloadRequest(object):
         """
 
         self._reboot_delay = reboot_delay
+
+    @property
+    def install(self):
+        """Gets the install of this DevicePackageDownloadRequest.  # noqa: E501
+
+
+        :return: The install of this DevicePackageDownloadRequest.  # noqa: E501
+        :rtype: bool
+        """
+        return self._install
+
+    @install.setter
+    def install(self, install):
+        """Sets the install of this DevicePackageDownloadRequest.
+
+
+        :param install: The install of this DevicePackageDownloadRequest.  # noqa: E501
+        :type: bool
+        """
+
+        self._install = install
 
     @property
     def name(self):

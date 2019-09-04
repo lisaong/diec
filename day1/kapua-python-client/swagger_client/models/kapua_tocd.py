@@ -35,47 +35,47 @@ class KapuaTocd(object):
     """
     swagger_types = {
         'icon': 'list[KapuaTicon]',
+        'any': 'list[object]',
+        'other_attributes': 'dict(str, str)',
         'description': 'str',
         'id': 'str',
         'ad': 'list[KapuaTad]',
-        'other_attributes': 'dict(str, str)',
-        'any': 'list[object]',
         'name': 'str'
     }
 
     attribute_map = {
         'icon': 'icon',
+        'any': 'any',
+        'other_attributes': 'otherAttributes',
         'description': 'description',
         'id': 'id',
         'ad': 'ad',
-        'other_attributes': 'otherAttributes',
-        'any': 'any',
         'name': 'name'
     }
 
-    def __init__(self, icon=None, description=None, id=None, ad=None, other_attributes=None, any=None, name=None):  # noqa: E501
+    def __init__(self, icon=None, any=None, other_attributes=None, description=None, id=None, ad=None, name=None):  # noqa: E501
         """KapuaTocd - a model defined in Swagger"""  # noqa: E501
 
         self._icon = None
+        self._any = None
+        self._other_attributes = None
         self._description = None
         self._id = None
         self._ad = None
-        self._other_attributes = None
-        self._any = None
         self._name = None
         self.discriminator = None
 
         if icon is not None:
             self.icon = icon
+        if any is not None:
+            self.any = any
+        if other_attributes is not None:
+            self.other_attributes = other_attributes
         if description is not None:
             self.description = description
         if id is not None:
             self.id = id
         self.ad = ad
-        if other_attributes is not None:
-            self.other_attributes = other_attributes
-        if any is not None:
-            self.any = any
         if name is not None:
             self.name = name
 
@@ -99,6 +99,48 @@ class KapuaTocd(object):
         """
 
         self._icon = icon
+
+    @property
+    def any(self):
+        """Gets the any of this KapuaTocd.  # noqa: E501
+
+
+        :return: The any of this KapuaTocd.  # noqa: E501
+        :rtype: list[object]
+        """
+        return self._any
+
+    @any.setter
+    def any(self, any):
+        """Sets the any of this KapuaTocd.
+
+
+        :param any: The any of this KapuaTocd.  # noqa: E501
+        :type: list[object]
+        """
+
+        self._any = any
+
+    @property
+    def other_attributes(self):
+        """Gets the other_attributes of this KapuaTocd.  # noqa: E501
+
+
+        :return: The other_attributes of this KapuaTocd.  # noqa: E501
+        :rtype: dict(str, str)
+        """
+        return self._other_attributes
+
+    @other_attributes.setter
+    def other_attributes(self, other_attributes):
+        """Sets the other_attributes of this KapuaTocd.
+
+
+        :param other_attributes: The other_attributes of this KapuaTocd.  # noqa: E501
+        :type: dict(str, str)
+        """
+
+        self._other_attributes = other_attributes
 
     @property
     def description(self):
@@ -164,48 +206,6 @@ class KapuaTocd(object):
             raise ValueError("Invalid value for `ad`, must not be `None`")  # noqa: E501
 
         self._ad = ad
-
-    @property
-    def other_attributes(self):
-        """Gets the other_attributes of this KapuaTocd.  # noqa: E501
-
-
-        :return: The other_attributes of this KapuaTocd.  # noqa: E501
-        :rtype: dict(str, str)
-        """
-        return self._other_attributes
-
-    @other_attributes.setter
-    def other_attributes(self, other_attributes):
-        """Sets the other_attributes of this KapuaTocd.
-
-
-        :param other_attributes: The other_attributes of this KapuaTocd.  # noqa: E501
-        :type: dict(str, str)
-        """
-
-        self._other_attributes = other_attributes
-
-    @property
-    def any(self):
-        """Gets the any of this KapuaTocd.  # noqa: E501
-
-
-        :return: The any of this KapuaTocd.  # noqa: E501
-        :rtype: list[object]
-        """
-        return self._any
-
-    @any.setter
-    def any(self, any):
-        """Sets the any of this KapuaTocd.
-
-
-        :param any: The any of this KapuaTocd.  # noqa: E501
-        :type: list[object]
-        """
-
-        self._any = any
 
     @property
     def name(self):

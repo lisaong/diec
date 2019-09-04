@@ -31,21 +31,21 @@ class DeviceConnection(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'client_id': 'str',
         'protocol': 'str',
         'status': 'str',
         'user_id': 'str',
+        'client_id': 'str',
         'server_ip': 'str',
         'allow_user_change': 'bool',
         'user_coupling_mode': 'str',
         'reserved_user_id': 'str',
         'client_ip': 'str',
         'type': 'str',
-        'modified_on': 'datetime',
-        'modified_by': 'str',
         'optlock': 'int',
         'entity_attributes': 'dict(str, str)',
         'entity_properties': 'dict(str, str)',
+        'modified_on': 'datetime',
+        'modified_by': 'str',
         'scope_id': 'str',
         'id': 'str',
         'created_on': 'datetime',
@@ -53,59 +53,59 @@ class DeviceConnection(object):
     }
 
     attribute_map = {
-        'client_id': 'clientId',
         'protocol': 'protocol',
         'status': 'status',
         'user_id': 'userId',
+        'client_id': 'clientId',
         'server_ip': 'serverIp',
         'allow_user_change': 'allowUserChange',
         'user_coupling_mode': 'userCouplingMode',
         'reserved_user_id': 'reservedUserId',
         'client_ip': 'clientIp',
         'type': 'type',
-        'modified_on': 'modifiedOn',
-        'modified_by': 'modifiedBy',
         'optlock': 'optlock',
         'entity_attributes': 'entityAttributes',
         'entity_properties': 'entityProperties',
+        'modified_on': 'modifiedOn',
+        'modified_by': 'modifiedBy',
         'scope_id': 'scopeId',
         'id': 'id',
         'created_on': 'createdOn',
         'created_by': 'createdBy'
     }
 
-    def __init__(self, client_id=None, protocol=None, status=None, user_id=None, server_ip=None, allow_user_change=None, user_coupling_mode=None, reserved_user_id=None, client_ip=None, type=None, modified_on=None, modified_by=None, optlock=None, entity_attributes=None, entity_properties=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
+    def __init__(self, protocol=None, status=None, user_id=None, client_id=None, server_ip=None, allow_user_change=None, user_coupling_mode=None, reserved_user_id=None, client_ip=None, type=None, optlock=None, entity_attributes=None, entity_properties=None, modified_on=None, modified_by=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
         """DeviceConnection - a model defined in Swagger"""  # noqa: E501
 
-        self._client_id = None
         self._protocol = None
         self._status = None
         self._user_id = None
+        self._client_id = None
         self._server_ip = None
         self._allow_user_change = None
         self._user_coupling_mode = None
         self._reserved_user_id = None
         self._client_ip = None
         self._type = None
-        self._modified_on = None
-        self._modified_by = None
         self._optlock = None
         self._entity_attributes = None
         self._entity_properties = None
+        self._modified_on = None
+        self._modified_by = None
         self._scope_id = None
         self._id = None
         self._created_on = None
         self._created_by = None
         self.discriminator = None
 
-        if client_id is not None:
-            self.client_id = client_id
         if protocol is not None:
             self.protocol = protocol
         if status is not None:
             self.status = status
         if user_id is not None:
             self.user_id = user_id
+        if client_id is not None:
+            self.client_id = client_id
         if server_ip is not None:
             self.server_ip = server_ip
         if allow_user_change is not None:
@@ -118,16 +118,16 @@ class DeviceConnection(object):
             self.client_ip = client_ip
         if type is not None:
             self.type = type
-        if modified_on is not None:
-            self.modified_on = modified_on
-        if modified_by is not None:
-            self.modified_by = modified_by
         if optlock is not None:
             self.optlock = optlock
         if entity_attributes is not None:
             self.entity_attributes = entity_attributes
         if entity_properties is not None:
             self.entity_properties = entity_properties
+        if modified_on is not None:
+            self.modified_on = modified_on
+        if modified_by is not None:
+            self.modified_by = modified_by
         if scope_id is not None:
             self.scope_id = scope_id
         if id is not None:
@@ -136,27 +136,6 @@ class DeviceConnection(object):
             self.created_on = created_on
         if created_by is not None:
             self.created_by = created_by
-
-    @property
-    def client_id(self):
-        """Gets the client_id of this DeviceConnection.  # noqa: E501
-
-
-        :return: The client_id of this DeviceConnection.  # noqa: E501
-        :rtype: str
-        """
-        return self._client_id
-
-    @client_id.setter
-    def client_id(self, client_id):
-        """Sets the client_id of this DeviceConnection.
-
-
-        :param client_id: The client_id of this DeviceConnection.  # noqa: E501
-        :type: str
-        """
-
-        self._client_id = client_id
 
     @property
     def protocol(self):
@@ -226,6 +205,27 @@ class DeviceConnection(object):
         """
 
         self._user_id = user_id
+
+    @property
+    def client_id(self):
+        """Gets the client_id of this DeviceConnection.  # noqa: E501
+
+
+        :return: The client_id of this DeviceConnection.  # noqa: E501
+        :rtype: str
+        """
+        return self._client_id
+
+    @client_id.setter
+    def client_id(self, client_id):
+        """Sets the client_id of this DeviceConnection.
+
+
+        :param client_id: The client_id of this DeviceConnection.  # noqa: E501
+        :type: str
+        """
+
+        self._client_id = client_id
 
     @property
     def server_ip(self):
@@ -360,48 +360,6 @@ class DeviceConnection(object):
         self._type = type
 
     @property
-    def modified_on(self):
-        """Gets the modified_on of this DeviceConnection.  # noqa: E501
-
-
-        :return: The modified_on of this DeviceConnection.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._modified_on
-
-    @modified_on.setter
-    def modified_on(self, modified_on):
-        """Sets the modified_on of this DeviceConnection.
-
-
-        :param modified_on: The modified_on of this DeviceConnection.  # noqa: E501
-        :type: datetime
-        """
-
-        self._modified_on = modified_on
-
-    @property
-    def modified_by(self):
-        """Gets the modified_by of this DeviceConnection.  # noqa: E501
-
-
-        :return: The modified_by of this DeviceConnection.  # noqa: E501
-        :rtype: str
-        """
-        return self._modified_by
-
-    @modified_by.setter
-    def modified_by(self, modified_by):
-        """Sets the modified_by of this DeviceConnection.
-
-
-        :param modified_by: The modified_by of this DeviceConnection.  # noqa: E501
-        :type: str
-        """
-
-        self._modified_by = modified_by
-
-    @property
     def optlock(self):
         """Gets the optlock of this DeviceConnection.  # noqa: E501
 
@@ -463,6 +421,48 @@ class DeviceConnection(object):
         """
 
         self._entity_properties = entity_properties
+
+    @property
+    def modified_on(self):
+        """Gets the modified_on of this DeviceConnection.  # noqa: E501
+
+
+        :return: The modified_on of this DeviceConnection.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._modified_on
+
+    @modified_on.setter
+    def modified_on(self, modified_on):
+        """Sets the modified_on of this DeviceConnection.
+
+
+        :param modified_on: The modified_on of this DeviceConnection.  # noqa: E501
+        :type: datetime
+        """
+
+        self._modified_on = modified_on
+
+    @property
+    def modified_by(self):
+        """Gets the modified_by of this DeviceConnection.  # noqa: E501
+
+
+        :return: The modified_by of this DeviceConnection.  # noqa: E501
+        :rtype: str
+        """
+        return self._modified_by
+
+    @modified_by.setter
+    def modified_by(self, modified_by):
+        """Sets the modified_by of this DeviceConnection.
+
+
+        :param modified_by: The modified_by of this DeviceConnection.  # noqa: E501
+        :type: str
+        """
+
+        self._modified_by = modified_by
 
     @property
     def scope_id(self):

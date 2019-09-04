@@ -4,10 +4,10 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **environment** | **list[str]** |  | [optional] 
-**timeout** | **int** |  | [optional] 
-**body** | **list[str]** |  | [optional] 
 **password** | **str** |  | [optional] 
+**timeout** | **int** |  | [optional] 
 **arguments** | **list[str]** |  | [optional] 
+**body** | **list[str]** |  | [optional] 
 **command** | **str** |  | [optional] 
 **working_dir** | **str** |  | [optional] 
 **run_asynch** | **bool** |  | [optional] 

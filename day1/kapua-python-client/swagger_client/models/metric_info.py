@@ -34,48 +34,50 @@ class MetricInfo(object):
     """
     swagger_types = {
         'scope_id': 'str',
-        'client_id': 'str',
         'id': 'StorableId',
+        'client_id': 'str',
+        'channel': 'str',
         'first_message_id': 'StorableId',
         'first_message_on': 'datetime',
         'last_message_id': 'StorableId',
         'last_message_on': 'datetime',
-        'channel': 'str',
         'name': 'str'
     }
 
     attribute_map = {
         'scope_id': 'scopeId',
-        'client_id': 'clientId',
         'id': 'id',
+        'client_id': 'clientId',
+        'channel': 'channel',
         'first_message_id': 'firstMessageId',
         'first_message_on': 'firstMessageOn',
         'last_message_id': 'lastMessageId',
         'last_message_on': 'lastMessageOn',
-        'channel': 'channel',
         'name': 'name'
     }
 
-    def __init__(self, scope_id=None, client_id=None, id=None, first_message_id=None, first_message_on=None, last_message_id=None, last_message_on=None, channel=None, name=None):  # noqa: E501
+    def __init__(self, scope_id=None, id=None, client_id=None, channel=None, first_message_id=None, first_message_on=None, last_message_id=None, last_message_on=None, name=None):  # noqa: E501
         """MetricInfo - a model defined in Swagger"""  # noqa: E501
 
         self._scope_id = None
-        self._client_id = None
         self._id = None
+        self._client_id = None
+        self._channel = None
         self._first_message_id = None
         self._first_message_on = None
         self._last_message_id = None
         self._last_message_on = None
-        self._channel = None
         self._name = None
         self.discriminator = None
 
         if scope_id is not None:
             self.scope_id = scope_id
-        if client_id is not None:
-            self.client_id = client_id
         if id is not None:
             self.id = id
+        if client_id is not None:
+            self.client_id = client_id
+        if channel is not None:
+            self.channel = channel
         if first_message_id is not None:
             self.first_message_id = first_message_id
         if first_message_on is not None:
@@ -84,8 +86,6 @@ class MetricInfo(object):
             self.last_message_id = last_message_id
         if last_message_on is not None:
             self.last_message_on = last_message_on
-        if channel is not None:
-            self.channel = channel
         if name is not None:
             self.name = name
 
@@ -111,6 +111,27 @@ class MetricInfo(object):
         self._scope_id = scope_id
 
     @property
+    def id(self):
+        """Gets the id of this MetricInfo.  # noqa: E501
+
+
+        :return: The id of this MetricInfo.  # noqa: E501
+        :rtype: StorableId
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        """Sets the id of this MetricInfo.
+
+
+        :param id: The id of this MetricInfo.  # noqa: E501
+        :type: StorableId
+        """
+
+        self._id = id
+
+    @property
     def client_id(self):
         """Gets the client_id of this MetricInfo.  # noqa: E501
 
@@ -132,25 +153,25 @@ class MetricInfo(object):
         self._client_id = client_id
 
     @property
-    def id(self):
-        """Gets the id of this MetricInfo.  # noqa: E501
+    def channel(self):
+        """Gets the channel of this MetricInfo.  # noqa: E501
 
 
-        :return: The id of this MetricInfo.  # noqa: E501
-        :rtype: StorableId
+        :return: The channel of this MetricInfo.  # noqa: E501
+        :rtype: str
         """
-        return self._id
+        return self._channel
 
-    @id.setter
-    def id(self, id):
-        """Sets the id of this MetricInfo.
+    @channel.setter
+    def channel(self, channel):
+        """Sets the channel of this MetricInfo.
 
 
-        :param id: The id of this MetricInfo.  # noqa: E501
-        :type: StorableId
+        :param channel: The channel of this MetricInfo.  # noqa: E501
+        :type: str
         """
 
-        self._id = id
+        self._channel = channel
 
     @property
     def first_message_id(self):
@@ -235,27 +256,6 @@ class MetricInfo(object):
         """
 
         self._last_message_on = last_message_on
-
-    @property
-    def channel(self):
-        """Gets the channel of this MetricInfo.  # noqa: E501
-
-
-        :return: The channel of this MetricInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._channel
-
-    @channel.setter
-    def channel(self, channel):
-        """Sets the channel of this MetricInfo.
-
-
-        :param channel: The channel of this MetricInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._channel = channel
 
     @property
     def name(self):

@@ -31,47 +31,26 @@ class KapuaPayload(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'body': 'str',
-        'metrics': 'dict(str, object)'
+        'metrics': 'dict(str, object)',
+        'body': 'str'
     }
 
     attribute_map = {
-        'body': 'body',
-        'metrics': 'metrics'
+        'metrics': 'metrics',
+        'body': 'body'
     }
 
-    def __init__(self, body=None, metrics=None):  # noqa: E501
+    def __init__(self, metrics=None, body=None):  # noqa: E501
         """KapuaPayload - a model defined in Swagger"""  # noqa: E501
 
-        self._body = None
         self._metrics = None
+        self._body = None
         self.discriminator = None
 
-        if body is not None:
-            self.body = body
         if metrics is not None:
             self.metrics = metrics
-
-    @property
-    def body(self):
-        """Gets the body of this KapuaPayload.  # noqa: E501
-
-
-        :return: The body of this KapuaPayload.  # noqa: E501
-        :rtype: str
-        """
-        return self._body
-
-    @body.setter
-    def body(self, body):
-        """Sets the body of this KapuaPayload.
-
-
-        :param body: The body of this KapuaPayload.  # noqa: E501
-        :type: str
-        """
-
-        self._body = body
+        if body is not None:
+            self.body = body
 
     @property
     def metrics(self):
@@ -93,6 +72,27 @@ class KapuaPayload(object):
         """
 
         self._metrics = metrics
+
+    @property
+    def body(self):
+        """Gets the body of this KapuaPayload.  # noqa: E501
+
+
+        :return: The body of this KapuaPayload.  # noqa: E501
+        :rtype: str
+        """
+        return self._body
+
+    @body.setter
+    def body(self, body):
+        """Sets the body of this KapuaPayload.
+
+
+        :param body: The body of this KapuaPayload.  # noqa: E501
+        :type: str
+        """
+
+        self._body = body
 
     def to_dict(self):
         """Returns the model properties as a dict"""

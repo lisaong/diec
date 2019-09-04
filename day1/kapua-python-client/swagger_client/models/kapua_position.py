@@ -31,82 +31,61 @@ class KapuaPosition(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'timestamp': 'datetime',
         'precision': 'float',
+        'timestamp': 'datetime',
+        'status': 'int',
         'longitude': 'float',
-        'altitude': 'float',
-        'heading': 'float',
         'speed': 'float',
-        'latitude': 'float',
         'satellites': 'int',
-        'status': 'int'
+        'latitude': 'float',
+        'altitude': 'float',
+        'heading': 'float'
     }
 
     attribute_map = {
-        'timestamp': 'timestamp',
         'precision': 'precision',
+        'timestamp': 'timestamp',
+        'status': 'status',
         'longitude': 'longitude',
-        'altitude': 'altitude',
-        'heading': 'heading',
         'speed': 'speed',
-        'latitude': 'latitude',
         'satellites': 'satellites',
-        'status': 'status'
+        'latitude': 'latitude',
+        'altitude': 'altitude',
+        'heading': 'heading'
     }
 
-    def __init__(self, timestamp=None, precision=None, longitude=None, altitude=None, heading=None, speed=None, latitude=None, satellites=None, status=None):  # noqa: E501
+    def __init__(self, precision=None, timestamp=None, status=None, longitude=None, speed=None, satellites=None, latitude=None, altitude=None, heading=None):  # noqa: E501
         """KapuaPosition - a model defined in Swagger"""  # noqa: E501
 
-        self._timestamp = None
         self._precision = None
+        self._timestamp = None
+        self._status = None
         self._longitude = None
+        self._speed = None
+        self._satellites = None
+        self._latitude = None
         self._altitude = None
         self._heading = None
-        self._speed = None
-        self._latitude = None
-        self._satellites = None
-        self._status = None
         self.discriminator = None
 
-        if timestamp is not None:
-            self.timestamp = timestamp
         if precision is not None:
             self.precision = precision
+        if timestamp is not None:
+            self.timestamp = timestamp
+        if status is not None:
+            self.status = status
         if longitude is not None:
             self.longitude = longitude
+        if speed is not None:
+            self.speed = speed
+        if satellites is not None:
+            self.satellites = satellites
+        if latitude is not None:
+            self.latitude = latitude
         if altitude is not None:
             self.altitude = altitude
         if heading is not None:
             self.heading = heading
-        if speed is not None:
-            self.speed = speed
-        if latitude is not None:
-            self.latitude = latitude
-        if satellites is not None:
-            self.satellites = satellites
-        if status is not None:
-            self.status = status
-
-    @property
-    def timestamp(self):
-        """Gets the timestamp of this KapuaPosition.  # noqa: E501
-
-
-        :return: The timestamp of this KapuaPosition.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._timestamp
-
-    @timestamp.setter
-    def timestamp(self, timestamp):
-        """Sets the timestamp of this KapuaPosition.
-
-
-        :param timestamp: The timestamp of this KapuaPosition.  # noqa: E501
-        :type: datetime
-        """
-
-        self._timestamp = timestamp
 
     @property
     def precision(self):
@@ -130,6 +109,48 @@ class KapuaPosition(object):
         self._precision = precision
 
     @property
+    def timestamp(self):
+        """Gets the timestamp of this KapuaPosition.  # noqa: E501
+
+
+        :return: The timestamp of this KapuaPosition.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._timestamp
+
+    @timestamp.setter
+    def timestamp(self, timestamp):
+        """Sets the timestamp of this KapuaPosition.
+
+
+        :param timestamp: The timestamp of this KapuaPosition.  # noqa: E501
+        :type: datetime
+        """
+
+        self._timestamp = timestamp
+
+    @property
+    def status(self):
+        """Gets the status of this KapuaPosition.  # noqa: E501
+
+
+        :return: The status of this KapuaPosition.  # noqa: E501
+        :rtype: int
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this KapuaPosition.
+
+
+        :param status: The status of this KapuaPosition.  # noqa: E501
+        :type: int
+        """
+
+        self._status = status
+
+    @property
     def longitude(self):
         """Gets the longitude of this KapuaPosition.  # noqa: E501
 
@@ -149,6 +170,69 @@ class KapuaPosition(object):
         """
 
         self._longitude = longitude
+
+    @property
+    def speed(self):
+        """Gets the speed of this KapuaPosition.  # noqa: E501
+
+
+        :return: The speed of this KapuaPosition.  # noqa: E501
+        :rtype: float
+        """
+        return self._speed
+
+    @speed.setter
+    def speed(self, speed):
+        """Sets the speed of this KapuaPosition.
+
+
+        :param speed: The speed of this KapuaPosition.  # noqa: E501
+        :type: float
+        """
+
+        self._speed = speed
+
+    @property
+    def satellites(self):
+        """Gets the satellites of this KapuaPosition.  # noqa: E501
+
+
+        :return: The satellites of this KapuaPosition.  # noqa: E501
+        :rtype: int
+        """
+        return self._satellites
+
+    @satellites.setter
+    def satellites(self, satellites):
+        """Sets the satellites of this KapuaPosition.
+
+
+        :param satellites: The satellites of this KapuaPosition.  # noqa: E501
+        :type: int
+        """
+
+        self._satellites = satellites
+
+    @property
+    def latitude(self):
+        """Gets the latitude of this KapuaPosition.  # noqa: E501
+
+
+        :return: The latitude of this KapuaPosition.  # noqa: E501
+        :rtype: float
+        """
+        return self._latitude
+
+    @latitude.setter
+    def latitude(self, latitude):
+        """Sets the latitude of this KapuaPosition.
+
+
+        :param latitude: The latitude of this KapuaPosition.  # noqa: E501
+        :type: float
+        """
+
+        self._latitude = latitude
 
     @property
     def altitude(self):
@@ -191,90 +275,6 @@ class KapuaPosition(object):
         """
 
         self._heading = heading
-
-    @property
-    def speed(self):
-        """Gets the speed of this KapuaPosition.  # noqa: E501
-
-
-        :return: The speed of this KapuaPosition.  # noqa: E501
-        :rtype: float
-        """
-        return self._speed
-
-    @speed.setter
-    def speed(self, speed):
-        """Sets the speed of this KapuaPosition.
-
-
-        :param speed: The speed of this KapuaPosition.  # noqa: E501
-        :type: float
-        """
-
-        self._speed = speed
-
-    @property
-    def latitude(self):
-        """Gets the latitude of this KapuaPosition.  # noqa: E501
-
-
-        :return: The latitude of this KapuaPosition.  # noqa: E501
-        :rtype: float
-        """
-        return self._latitude
-
-    @latitude.setter
-    def latitude(self, latitude):
-        """Sets the latitude of this KapuaPosition.
-
-
-        :param latitude: The latitude of this KapuaPosition.  # noqa: E501
-        :type: float
-        """
-
-        self._latitude = latitude
-
-    @property
-    def satellites(self):
-        """Gets the satellites of this KapuaPosition.  # noqa: E501
-
-
-        :return: The satellites of this KapuaPosition.  # noqa: E501
-        :rtype: int
-        """
-        return self._satellites
-
-    @satellites.setter
-    def satellites(self, satellites):
-        """Sets the satellites of this KapuaPosition.
-
-
-        :param satellites: The satellites of this KapuaPosition.  # noqa: E501
-        :type: int
-        """
-
-        self._satellites = satellites
-
-    @property
-    def status(self):
-        """Gets the status of this KapuaPosition.  # noqa: E501
-
-
-        :return: The status of this KapuaPosition.  # noqa: E501
-        :rtype: int
-        """
-        return self._status
-
-    @status.setter
-    def status(self, status):
-        """Sets the status of this KapuaPosition.
-
-
-        :param status: The status of this KapuaPosition.  # noqa: E501
-        :type: int
-        """
-
-        self._status = status
 
     def to_dict(self):
         """Returns the model properties as a dict"""

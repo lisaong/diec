@@ -37,13 +37,13 @@ class KapuaTad(object):
         'type': 'KapuaTscalar',
         'option': 'list[KapuaToption]',
         'default': 'str',
+        'cardinality': 'int',
+        'any': 'list[object]',
+        'other_attributes': 'dict(str, str)',
         'min': 'str',
         'max': 'str',
         'description': 'str',
         'id': 'str',
-        'cardinality': 'int',
-        'other_attributes': 'dict(str, str)',
-        'any': 'list[object]',
         'required': 'bool',
         'name': 'str'
     }
@@ -52,30 +52,30 @@ class KapuaTad(object):
         'type': 'type',
         'option': 'option',
         'default': 'default',
+        'cardinality': 'cardinality',
+        'any': 'any',
+        'other_attributes': 'otherAttributes',
         'min': 'min',
         'max': 'max',
         'description': 'description',
         'id': 'id',
-        'cardinality': 'cardinality',
-        'other_attributes': 'otherAttributes',
-        'any': 'any',
         'required': 'required',
         'name': 'name'
     }
 
-    def __init__(self, type=None, option=None, default=None, min=None, max=None, description=None, id=None, cardinality=None, other_attributes=None, any=None, required=None, name=None):  # noqa: E501
+    def __init__(self, type=None, option=None, default=None, cardinality=None, any=None, other_attributes=None, min=None, max=None, description=None, id=None, required=None, name=None):  # noqa: E501
         """KapuaTad - a model defined in Swagger"""  # noqa: E501
 
         self._type = None
         self._option = None
         self._default = None
+        self._cardinality = None
+        self._any = None
+        self._other_attributes = None
         self._min = None
         self._max = None
         self._description = None
         self._id = None
-        self._cardinality = None
-        self._other_attributes = None
-        self._any = None
         self._required = None
         self._name = None
         self.discriminator = None
@@ -86,6 +86,12 @@ class KapuaTad(object):
             self.option = option
         if default is not None:
             self.default = default
+        if cardinality is not None:
+            self.cardinality = cardinality
+        if any is not None:
+            self.any = any
+        if other_attributes is not None:
+            self.other_attributes = other_attributes
         if min is not None:
             self.min = min
         if max is not None:
@@ -94,12 +100,6 @@ class KapuaTad(object):
             self.description = description
         if id is not None:
             self.id = id
-        if cardinality is not None:
-            self.cardinality = cardinality
-        if other_attributes is not None:
-            self.other_attributes = other_attributes
-        if any is not None:
-            self.any = any
         if required is not None:
             self.required = required
         if name is not None:
@@ -167,6 +167,69 @@ class KapuaTad(object):
         """
 
         self._default = default
+
+    @property
+    def cardinality(self):
+        """Gets the cardinality of this KapuaTad.  # noqa: E501
+
+
+        :return: The cardinality of this KapuaTad.  # noqa: E501
+        :rtype: int
+        """
+        return self._cardinality
+
+    @cardinality.setter
+    def cardinality(self, cardinality):
+        """Sets the cardinality of this KapuaTad.
+
+
+        :param cardinality: The cardinality of this KapuaTad.  # noqa: E501
+        :type: int
+        """
+
+        self._cardinality = cardinality
+
+    @property
+    def any(self):
+        """Gets the any of this KapuaTad.  # noqa: E501
+
+
+        :return: The any of this KapuaTad.  # noqa: E501
+        :rtype: list[object]
+        """
+        return self._any
+
+    @any.setter
+    def any(self, any):
+        """Sets the any of this KapuaTad.
+
+
+        :param any: The any of this KapuaTad.  # noqa: E501
+        :type: list[object]
+        """
+
+        self._any = any
+
+    @property
+    def other_attributes(self):
+        """Gets the other_attributes of this KapuaTad.  # noqa: E501
+
+
+        :return: The other_attributes of this KapuaTad.  # noqa: E501
+        :rtype: dict(str, str)
+        """
+        return self._other_attributes
+
+    @other_attributes.setter
+    def other_attributes(self, other_attributes):
+        """Sets the other_attributes of this KapuaTad.
+
+
+        :param other_attributes: The other_attributes of this KapuaTad.  # noqa: E501
+        :type: dict(str, str)
+        """
+
+        self._other_attributes = other_attributes
 
     @property
     def min(self):
@@ -251,69 +314,6 @@ class KapuaTad(object):
         """
 
         self._id = id
-
-    @property
-    def cardinality(self):
-        """Gets the cardinality of this KapuaTad.  # noqa: E501
-
-
-        :return: The cardinality of this KapuaTad.  # noqa: E501
-        :rtype: int
-        """
-        return self._cardinality
-
-    @cardinality.setter
-    def cardinality(self, cardinality):
-        """Sets the cardinality of this KapuaTad.
-
-
-        :param cardinality: The cardinality of this KapuaTad.  # noqa: E501
-        :type: int
-        """
-
-        self._cardinality = cardinality
-
-    @property
-    def other_attributes(self):
-        """Gets the other_attributes of this KapuaTad.  # noqa: E501
-
-
-        :return: The other_attributes of this KapuaTad.  # noqa: E501
-        :rtype: dict(str, str)
-        """
-        return self._other_attributes
-
-    @other_attributes.setter
-    def other_attributes(self, other_attributes):
-        """Sets the other_attributes of this KapuaTad.
-
-
-        :param other_attributes: The other_attributes of this KapuaTad.  # noqa: E501
-        :type: dict(str, str)
-        """
-
-        self._other_attributes = other_attributes
-
-    @property
-    def any(self):
-        """Gets the any of this KapuaTad.  # noqa: E501
-
-
-        :return: The any of this KapuaTad.  # noqa: E501
-        :rtype: list[object]
-        """
-        return self._any
-
-    @any.setter
-    def any(self, any):
-        """Sets the any of this KapuaTad.
-
-
-        :param any: The any of this KapuaTad.  # noqa: E501
-        :type: list[object]
-        """
-
-        self._any = any
 
     @property
     def required(self):

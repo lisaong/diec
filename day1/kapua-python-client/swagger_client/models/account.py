@@ -16,7 +16,7 @@ import re  # noqa: F401
 
 import six
 
-#from swagger_client.models.account import Account  # noqa: F401,E501
+# from swagger_client.models.account import Account  # noqa: F401,E501
 from swagger_client.models.organization import Organization  # noqa: F401,E501
 
 
@@ -35,16 +35,16 @@ class Account(object):
     """
     swagger_types = {
         'organization': 'Organization',
+        'expiration_date': 'datetime',
         'parent_account_path': 'str',
         'child_accounts': 'list[Account]',
-        'expiration_date': 'datetime',
         'type': 'str',
         'name': 'str',
-        'modified_on': 'datetime',
-        'modified_by': 'str',
         'optlock': 'int',
         'entity_attributes': 'dict(str, str)',
         'entity_properties': 'dict(str, str)',
+        'modified_on': 'datetime',
+        'modified_by': 'str',
         'scope_id': 'str',
         'id': 'str',
         'created_on': 'datetime',
@@ -53,36 +53,36 @@ class Account(object):
 
     attribute_map = {
         'organization': 'organization',
+        'expiration_date': 'expirationDate',
         'parent_account_path': 'parentAccountPath',
         'child_accounts': 'childAccounts',
-        'expiration_date': 'expirationDate',
         'type': 'type',
         'name': 'name',
-        'modified_on': 'modifiedOn',
-        'modified_by': 'modifiedBy',
         'optlock': 'optlock',
         'entity_attributes': 'entityAttributes',
         'entity_properties': 'entityProperties',
+        'modified_on': 'modifiedOn',
+        'modified_by': 'modifiedBy',
         'scope_id': 'scopeId',
         'id': 'id',
         'created_on': 'createdOn',
         'created_by': 'createdBy'
     }
 
-    def __init__(self, organization=None, parent_account_path=None, child_accounts=None, expiration_date=None, type=None, name=None, modified_on=None, modified_by=None, optlock=None, entity_attributes=None, entity_properties=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
+    def __init__(self, organization=None, expiration_date=None, parent_account_path=None, child_accounts=None, type=None, name=None, optlock=None, entity_attributes=None, entity_properties=None, modified_on=None, modified_by=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
         """Account - a model defined in Swagger"""  # noqa: E501
 
         self._organization = None
+        self._expiration_date = None
         self._parent_account_path = None
         self._child_accounts = None
-        self._expiration_date = None
         self._type = None
         self._name = None
-        self._modified_on = None
-        self._modified_by = None
         self._optlock = None
         self._entity_attributes = None
         self._entity_properties = None
+        self._modified_on = None
+        self._modified_by = None
         self._scope_id = None
         self._id = None
         self._created_on = None
@@ -91,26 +91,26 @@ class Account(object):
 
         if organization is not None:
             self.organization = organization
+        if expiration_date is not None:
+            self.expiration_date = expiration_date
         if parent_account_path is not None:
             self.parent_account_path = parent_account_path
         if child_accounts is not None:
             self.child_accounts = child_accounts
-        if expiration_date is not None:
-            self.expiration_date = expiration_date
         if type is not None:
             self.type = type
         if name is not None:
             self.name = name
-        if modified_on is not None:
-            self.modified_on = modified_on
-        if modified_by is not None:
-            self.modified_by = modified_by
         if optlock is not None:
             self.optlock = optlock
         if entity_attributes is not None:
             self.entity_attributes = entity_attributes
         if entity_properties is not None:
             self.entity_properties = entity_properties
+        if modified_on is not None:
+            self.modified_on = modified_on
+        if modified_by is not None:
+            self.modified_by = modified_by
         if scope_id is not None:
             self.scope_id = scope_id
         if id is not None:
@@ -140,6 +140,27 @@ class Account(object):
         """
 
         self._organization = organization
+
+    @property
+    def expiration_date(self):
+        """Gets the expiration_date of this Account.  # noqa: E501
+
+
+        :return: The expiration_date of this Account.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._expiration_date
+
+    @expiration_date.setter
+    def expiration_date(self, expiration_date):
+        """Sets the expiration_date of this Account.
+
+
+        :param expiration_date: The expiration_date of this Account.  # noqa: E501
+        :type: datetime
+        """
+
+        self._expiration_date = expiration_date
 
     @property
     def parent_account_path(self):
@@ -184,27 +205,6 @@ class Account(object):
         self._child_accounts = child_accounts
 
     @property
-    def expiration_date(self):
-        """Gets the expiration_date of this Account.  # noqa: E501
-
-
-        :return: The expiration_date of this Account.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._expiration_date
-
-    @expiration_date.setter
-    def expiration_date(self, expiration_date):
-        """Sets the expiration_date of this Account.
-
-
-        :param expiration_date: The expiration_date of this Account.  # noqa: E501
-        :type: datetime
-        """
-
-        self._expiration_date = expiration_date
-
-    @property
     def type(self):
         """Gets the type of this Account.  # noqa: E501
 
@@ -245,48 +245,6 @@ class Account(object):
         """
 
         self._name = name
-
-    @property
-    def modified_on(self):
-        """Gets the modified_on of this Account.  # noqa: E501
-
-
-        :return: The modified_on of this Account.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._modified_on
-
-    @modified_on.setter
-    def modified_on(self, modified_on):
-        """Sets the modified_on of this Account.
-
-
-        :param modified_on: The modified_on of this Account.  # noqa: E501
-        :type: datetime
-        """
-
-        self._modified_on = modified_on
-
-    @property
-    def modified_by(self):
-        """Gets the modified_by of this Account.  # noqa: E501
-
-
-        :return: The modified_by of this Account.  # noqa: E501
-        :rtype: str
-        """
-        return self._modified_by
-
-    @modified_by.setter
-    def modified_by(self, modified_by):
-        """Sets the modified_by of this Account.
-
-
-        :param modified_by: The modified_by of this Account.  # noqa: E501
-        :type: str
-        """
-
-        self._modified_by = modified_by
 
     @property
     def optlock(self):
@@ -350,6 +308,48 @@ class Account(object):
         """
 
         self._entity_properties = entity_properties
+
+    @property
+    def modified_on(self):
+        """Gets the modified_on of this Account.  # noqa: E501
+
+
+        :return: The modified_on of this Account.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._modified_on
+
+    @modified_on.setter
+    def modified_on(self, modified_on):
+        """Sets the modified_on of this Account.
+
+
+        :param modified_on: The modified_on of this Account.  # noqa: E501
+        :type: datetime
+        """
+
+        self._modified_on = modified_on
+
+    @property
+    def modified_by(self):
+        """Gets the modified_by of this Account.  # noqa: E501
+
+
+        :return: The modified_by of this Account.  # noqa: E501
+        :rtype: str
+        """
+        return self._modified_by
+
+    @modified_by.setter
+    def modified_by(self, modified_by):
+        """Sets the modified_by of this Account.
+
+
+        :param modified_by: The modified_by of this Account.  # noqa: E501
+        :type: str
+        """
+
+        self._modified_by = modified_by
 
     @property
     def scope_id(self):

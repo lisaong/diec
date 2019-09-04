@@ -34,17 +34,17 @@ class Device(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'connection': 'DeviceConnection',
         'os_version': 'str',
         'serial_number': 'str',
         'display_name': 'str',
+        'group_id': 'str',
+        'last_event': 'DeviceEvent',
+        'status': 'str',
         'client_id': 'str',
         'model_name': 'str',
-        'model_id': 'str',
-        'last_event': 'DeviceEvent',
-        'connection': 'DeviceConnection',
-        'status': 'str',
-        'group_id': 'str',
         'firmware_version': 'str',
+        'model_id': 'str',
         'bios_version': 'str',
         'jvm_version': 'str',
         'application_framework_version': 'str',
@@ -65,11 +65,11 @@ class Device(object):
         'custom_attribute4': 'str',
         'custom_attribute5': 'str',
         'type': 'str',
-        'modified_on': 'datetime',
-        'modified_by': 'str',
         'optlock': 'int',
         'entity_attributes': 'dict(str, str)',
         'entity_properties': 'dict(str, str)',
+        'modified_on': 'datetime',
+        'modified_by': 'str',
         'scope_id': 'str',
         'id': 'str',
         'created_on': 'datetime',
@@ -77,17 +77,17 @@ class Device(object):
     }
 
     attribute_map = {
+        'connection': 'connection',
         'os_version': 'osVersion',
         'serial_number': 'serialNumber',
         'display_name': 'displayName',
+        'group_id': 'groupId',
+        'last_event': 'lastEvent',
+        'status': 'status',
         'client_id': 'clientId',
         'model_name': 'modelName',
-        'model_id': 'modelId',
-        'last_event': 'lastEvent',
-        'connection': 'connection',
-        'status': 'status',
-        'group_id': 'groupId',
         'firmware_version': 'firmwareVersion',
+        'model_id': 'modelId',
         'bios_version': 'biosVersion',
         'jvm_version': 'jvmVersion',
         'application_framework_version': 'applicationFrameworkVersion',
@@ -108,31 +108,31 @@ class Device(object):
         'custom_attribute4': 'customAttribute4',
         'custom_attribute5': 'customAttribute5',
         'type': 'type',
-        'modified_on': 'modifiedOn',
-        'modified_by': 'modifiedBy',
         'optlock': 'optlock',
         'entity_attributes': 'entityAttributes',
         'entity_properties': 'entityProperties',
+        'modified_on': 'modifiedOn',
+        'modified_by': 'modifiedBy',
         'scope_id': 'scopeId',
         'id': 'id',
         'created_on': 'createdOn',
         'created_by': 'createdBy'
     }
 
-    def __init__(self, os_version=None, serial_number=None, display_name=None, client_id=None, model_name=None, model_id=None, last_event=None, connection=None, status=None, group_id=None, firmware_version=None, bios_version=None, jvm_version=None, application_framework_version=None, connection_interface=None, connection_ip=None, accept_encoding=None, application_identifiers=None, connection_id=None, last_event_id=None, imei=None, imsi=None, iccid=None, osgi_framework_version=None, tag_ids=None, custom_attribute1=None, custom_attribute2=None, custom_attribute3=None, custom_attribute4=None, custom_attribute5=None, type=None, modified_on=None, modified_by=None, optlock=None, entity_attributes=None, entity_properties=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
+    def __init__(self, connection=None, os_version=None, serial_number=None, display_name=None, group_id=None, last_event=None, status=None, client_id=None, model_name=None, firmware_version=None, model_id=None, bios_version=None, jvm_version=None, application_framework_version=None, connection_interface=None, connection_ip=None, accept_encoding=None, application_identifiers=None, connection_id=None, last_event_id=None, imei=None, imsi=None, iccid=None, osgi_framework_version=None, tag_ids=None, custom_attribute1=None, custom_attribute2=None, custom_attribute3=None, custom_attribute4=None, custom_attribute5=None, type=None, optlock=None, entity_attributes=None, entity_properties=None, modified_on=None, modified_by=None, scope_id=None, id=None, created_on=None, created_by=None):  # noqa: E501
         """Device - a model defined in Swagger"""  # noqa: E501
 
+        self._connection = None
         self._os_version = None
         self._serial_number = None
         self._display_name = None
+        self._group_id = None
+        self._last_event = None
+        self._status = None
         self._client_id = None
         self._model_name = None
-        self._model_id = None
-        self._last_event = None
-        self._connection = None
-        self._status = None
-        self._group_id = None
         self._firmware_version = None
+        self._model_id = None
         self._bios_version = None
         self._jvm_version = None
         self._application_framework_version = None
@@ -153,39 +153,39 @@ class Device(object):
         self._custom_attribute4 = None
         self._custom_attribute5 = None
         self._type = None
-        self._modified_on = None
-        self._modified_by = None
         self._optlock = None
         self._entity_attributes = None
         self._entity_properties = None
+        self._modified_on = None
+        self._modified_by = None
         self._scope_id = None
         self._id = None
         self._created_on = None
         self._created_by = None
         self.discriminator = None
 
+        if connection is not None:
+            self.connection = connection
         if os_version is not None:
             self.os_version = os_version
         if serial_number is not None:
             self.serial_number = serial_number
         if display_name is not None:
             self.display_name = display_name
+        if group_id is not None:
+            self.group_id = group_id
+        if last_event is not None:
+            self.last_event = last_event
+        if status is not None:
+            self.status = status
         if client_id is not None:
             self.client_id = client_id
         if model_name is not None:
             self.model_name = model_name
-        if model_id is not None:
-            self.model_id = model_id
-        if last_event is not None:
-            self.last_event = last_event
-        if connection is not None:
-            self.connection = connection
-        if status is not None:
-            self.status = status
-        if group_id is not None:
-            self.group_id = group_id
         if firmware_version is not None:
             self.firmware_version = firmware_version
+        if model_id is not None:
+            self.model_id = model_id
         if bios_version is not None:
             self.bios_version = bios_version
         if jvm_version is not None:
@@ -226,16 +226,16 @@ class Device(object):
             self.custom_attribute5 = custom_attribute5
         if type is not None:
             self.type = type
-        if modified_on is not None:
-            self.modified_on = modified_on
-        if modified_by is not None:
-            self.modified_by = modified_by
         if optlock is not None:
             self.optlock = optlock
         if entity_attributes is not None:
             self.entity_attributes = entity_attributes
         if entity_properties is not None:
             self.entity_properties = entity_properties
+        if modified_on is not None:
+            self.modified_on = modified_on
+        if modified_by is not None:
+            self.modified_by = modified_by
         if scope_id is not None:
             self.scope_id = scope_id
         if id is not None:
@@ -244,6 +244,27 @@ class Device(object):
             self.created_on = created_on
         if created_by is not None:
             self.created_by = created_by
+
+    @property
+    def connection(self):
+        """Gets the connection of this Device.  # noqa: E501
+
+
+        :return: The connection of this Device.  # noqa: E501
+        :rtype: DeviceConnection
+        """
+        return self._connection
+
+    @connection.setter
+    def connection(self, connection):
+        """Sets the connection of this Device.
+
+
+        :param connection: The connection of this Device.  # noqa: E501
+        :type: DeviceConnection
+        """
+
+        self._connection = connection
 
     @property
     def os_version(self):
@@ -309,6 +330,75 @@ class Device(object):
         self._display_name = display_name
 
     @property
+    def group_id(self):
+        """Gets the group_id of this Device.  # noqa: E501
+
+
+        :return: The group_id of this Device.  # noqa: E501
+        :rtype: str
+        """
+        return self._group_id
+
+    @group_id.setter
+    def group_id(self, group_id):
+        """Sets the group_id of this Device.
+
+
+        :param group_id: The group_id of this Device.  # noqa: E501
+        :type: str
+        """
+
+        self._group_id = group_id
+
+    @property
+    def last_event(self):
+        """Gets the last_event of this Device.  # noqa: E501
+
+
+        :return: The last_event of this Device.  # noqa: E501
+        :rtype: DeviceEvent
+        """
+        return self._last_event
+
+    @last_event.setter
+    def last_event(self, last_event):
+        """Sets the last_event of this Device.
+
+
+        :param last_event: The last_event of this Device.  # noqa: E501
+        :type: DeviceEvent
+        """
+
+        self._last_event = last_event
+
+    @property
+    def status(self):
+        """Gets the status of this Device.  # noqa: E501
+
+
+        :return: The status of this Device.  # noqa: E501
+        :rtype: str
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this Device.
+
+
+        :param status: The status of this Device.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["ENABLED", "DISABLED"]  # noqa: E501
+        if status not in allowed_values:
+            raise ValueError(
+                "Invalid value for `status` ({0}), must be one of {1}"  # noqa: E501
+                .format(status, allowed_values)
+            )
+
+        self._status = status
+
+    @property
     def client_id(self):
         """Gets the client_id of this Device.  # noqa: E501
 
@@ -351,117 +441,6 @@ class Device(object):
         self._model_name = model_name
 
     @property
-    def model_id(self):
-        """Gets the model_id of this Device.  # noqa: E501
-
-
-        :return: The model_id of this Device.  # noqa: E501
-        :rtype: str
-        """
-        return self._model_id
-
-    @model_id.setter
-    def model_id(self, model_id):
-        """Sets the model_id of this Device.
-
-
-        :param model_id: The model_id of this Device.  # noqa: E501
-        :type: str
-        """
-
-        self._model_id = model_id
-
-    @property
-    def last_event(self):
-        """Gets the last_event of this Device.  # noqa: E501
-
-
-        :return: The last_event of this Device.  # noqa: E501
-        :rtype: DeviceEvent
-        """
-        return self._last_event
-
-    @last_event.setter
-    def last_event(self, last_event):
-        """Sets the last_event of this Device.
-
-
-        :param last_event: The last_event of this Device.  # noqa: E501
-        :type: DeviceEvent
-        """
-
-        self._last_event = last_event
-
-    @property
-    def connection(self):
-        """Gets the connection of this Device.  # noqa: E501
-
-
-        :return: The connection of this Device.  # noqa: E501
-        :rtype: DeviceConnection
-        """
-        return self._connection
-
-    @connection.setter
-    def connection(self, connection):
-        """Sets the connection of this Device.
-
-
-        :param connection: The connection of this Device.  # noqa: E501
-        :type: DeviceConnection
-        """
-
-        self._connection = connection
-
-    @property
-    def status(self):
-        """Gets the status of this Device.  # noqa: E501
-
-
-        :return: The status of this Device.  # noqa: E501
-        :rtype: str
-        """
-        return self._status
-
-    @status.setter
-    def status(self, status):
-        """Sets the status of this Device.
-
-
-        :param status: The status of this Device.  # noqa: E501
-        :type: str
-        """
-        allowed_values = ["ENABLED", "DISABLED"]  # noqa: E501
-        if status not in allowed_values:
-            raise ValueError(
-                "Invalid value for `status` ({0}), must be one of {1}"  # noqa: E501
-                .format(status, allowed_values)
-            )
-
-        self._status = status
-
-    @property
-    def group_id(self):
-        """Gets the group_id of this Device.  # noqa: E501
-
-
-        :return: The group_id of this Device.  # noqa: E501
-        :rtype: str
-        """
-        return self._group_id
-
-    @group_id.setter
-    def group_id(self, group_id):
-        """Sets the group_id of this Device.
-
-
-        :param group_id: The group_id of this Device.  # noqa: E501
-        :type: str
-        """
-
-        self._group_id = group_id
-
-    @property
     def firmware_version(self):
         """Gets the firmware_version of this Device.  # noqa: E501
 
@@ -481,6 +460,27 @@ class Device(object):
         """
 
         self._firmware_version = firmware_version
+
+    @property
+    def model_id(self):
+        """Gets the model_id of this Device.  # noqa: E501
+
+
+        :return: The model_id of this Device.  # noqa: E501
+        :rtype: str
+        """
+        return self._model_id
+
+    @model_id.setter
+    def model_id(self, model_id):
+        """Sets the model_id of this Device.
+
+
+        :param model_id: The model_id of this Device.  # noqa: E501
+        :type: str
+        """
+
+        self._model_id = model_id
 
     @property
     def bios_version(self):
@@ -903,48 +903,6 @@ class Device(object):
         self._type = type
 
     @property
-    def modified_on(self):
-        """Gets the modified_on of this Device.  # noqa: E501
-
-
-        :return: The modified_on of this Device.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._modified_on
-
-    @modified_on.setter
-    def modified_on(self, modified_on):
-        """Sets the modified_on of this Device.
-
-
-        :param modified_on: The modified_on of this Device.  # noqa: E501
-        :type: datetime
-        """
-
-        self._modified_on = modified_on
-
-    @property
-    def modified_by(self):
-        """Gets the modified_by of this Device.  # noqa: E501
-
-
-        :return: The modified_by of this Device.  # noqa: E501
-        :rtype: str
-        """
-        return self._modified_by
-
-    @modified_by.setter
-    def modified_by(self, modified_by):
-        """Sets the modified_by of this Device.
-
-
-        :param modified_by: The modified_by of this Device.  # noqa: E501
-        :type: str
-        """
-
-        self._modified_by = modified_by
-
-    @property
     def optlock(self):
         """Gets the optlock of this Device.  # noqa: E501
 
@@ -1006,6 +964,48 @@ class Device(object):
         """
 
         self._entity_properties = entity_properties
+
+    @property
+    def modified_on(self):
+        """Gets the modified_on of this Device.  # noqa: E501
+
+
+        :return: The modified_on of this Device.  # noqa: E501
+        :rtype: datetime
+        """
+        return self._modified_on
+
+    @modified_on.setter
+    def modified_on(self, modified_on):
+        """Sets the modified_on of this Device.
+
+
+        :param modified_on: The modified_on of this Device.  # noqa: E501
+        :type: datetime
+        """
+
+        self._modified_on = modified_on
+
+    @property
+    def modified_by(self):
+        """Gets the modified_by of this Device.  # noqa: E501
+
+
+        :return: The modified_by of this Device.  # noqa: E501
+        :rtype: str
+        """
+        return self._modified_by
+
+    @modified_by.setter
+    def modified_by(self, modified_by):
+        """Sets the modified_by of this Device.
+
+
+        :param modified_by: The modified_by of this Device.  # noqa: E501
+        :type: str
+        """
+
+        self._modified_by = modified_by
 
     @property
     def scope_id(self):
