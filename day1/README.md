@@ -10,7 +10,7 @@
 6. cd day1/kapua-python-client
 7. Fix-ups
 
-  * Update the root url in `swagger_client/configuration.py` to add the port number:
+  * Update the root url in `swagger_client/configuration.py` to the host URL:
 ```
         # Default Base url
         self.host = "http://localhost:8081/v1"
