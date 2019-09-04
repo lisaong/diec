@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if birth.command == 'birth':
+    if args.command == 'birth':
         connect(args)
     elif args.command == 'death':
         death(args)
