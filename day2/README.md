@@ -89,10 +89,8 @@ python microbit_to_mqtt.py /dev/ttyXXXX
 After an IOTA transaction is issued and confirmed, the micro:bit will display the bundle hash on its screen.
 
 ### Windows
-PyOTA is not compatible with python 3.7. See https://stackoverflow.com/questions/52971244/import-filters-typeerror-type-doesnt-support-mro-entry-resolution
-
 ```
-conda create -n iota python=3.6
+conda create -n iota python=3
 conda activate iota
 
 pip install -r requirements.txt
