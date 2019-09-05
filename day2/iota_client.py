@@ -7,10 +7,6 @@
 # https://medium.com/coinmonks/integrating-physical-devices-with-iota-83f4e00cc5bb
 
 import sys
-#if sys.version_info >= (3, 7):
-#    print('Python 3.7 is not supported for IOTA, please use Python 3.6')
-#    exit(-1)
-
 import iota
 from iota.crypto.addresses import AddressGenerator
 from iota.crypto.types import Seed
@@ -26,6 +22,8 @@ node_config = {
     'zmq': 'tcp://zmq.devnet.iota.org:5556'
 }
 
+# security level for private key signature lengths
+# https://docs.iota.org/docs/dev-essentials/0.1/references/security-levels
 security_level = 2
 
 def as_bytes(string):
