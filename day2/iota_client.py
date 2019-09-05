@@ -31,7 +31,7 @@ security_level = 2
 def as_bytes(string):
     return bytes(string, 'ASCII')
 
-def generate_addresses(count, seed=None):
+def generate_addresses(count=1, seed=None):
     """Generates a number of IOTA addresses (given by count and optional seed)
     Returns: (address, seed)
     """
@@ -123,7 +123,7 @@ def do_transaction(sender_seed_str, recipient_str, amount, message=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='IOTA client script for workshop')
-    parser.add_argument('--gen_address', metavar='COUNT', type=int, help='generates the given number of IOTA addresses')
+    parser.add_argument('--gen_address', action='store_true', help='generates an IOTA address')
     parser.add_argument('--balance', metavar='ADDRESS', type=str, help='checks balance for a given IOTA address')
     parser.add_argument('--monitor', metavar='ADDRESS', type=str, help='monitors transactions for a given IOTA address')
 
@@ -138,9 +138,9 @@ if __name__ == "__main__":
 
     start = time.time()
 
-    if args.gen_address is not None and args.gen_address > 0:
-        (addresses, seed) = generate_addresses(args.gen_address)
-        pprint(addresses)
+    if args.gen_address:
+        (address, seed) = generate_addresses()
+        pprint(address)
         print(seed)
     elif args.balance:
         balance = get_balance(args.balance)
