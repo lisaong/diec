@@ -41,9 +41,8 @@ Proposed solution using IOTA
 ```
 sudo apt-get install libssl-dev
 
-conda create -n iota python=3.6
+conda create -n iota python=3
 conda activate iota
-pip install packages/*
 pip install –r requirements.txt
 
 ```
