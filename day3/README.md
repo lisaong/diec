@@ -12,7 +12,8 @@ Overview:
 ![Workflow](https://www.tensorflow.org/lite/images/convert/workflow.svg)
 
 ## Training and Conversion
-Open this notebook from Google Colaboratory: [edge_time_series_classification.ipynb](edge_time_series_classification.ipynb)
+1. Go to http://colab.research.google.com
+2. Open notebook from Github: [edge_time_series_classification.ipynb](edge_time_series_classification.ipynb)
 
 ## Inference
 This phase uses the TensorFlow Lite Python API to perform inference using your compressed TF Lite model.
