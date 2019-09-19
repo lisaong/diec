@@ -73,5 +73,3 @@ args = parser.parse_args()
 
 test_X, test_y = load_test_data(args.input, './preprocessors.pkl')
 predict('./cnn.tflite', test_X)
-
-
