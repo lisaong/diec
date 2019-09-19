@@ -1,53 +1,25 @@
 # Anomaly Detection on Raspberry Pi using TensorFlow Lite
 
-This example trains a Variational Auto Encoder to detect anomalies on Smart Factory data.
+This example predicts a value using time series data from a Smart Factory.
 
 1. Train model using Keras on a Desktop machine
 2. Convert to compressed floating point version using Tensorflow Lite
-3. Perform Inference on a Raspberry Pi 3
+3. Perform Inference on a Raspberry Pi
 
 Dataset: https://www.kaggle.com/inIT-OWL/versatileproductionsystem
 
 Overview:
 ![Workflow](https://www.tensorflow.org/lite/images/convert/workflow.svg)
 
-## Training
-This phase performs the training (using optional GPU).
-
-See [Anomaly_detection_VAE.ipynb](Anomaly_detection_VAE.ipynb)
-
-## Conversion
-This phase takes a Keras model (HDF5 format) and converts it to a TensorFlow Lite model (.tflite)
-
-See [Anomaly_detection_VAE.ipynb](Anomaly_detection_VAE.ipynb)
+## Training and Conversion
+Open this notebook from Google Colaboratory: [edge_time_series_classification.ipynb](edge_time_series_classification.ipynb)
 
 ## Inference
-This phase uses the TensorFlow Lite C++ API to perform inferences. We use the C++ API because the model contains a custom operator that is not natively supported by the core TensorFlow Lite Kernel.
+This phase uses the TensorFlow Lite Python API to perform inference using your compressed TF Lite model.
 
-### Compiling TensorFlow Lite library for Raspberry Pi
+Documentation: https://www.tensorflow.org/lite/guide/inference#running_a_model
 
-https://www.tensorflow.org/lite/guide/build_rpi
+1. Run the Training notebook from Google Colab
+2. Download *.pkl and *.tflite from Colab storage to your laptop
+3. Deploy the files to the Raspberry Pi. You can use [WinSCP](https://winscp.net/eng/download.php) (on Windows) or scp (on MacOS) to transfer files to the Raspberry Pi.
 
-From an Ubuntu machine (with docker installed):
-
-```
-git clone https://github.com/tensorflow/tensorflow.git
-cd tensorflow
-git checkout tags/v1.13.1 -b v1.13.1
-
-sudo docker pull tensorflow/tensorflow:devel
-sudo docker run -v /home/diec/tensorflow:/tensorflow -it tensorflow/tensorflow:devel bash
-```
-
-From the container:
-```
-sudo apt-get update
-sudo apt-get install crossbuild-essential-armhf
-cd /tensorflow
-./tensorflow/lite/tools/make/download_dependencies.sh
-./tensorflow/lite/tools/make/build_rpi_lib.sh
-```
-
-### Inference
-
-See [inference/README.md](inference/README.md)
