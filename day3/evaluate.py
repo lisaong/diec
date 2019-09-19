@@ -65,9 +65,13 @@ def predict(model_path, test_data):
 # Download the following files from Colaboratory and copy to the Raspberry Pi:
 #   *.pkl
 #   cnn.tflite
+#   evaluate.py
+
 parser = argparse.ArgumentParser()
-parser.add_argument('input', type=string, help='pkl file containing input data')
+parser.add_argument('input', type=str, help='path to pkl file containing input data')
 args = parser.parse_args()
 
 test_X, test_y = load_test_data(args.input, './preprocessors.pkl')
 predict('./cnn.tflite', test_X)
+
+
