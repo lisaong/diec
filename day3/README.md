@@ -23,4 +23,13 @@ Documentation: https://www.tensorflow.org/lite/guide/inference#running_a_model
 1. Run the Training notebook from Google Colab
 2. Download *.pkl and *.tflite from Colab storage to your laptop
 3. Deploy the files to the Raspberry Pi. You can use [WinSCP](https://winscp.net/eng/download.php) (on Windows) or scp (on MacOS) to transfer files to the Raspberry Pi.
-
+4. From the Raspberry Pi 3, launch docker image containing Tensorflow 1.14 for Python 3.7
+```
+cd ~/diec/day3/docker
+sh ./launch_docker.sh
+```
+5. From the docker instance running on the Raspberry Pi 3, evaluate the saved TF Lite model using inputs
+```
+cd /code/day3
+python3 evaluate.py df_test.pkl
+```
