@@ -5,19 +5,17 @@ import tensorflow as tf
 import argparse
 
 def load_test_data(data_filename, preprocessors_filename):
+  timesteps = 10
 
-  # Load test data and process it
-  df_test = pickle.load(open(data_filename, 'rb'))
-  target = 'I_BottlesReserveAvailable'
-  test_X = df_test.loc[:, df_test.columns != target]
-  test_y = df_test[[target]]
+  # Load test numpy array and process it
+  test_array = pickle.load(open(data_filename, 'rb'))
 
   preprocessors = pickle.load(open(preprocessors_filename, 'rb'))
   vt = preprocessors['variance_threshold']
   feature_scaler = preprocessors['feature_scaler']
 
   # select features
-  test_X = vt.transform(test_X)
+  test_X = vt.transform(test_array)
 
   # scale
   test_X_scaled = feature_scaler.transform(test_X)
@@ -28,13 +26,8 @@ def load_test_data(data_filename, preprocessors_filename):
 
   test_X_sequence = np.take(test_X_scaled, rolling_indexes, axis=0)
   print(test_X_sequence.shape) # (rows, timesteps, features)
-    
-  # shift y down by 1 value so that we are predicting the future
-  # make sure y is the same length as test_X_sequence
-  test_y = df_test_y[1:test_X_sequence.shape[0]+1] 
-  print(test_y.shape)
 
-  return test_X_sequence, test_y
+  return test_X_sequence
 
 def predict(model_path, test_data):
   # Load TFLite model and allocate tensors.
@@ -71,5 +64,5 @@ parser = argparse.ArgumentParser()
 parser.add_argument('input', type=str, help='path to pkl file containing input data')
 args = parser.parse_args()
 
-test_X, test_y = load_test_data(args.input, './preprocessors.pkl')
-predict('./cnn.tflite', test_X)
+X_test = load_test_data(args.input, './preprocessors.pkl')
+predict('./cnn.tflite', X_test)
