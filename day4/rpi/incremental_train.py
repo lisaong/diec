@@ -10,6 +10,7 @@ import tensorflow as tf
 import tensorflow.keras as keras
 import numpy as np
 import pickle
+from dask.distributed import Client, Queue
 
 def create_windows(X, timesteps):
     """convert the time series so that each entry contains a series of timesteps.
@@ -57,6 +58,9 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
         self.num_columns = 5 # number of data columns
         self.samples = np.array([]) # buffer to hold samples
 
+        self.dask_client = Client(processes=False) # use threads
+        self.dask_queue = Queue()
+
     def data_available(self, timestamp, data):
         """Overrides SerialIoBase.data_available() to
         accumulate the data and update the model
@@ -78,24 +82,27 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
             else:
                 self.samples = np.vstack((self.samples, data))
 
+            # once the minimum batch size is reached, queue a task
+            # to update the model using a snapshot of the collected samples
             if self.samples.shape[0] >= self.min_batch_size:
-                # once min batch size is reached, update the model
-                self.update_model()
+                self.dask_queue.put(self.dask_client.submit(
+                    self.update_model, 
+                    self.samples.copy()))
                 self.samples = np.array([])
 
         except Exception as e:
             print(e)
 
-    def update_model(self):
+    def update_model(self, samples):
         """Updates a model using the input data
         """
-        print(f'Updating model using {self.samples.shape[0]} samples')
+        print(f'Updating model using {samples.shape[0]} samples')
 
-        X = self.samples[:, 1:]
+        X = samples[:, 1:]
         X_scaled = self.preprocessors_and_data['scaler'].transform(X)
         X_train = create_windows(X_scaled, self.timesteps)
  
-        y = self.samples[:, 0]
+        y = samples[:, 0]
         y_train = create_rolling_average(y, self.timesteps)
 
         # saved validation set from original training
