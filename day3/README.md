@@ -33,6 +33,6 @@ sh ./launch_docker.sh
 ```
 3. From the **docker container** running on the Raspberry Pi 3, evaluate the saved TF Lite model using inputs
 ```
-cd /code/day3/rpi
+cd day3/rpi
 python3 evaluate.py X_test.pkl
 ```
