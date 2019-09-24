@@ -11,8 +11,9 @@ import serial_asyncio
 
 #%%
 
-COMPORT = '/dev/cu.usbmodem144102'
-#COMPORT = 'COM3'
+#COMPORT = '/dev/cu.usbmodem144102' # Example MacOS port
+COMPORT = 'COM3' # Example Windows port
+
 BAUDRATE = 115200
 OUTPUT_FILE = 'data.csv'
 
