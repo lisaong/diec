@@ -5,6 +5,7 @@ import sys
 sys.path.append('..')
 import serialio
 
+import os
 import argparse
 import numpy as np
 import pickle
@@ -24,7 +25,7 @@ def create_windows(X, timesteps):
     """convert the time series so that each entry contains a series of timesteps.
     Before: rows, features
     After: rows, timesteps, features
-    """  
+    """
     rolling_indexes = [(range(i, i+timesteps))
                         for i in range(X.shape[0]-timesteps)]
 
@@ -66,7 +67,7 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
     def data_available(self, timestamp, data):
         """Overrides SerialIoBase.data_available() to
         accumulate the data and update the model
-        
+
         This implementation keeps things simple by performing the
         update sequentially to data acquisition.
         """
@@ -107,7 +108,7 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
         X = samples[:, 1:]
         X_scaled = preprocessors_and_data['scaler'].transform(X)
         X_train = create_windows(X_scaled, timesteps)
- 
+
         y = samples[:, 0]
         y_train = create_rolling_average(y, timesteps)
 
@@ -120,6 +121,7 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
         # within the task
         checkpoint = keras.models.load_model('./cnn_online_rpi.h5')
         checkpoint.fit(X_train, y_train, epochs=1, validation_data=(X_val, y_val))
+        os.remove('./cnn_online_rpi.h5')
         checkpoint.save('./cnn_online_rpi.h5')
 
 # main program
