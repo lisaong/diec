@@ -88,9 +88,9 @@ Note: the micro:bit must be connected **before** the docker container is launche
 ls /dev/ttyA*
 ```
 
-5. From the **docker container** on the Raspberry Pi, incrementally update the model after data has been acquired.
+5. From the **docker container** on the Raspberry Pi, incrementally update the model in intervals of N timesteps:
 ```
 cd day4/rpi
 python3 incremental_train.py /dev/ttyACM0 --update_interval=2
 ```
-(Substitute `/dev/ttyACM0` with the path from step 3)
+(Substitute `/dev/ttyACM0` with the path from step 2)
