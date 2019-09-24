@@ -14,13 +14,21 @@ Using the [Python Micro:bit Editor](https://python.microbit.org/v/1.1), flash a 
 ## Initial data collection
 In this section, you will collect data for your own micro:bit gesture.
 
-1. Connect the Micro:bit to your laptop using USB, find the serial port path associated with device. This will be unique to your laptop. 
+1. Find the serial port path associated with micro:bit
 
-   On MacOS, you can use `ls /dev/cu.usbmodem*`. 
+   a. With the micro:bit **disconnected**:
 
-   On Windows, you can find the path from Device Manager
+       On MacOS, use `ls /dev/cu.*`
 
-2. Edit acquire_data.py, update COMPORT to your path:
+       On Windows, open Device Manager and expand "Ports (COM & LPT)"
+
+   b. Connect the micro:bit:
+
+       On MacOS, use `ls /dev/cu.*`, you should see a path that looks similar to `/dev/cu.usbmodemXXXX`
+
+       On Windows, a new COMXX node should appear under "Ports (COM & LPT)"
+   
+2. Edit acquire_data.py, update COMPORT to the path found in step 1:
 
    On MacOS:
     ```
