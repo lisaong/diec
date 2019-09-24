@@ -28,16 +28,16 @@ In this section, you will collect data for your own micro:bit gesture.
 
        On Windows, a new COMXX node should appear under "Ports (COM & LPT)"
    
-2. Edit acquire_data.py, update COMPORT to the path found in step 1:
+2. Edit acquire_data.py, update comport to the path found in step 1:
 
    On MacOS:
     ```
-    COMPORT = '/dev/cu.usbmodem144102' # Example MacOS path
+    comport = '/dev/cu.usbmodem144102' # Example MacOS path
     ```
 
    On Windows:
     ```
-    COMPORT = 'COM3' # Example Windows path
+    comport = 'COM3' # Example Windows path
     ```
 
 3. Setup the data collection script
