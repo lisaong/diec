@@ -94,3 +94,6 @@ cd day4/rpi
 python3 incremental_train.py /dev/ttyACM0 --update_interval=2
 ```
 (Substitute `/dev/ttyACM0` with the path from step 2)
+
+## Troubleshooting
+For troubleshooting training issues, the incremental_train.py script can also be run on the laptop with the micro:bit connected. Use the appropriate serial path.
