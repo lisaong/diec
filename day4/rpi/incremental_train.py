@@ -11,22 +11,6 @@ import tensorflow.keras as keras
 import numpy as np
 import pickle
 
-# parallelise collection and training
-from dask import compute, delayed
-
-class OnlineTrainer(serialio.SerialIoBase):
-    def __init__(self, *args, **kw):
-        '''https://github.com/pyserial/pyserial-asyncio/issues/41
-        '''
-        super().__init__(*args, **kw)
-
-    def data_available(self, timestamp, data):
-        """Overrides SerialIoBase.data_available()
-        """
-        #self.file.write(data)
-        #self.file.write('\n')
-        #self.file.flush()
-
 def create_windows(X, timesteps):
     """convert the time series so that each entry contains a series of timesteps.
     Before: rows, features
@@ -53,42 +37,89 @@ def create_rolling_average(y, timesteps):
 
     return y_out
 
-def update_model(model, preprocessors_and_data, X, y):
-    """Updates a model using the input data
-    """
-    timesteps = 20
-    X_scaled = preprocessors_and_data['scaler'].transform(X)
+class SerialIoUpdateModel(serialio.SerialIoBase):
+    def __init__(self, update_interval, *args, **kw):
+        '''https://github.com/pyserial/pyserial-asyncio/issues/41
+        '''
+        super().__init__(*args, **kw)
 
-    X_train = create_windows(X_scaled, timesteps)
-    y_train = create_rolling_average(y, timesteps)
+        # A model trained using Keras with Tensorflow backend can be
+        # loaded using tensorflow.keras
+        # This avoids having to compile and install Keras on the Raspberry Pi 
+        self.checkpoint = keras.models.load_model('./cnn_online.h5')
+        self.checkpoint.summary()
 
-    X_val = preprocessors_and_data['X_val']
-    y_val = preprocessors_and_data['y_val']
+        self.preprocessors_and_data = pickle.load(open(
+            './preprocessors_and_data.pkl', 'rb'))
 
-    model.fit(X_train, y_train, epochs=1, validation_data=(X_val, y_val))
+        self.timesteps = 20 # timesteps for windowing
+        self.min_batch_size = self.timesteps * update_interval
+        self.num_columns = 5 # number of data columns
+        self.samples = np.array([]) # buffer to hold samples
+
+    def data_available(self, timestamp, data):
+        """Overrides SerialIoBase.data_available() to
+        accumulate the data and update the model
+        
+        This implementation keeps things simple by performing the
+        update sequentially to data acquisition.
+        """
+        try:
+            # cleaning
+            data = data.replace('\r\n', ',').replace('True', '1').replace('False', '0')
+            data = np.array(data.split(',')).astype(np.float)
+
+            # split into multiple rows
+            data = data.reshape(-1, self.num_columns)
+
+            # append to samples buffer
+            if self.samples.shape[0] == 0:
+                self.samples = data
+            else:
+                self.samples = np.vstack((self.samples, data))
+
+            if self.samples.shape[0] >= self.min_batch_size:
+                # once min batch size is reached, update the model
+                self.update_model()
+                self.samples = np.array([])
+
+        except Exception as e:
+            print(e)
+
+    def update_model(self):
+        """Updates a model using the input data
+        """
+        print(f'Updating model using {self.samples.shape[0]} samples')
+
+        X = self.samples[:, 1:]
+        X_scaled = self.preprocessors_and_data['scaler'].transform(X)
+        X_train = create_windows(X_scaled, self.timesteps)
+ 
+        y = self.samples[:, 0]
+        y_train = create_rolling_average(y, self.timesteps)
+
+        # saved validation set from original training
+        # so that we can monitor whether model is overfitting
+        X_val = self.preprocessors_and_data['X_val']
+        y_val = self.preprocessors_and_data['y_val']
+
+        self.checkpoint.fit(X_train, y_train, epochs=1, validation_data=(X_val, y_val))
+
+# main program
+update_interval = 5
+baudrate = 115200
 
 parser = argparse.ArgumentParser(description='Online training using data from micro:bit')
 parser.add_argument('comport', help='serial port for micro:bit')
+parser.add_argument('--update_interval',
+    help='minimum intervals of timesteps before doing a model update',
+    default=update_interval)
 args = parser.parse_args()
-#print(args.comport)
 
-# A model trained using Keras with Tensorflow backend can be
-# loaded using tensorflow.keras
-# This avoids having to compile and install Keras on the Raspberry Pi 
-checkpoint = keras.models.load_model('./cnn_online.h5')
-print(checkpoint.summary())
+if args.update_interval:
+    update_interval = args.update_interval
 
-for_training = pickle.load(open('./preprocessors_and_data.pkl', 'rb'))
+def SerialIoUpdateModel_Factory():
+    return SerialIoUpdateModel(args.update_interval)
 
-# temp
-import pandas as pd
-df_test = pd.read_csv('../data.csv', names=['Gesture', 'AccX', 'AccY', 'AccZ', 'Heading'])
-
-timesteps = 20
-sample = df_test.iloc[-(timesteps*2):]
-X_sample = sample.loc[:, sample.columns != 'Gesture'].values
-y_sample = np.where(sample['Gesture'], 1, 0)
-# end temp
-
-update_model(checkpoint, for_training, X_sample, y_sample)
-
+serialio.run_loop_forever(args.comport, baudrate, SerialIoUpdateModel_Factory)
