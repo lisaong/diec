@@ -3,26 +3,26 @@
 This example performs online training of a gesture detector on a Raspberry Pi,
 using live sensor readings from a BBC Micro:bit.
 
-1. Collect data from micro:bit
+1. Collect data from Micro:bit
 2. Train initial model using Google Colab, save a model checkpoint
 3. Load model checkpoint on a Raspberry Pi
-4. Continue training on the Raspberry Pi, using live sensor data from the micro:bit
+4. Continue training on the Raspberry Pi, using live sensor data from the Micro:bit
 
 ## Micro:bit Programming
-Using the [Python Micro:bit Editor](https://python.microbit.org/v/1.1), flash a micro:bit with [microbit/device_code.py](microbit/device_code.py)
+Using the [Python Micro:bit Editor](https://python.microbit.org/v/1.1), flash a Micro:bit with [microbit/device_code.py](microbit/device_code.py)
 
 ## Initial data collection
-In this section, you will collect data for your own micro:bit gesture.
+In this section, you will collect data for your own Micro:bit gesture.
 
-1. Find the serial port path associated with micro:bit
+1. Find the serial port path associated with Micro:bit
 
-   a. With the micro:bit **disconnected**:
+   a. With the Micro:bit **disconnected**:
 
        On MacOS, use `ls /dev/cu.*`
 
        On Windows, open Device Manager and expand "Ports (COM & LPT)"
 
-   b. Connect the micro:bit:
+   b. Connect the Micro:bit:
 
        On MacOS, use `ls /dev/cu.*`, you should see a path that looks similar to `/dev/cu.usbmodemXXXX`
 
@@ -51,7 +51,7 @@ In this section, you will collect data for your own micro:bit gesture.
     python acquire_data.py
     ```
    As the script is running:
-      - press button A to perform the gesture (by moving the micro:bit)
+      - press button A to perform the gesture (by moving the Micro:bit)
       - release button A when your gesture completes
       - repeat about 10 times to gather enough data
 
@@ -70,18 +70,19 @@ In this section, you will collect data for your own micro:bit gesture.
 ~/diec/day4/rpi
 ``` 
 
-2. Connect the Micro:bit device, check the serial path for it **from the docker container**.
+2. Connect the Micro:bit device to the Raspberry Pi 3, check its serial path:
 ```
 ls /dev/ttyA*
 ```
 Note down the serial path, e.g. `/dev/ttyACM0`
+
+**Important**: the Micro:bit must be connected **before** the docker container is launched, in order for the container to find the serial device.
 
 3. From the Raspberry Pi 3, launch docker container
 ```
 cd ~/diec/day4/docker
 sh ./launch_docker.sh
 ```
-Note: the micro:bit must be connected **before** the docker container is launched, in order for the container to find the serial device.
 
 4. From the **docker container** on the Raspberry Pi, verify that the serial device can be seen:
 ```
@@ -96,4 +97,4 @@ python3 incremental_train.py /dev/ttyACM0 --update_interval=2
 (Substitute `/dev/ttyACM0` with the path from step 2)
 
 ## Troubleshooting
-For troubleshooting training issues, the incremental_train.py script can also be run on the laptop with the micro:bit connected. Use the appropriate serial path.
+For troubleshooting training issues, the incremental_train.py script can also be run on the laptop with the Micro:bit connected. Use the appropriate serial path.

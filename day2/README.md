@@ -53,11 +53,11 @@ sudo apt install mosquitto mosquitto-clients
 ```
 
 To find the microbit serial port path:
-1. Disconnect the micro:bit
+1. Disconnect the Micro:bit
 2. `ls /dev/ttyA*`
-3. Connect the micro:bit over USB
+3. Connect the Micro:bit over USB
 4. `ls /dev/ttyA*`
-5. The path is whatever is new in step 4 after the micro:bit is plugged in. If nothing new comes up, try expand the search path by doing `ls /dev/tty*` instead (note that you'll see a lot more paths here)
+5. The path is whatever is new in step 4 after the Micro:bit is plugged in. If nothing new comes up, try expand the search path by doing `ls /dev/tty*` instead (note that you'll see a lot more paths here)
 
 Running the microservices:
 1. Generate 1 IOTA seed and address on DevNet:
@@ -77,7 +77,7 @@ python iota_microservice.py /dev/ttyXXXX
 # from another terminal:
 python microbit_to_mqtt.py /dev/ttyXXXX
 ```
-5. Flip the micro:bit left and right, while clicking button A.  If all goes well, you should observe see MQTT traffic. 
+5. Flip the Micro:bit left and right, while clicking button A.  If all goes well, you should observe see MQTT traffic. 
 
 | Topic | Publisher | Key Subscriber | Payload |
 | -- | -- | -- | -- |
@@ -86,7 +86,7 @@ python microbit_to_mqtt.py /dev/ttyXXXX
 |/dev/ttyXXXX/iota|nutrient_microservice.py|iota_microservice.py|nutrient amounts to request payment for|
 |/dev/ttyXXXX/dispenser|iota_microservice.py|microbit_to_mqtt.py|IOTA bundle hash of completed transaction|
 
-After an IOTA transaction is issued and confirmed, the micro:bit will display the bundle hash on its screen.
+After an IOTA transaction is issued and confirmed, the Micro:bit will display the bundle hash on its screen.
 
 ### Windows
 ```
@@ -103,7 +103,7 @@ mosquitto.exe
 ```
 
 To find the microbit serial port path:
-1. Connect the micro:bit over USB. The driver should automatically install (will require admin privileges)
+1. Connect the Micro:bit over USB. The driver should automatically install (will require admin privileges)
 2. Start -> Device Manager
   - Expand Ports (COM & LPT)
   - Look for something like "USB Serial Device (COM4)" (the last digit will change depending on your computer)
