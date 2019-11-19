@@ -68,8 +68,8 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
         """Overrides SerialIoBase.data_available() to
         accumulate the data and update the model
 
-        This implementation keeps things simple by performing the
-        update sequentially to data acquisition.
+        This implementation uses queuing to perform the
+        model update in parallel to data acquisition.
         """
         try:
             # clean
