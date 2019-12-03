@@ -9,17 +9,48 @@ import os
 import argparse
 import numpy as np
 import pickle
-import shutil
+
 from dask.distributed import Client, Queue
 
-# A model trained using Keras with Tensorflow backend can be
-# loaded using tensorflow.keras
-# This avoids having to compile and install Keras on the Raspberry Pi
 import tensorflow as tf
 import tensorflow.keras as keras
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 dask_client = Client(processes=False) # use threads
 dask_queue = Queue() # ensure that training is executed sequentially
+
+# Global model checkpoint accessed from the queue
+# A workaround for a pickling issue in TF 2.0
+#  https://github.com/tensorflow/tensorflow/issues/33283
+checkpoint = None
+save_model = None
+
+def load_model():
+    """manually creates a model and loads its weights, instead of using
+    tensorflow.keras.load_model()
+
+    A workaround for a pickling issue in TF 2.0
+    https://github.com/tensorflow/tensorflow/issues/33283
+    """
+
+    from tensorflow.keras.models import Sequential
+    from tensorflow.keras.layers import Conv1D, Flatten, Dense
+    from tensorflow.keras.optimizers import SGD
+
+    model = Sequential()
+
+    model.add(Conv1D(64, kernel_size=3,
+                    input_shape=(20, 4),
+                    activation='relu'))
+    model.add(Flatten())
+    model.add(Dense(64, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    model.compile(loss='binary_crossentropy',
+        optimizer=SGD(learning_rate=.01), metrics=['acc'])
+    model.load_weights("./cnn_online.h5")
+
+    return model
 
 def create_windows(X, timesteps):
     """convert the time series so that each entry contains a series of timesteps.
@@ -52,9 +83,6 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
         '''https://github.com/pyserial/pyserial-asyncio/issues/41
         '''
         super().__init__(*args, **kw)
-
-        # make a working copy of the model
-        shutil.copyfile('./cnn_online.h5', './cnn_online_rpi.h5')
 
         self.preprocessors_and_data = pickle.load(open(
             './preprocessors_and_data.pkl', 'rb'))
@@ -104,6 +132,12 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
     def update_model(timesteps, preprocessors_and_data, samples):
         """Updates a model using the input data
         """
+        # Global model checkpoint
+        # A workaround for a pickling issue in TF 2.0
+        #  https://github.com/tensorflow/tensorflow/issues/33283
+        global checkpoint
+        global save_model
+
         print(f'Entering update_model with {samples.shape} samples')
         X = samples[:, 1:]
         X_scaled = preprocessors_and_data['scaler'].transform(X)
@@ -117,12 +151,16 @@ class SerialIoUpdateModel(serialio.SerialIoBase):
         X_val = preprocessors_and_data['X_val']
         y_val = preprocessors_and_data['y_val']
 
-        # due to a bug in dask and tensorflow, we have to load the checkpoint
-        # within the task
-        checkpoint = keras.models.load_model('./cnn_online_rpi.h5')
-        checkpoint.fit(X_train, y_train, epochs=1, validation_data=(X_val, y_val))
-        os.remove('./cnn_online_rpi.h5')
-        checkpoint.save('./cnn_online_rpi.h5')
+        # Initialise the global model checkpoint on demand
+        # This assumes that Dask maintains thread affinity for its tasks
+        if checkpoint is None:
+            checkpoint = load_model()
+            save_model = ModelCheckpoint('./cnn_online_updated_weights.h5',
+                save_best_only=True, save_weights_only=True)
+
+        checkpoint.fit(X_train, y_train, epochs=1, 
+            validation_data=(X_val, y_val),
+            callbacks=[save_model])
 
 # main program
 update_interval = 5
