@@ -26,7 +26,7 @@ Documentation: https://www.tensorflow.org/lite/guide/inference#running_a_model
 ```
 ~/diec/day3/rpi
 ``` 
-2. From the Raspberry Pi 3, launch docker image containing Tensorflow 1.14 for Python 3.7
+2. From the Raspberry Pi 3, launch docker image containing Tensorflow 2.0 for Python 3.7
 ```
 cd ~/diec/day3/docker
 sh ./launch_docker.sh
@@ -34,5 +34,5 @@ sh ./launch_docker.sh
 3. From the **docker container** running on the Raspberry Pi 3, evaluate the saved TF Lite model using inputs
 ```
 cd day3/rpi
-python3 evaluate.py X_test.pkl
+python3 evaluate.py input_file
 ```
