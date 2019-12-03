@@ -1,4 +1,4 @@
-# Anomaly Detection on Raspberry Pi using TensorFlow Lite
+# Time Series Classification on Raspberry Pi using TensorFlow Lite
 
 This example predicts a value using time series data from a Smart Factory.
 
