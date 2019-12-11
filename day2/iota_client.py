@@ -17,7 +17,14 @@ import zmq
 
 # https://docs.iota.org/docs/getting-started/0.1/references/iota-networks#devnet
 node_config = {
-    'url': 'https://nodes.devnet.iota.org:443',
+    # https://github.com/iota-community/one-command-tangle
+    'url': 'http://<ec2_address_here>:14265', # TODO: update with ec2 url
+    'seed_str': 'SEED99999999999999999999999999999999999999999999999999999999999999999999999999999',
+
+    # Devnet
+    #'url': 'https://nodes.devnet.iota.org:443',
+    #'seed_str': None,
+
     'min_weight_magnitude': 9,
     'zmq': 'tcp://zmq.devnet.iota.org:5556'
 }
@@ -34,7 +41,10 @@ def generate_addresses(count=1, seed=None):
     Returns: (address, seed)
     """
     if seed is None:
-        seed = Seed.random()
+        if node_config['seed_str']:
+            seed = node_config['seed_str']
+        else:
+            seed = Seed.random()
 
     generator = AddressGenerator(seed=seed, security_level=security_level)
     return (generator.get_addresses(0, count), seed) # index, count
