@@ -37,6 +37,28 @@ Proposed solution using IOTA
 ![relay](assets/microbit_to_mqtt.png)
 
 ## Installation
+### Setting up test IOTA Tangle
+
+Go to: https://github.com/iota-community/one-command-tangle
+
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+git clone https://github.com/iota-community/one-command-tangle.git
+cd one-command-tangle
+sudo docker-compose up
+```
+
+Add 14265 as inbound port.
+
+To test locally, download IOTA light wallet on laptop: https://github.com/iotaledger/wallet/releases
+
+```
+Host: Custom, use http://your_url:14265
+Login with seed: SEED99999999999999999999999999999999999999999999999999999999999999999999999999999
+```
+Note: When you first log into the IOTA Light Wallet, go to RECEIVE > ATTACH TO TANGLE to see your full balance.
+
 ### Raspberry Pi
 ```
 sudo apt-get install libssl-dev
@@ -60,11 +82,11 @@ To find the microbit serial port path:
 5. The path is whatever is new in step 4 after the Micro:bit is plugged in. If nothing new comes up, try expand the search path by doing `ls /dev/tty*` instead (note that you'll see a lot more paths here)
 
 Running the microservices:
-1. Generate 1 IOTA seed and address on DevNet:
+1. Edit `iota_client.py` to use the URL for your test IOTA Tangle.
+2. Generate 1 IOTA seed and address:
 ```
 python iota_client.py --gen_address 1
 ```
-2. Go to https://faucet.devnet.iota.org to request free tokens using the account (not the seed). 
 3. Update feeder/iota_wallets.json. Sender accounts must use the IOTA seed, whereas recipient accounts can use an IOTA address. You basically run steps 1 and 2 three times (where step 2 is optional for the recipient account).
 4. Run the microservices in terminals to see what they do:
 ```

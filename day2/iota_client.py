@@ -13,7 +13,6 @@ from iota.crypto.types import Seed
 from pprint import pprint
 import argparse
 import time
-import zmq
 
 # https://docs.iota.org/docs/getting-started/0.1/references/iota-networks#devnet
 node_config = {
@@ -23,8 +22,7 @@ node_config = {
     # Devnet
     #'url': 'https://nodes.devnet.iota.org:443',
 
-    'min_weight_magnitude': 9,
-    'zmq': 'tcp://zmq.devnet.iota.org:5556'
+    'min_weight_magnitude': 9
 }
 
 # security level for private key signature lengths
@@ -51,35 +49,6 @@ def get_balance(address_str):
     address = iota.Address(as_bytes(address_str))
     api = iota.Iota(node_config['url'])
     return api.get_balances(addresses=[address], threshold=100)
-
-def monitor(address_str):
-    """Monitors a given address for a confirmed transaction
-
-    References:
-    https://docs.iota.org/docs/iri/0.1/references/zmq-events
-    https://www.digitalocean.com/community/tutorials/how-to-work-with-the-zeromq-messaging-library
-    """
-    context = zmq.Context()
-
-    # get a socket for our context
-    sock = context.socket(zmq.SUB)
-
-    # subscribe to this IOTA address
-    sock.setsockopt(zmq.SUBSCRIBE, as_bytes(address_str))
-
-    # Or subscribe to everything
-    #sock.setsockopt(zmq.SUBSCRIBE, as_bytes('sn'))
-
-    sock.connect(node_config['zmq'])
-
-    try:
-        print('Monitoring transactions for', address_str)
-        while True:
-            message = sock.recv()
-            print(message)
-    finally:
-        print('Closing socket')
-        sock.close()
 
 def do_transaction(sender_seed_str, recipient_str, amount, message=None):
     """Performs an IOTA transaction with an optional message"""
@@ -128,7 +97,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='IOTA client script for workshop')
     parser.add_argument('--gen_address', action='store_true', help='generates an IOTA address')
     parser.add_argument('--balance', metavar='ADDRESS', type=str, help='checks balance for a given IOTA address')
-    parser.add_argument('--monitor', metavar='ADDRESS', type=str, help='monitors transactions for a given IOTA address')
 
     # arguments for transactions
     tx_args = parser.add_argument_group('transaction arguments')
@@ -148,8 +116,6 @@ if __name__ == "__main__":
     elif args.balance:
         balance = get_balance(args.balance)
         pprint(balance)
-    elif args.monitor is not None:
-        monitor(args.monitor)
     elif args.sender_seed and args.to_address and args.amount is not None:
         do_transaction(args.sender_seed, args.to_address, args.amount, args.message)
     else:
