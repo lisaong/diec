@@ -18,14 +18,9 @@ RUN apt-get update \
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 --no-cache-dir install \
-    virtualenv \
-    && virtualenv -p python3 iota
-
 COPY requirements.txt /tmp/
 
-RUN source iota/bin/activate \
-    && pip --no-cache-dir install \
+RUN pip --no-cache-dir install \
     -r /tmp/requirements.txt
 
 WORKDIR "/code"
