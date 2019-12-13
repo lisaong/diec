@@ -20,7 +20,7 @@ RUN apt-get clean \
 
 RUN pip3 --no-cache-dir install \
     virtualenv \
-    && virtualenv -p python iota
+    && virtualenv -p python3 iota
 
 COPY requirements.txt /tmp/
 
