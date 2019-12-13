@@ -27,4 +27,4 @@ RUN source iota/bin/activate \
 WORKDIR "/code"
 
 # Test
-RUN python3 -c "import pyota; print('pyota', pyota.__version__);"
+RUN python3 -c "import pyota; print('iota', iota.__version__);"
