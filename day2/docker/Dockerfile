@@ -13,7 +13,8 @@ RUN apt-get update \
         libssl-dev \
         mosquitto \
         mosquitto-clients \
-        python3-pip
+        python3-pip \
+        pyserial-asyncio
 
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
