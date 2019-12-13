@@ -20,7 +20,7 @@ RUN apt-get clean \
 
 COPY requirements.txt /tmp/
 
-RUN pip --no-cache-dir install \
+RUN pip3 --no-cache-dir install \
     -r /tmp/requirements.txt
 
 WORKDIR "/code"
