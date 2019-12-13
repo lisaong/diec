@@ -1,3 +1,7 @@
+# Consider: moving to balena
+#   https://www.balena.io/docs/reference/base-images/base-images/
+# FROM balenalib/raspberrypi3:buster
+#
 FROM resin/rpi-raspbian:buster
 
 RUN apt-get update \
