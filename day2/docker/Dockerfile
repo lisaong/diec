@@ -11,10 +11,7 @@ RUN apt-get update \
         mosquitto-clients \
         python3-pip
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-
-RUN  apt-get clean \
+RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 --no-cache-dir install \
