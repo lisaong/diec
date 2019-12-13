@@ -61,17 +61,8 @@ Note: When you first log into the IOTA Light Wallet, go to RECEIVE > ATTACH TO T
 
 ### Raspberry Pi
 ```
-sudo apt-get install libssl-dev
-
-conda create -n iota python=3
-conda activate iota
-pip install –r requirements.txt
-
-```
-
-Install mosquitto service:
-```
-sudo apt install mosquitto mosquitto-clients
+cd ~/diec/day2/docker
+sh ./launch_docker.sh
 ```
 
 To find the microbit serial port path:
@@ -85,7 +76,7 @@ Running the microservices:
 1. Edit `iota_client.py` to use the URL for your test IOTA Tangle.
 2. Generate 1 IOTA seed and address:
 ```
-python iota_client.py --gen_address 1
+python iota_client.py --gen_address
 ```
 3. Update feeder/iota_wallets.json. Sender accounts must use the IOTA seed, whereas recipient accounts can use an IOTA address. You basically run steps 1 and 2 three times (where step 2 is optional for the recipient account).
 4. Run the microservices in terminals to see what they do:
@@ -115,7 +106,7 @@ After an IOTA transaction is issued and confirmed, the Micro:bit will display th
 conda create -n iota python=3
 conda activate iota
 
-pip install -r requirements.txt
+pip install -r docker\requirements.txt
 ```
 
 Install mosquitto (tested with 64 bit version): https://mosquitto.org/download/
