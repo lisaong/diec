@@ -29,4 +29,4 @@ RUN pip3 --no-cache-dir install \
 WORKDIR "/code"
 
 # Test
-RUN python3 -c "import pyota; print('iota', iota.__version__);"
+RUN python3 -c "import iota; print('iota', iota.__version__);"
