@@ -13,6 +13,7 @@ RUN apt-get update \
         libssl-dev \
         mosquitto \
         mosquitto-clients \
+        python3-dev \
         python3-pip \
         python3-setuptools
 
