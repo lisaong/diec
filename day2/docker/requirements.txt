@@ -21,6 +21,7 @@ pycparser==2.19
 pyOpenSSL==19.0.0
 -e git+https://github.com/pdecol/iota.lib.py.git@6d629b8a139fe6eb412e021106ef0d115138707d#egg=PyOTA
 pyserial==3.4
+pyserial-asyncio==0.4
 pysha3==1.0.2
 python-dateutil==2.8.0
 pytz==2018.9

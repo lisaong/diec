@@ -60,44 +60,36 @@ Login with seed: SEED99999999999999999999999999999999999999999999999999999999999
 Note: When you first log into the IOTA Light Wallet, go to RECEIVE > ATTACH TO TANGLE to see your full balance.
 
 ### Raspberry Pi
-```
-sudo apt-get install libssl-dev
-
-conda create -n iota python=3
-conda activate iota
-pip install –r requirements.txt
-
-```
-
-Install mosquitto service:
-```
-sudo apt install mosquitto mosquitto-clients
-```
 
 To find the microbit serial port path:
 1. Disconnect the Micro:bit
 2. `ls /dev/ttyA*`
-3. Connect the Micro:bit over USB
+3. Connect the Micro:bit over USB to the Raspberry Pi
 4. `ls /dev/ttyA*`
 5. The path is whatever is new in step 4 after the Micro:bit is plugged in. If nothing new comes up, try expand the search path by doing `ls /dev/tty*` instead (note that you'll see a lot more paths here)
+6. Launch the docker container **after** connecting the Micro:bit to the Raspberry Pi:
+```
+cd ~/diec/day2/docker
+sh ./launch_docker.sh
+```
 
 Running the microservices:
-1. Edit `iota_client.py` to use the URL for your test IOTA Tangle.
+1. Edit `iota_client.py` on the Raspberry Pi to use the URL for your test IOTA Tangle.
 2. Generate 1 IOTA seed and address:
 ```
-python iota_client.py --gen_address 1
+python3 iota_client.py --gen_address
 ```
-3. Update feeder/iota_wallets.json. Sender accounts must use the IOTA seed, whereas recipient accounts can use an IOTA address. You basically run steps 1 and 2 three times (where step 2 is optional for the recipient account).
+3. Edit feeder/iota_wallets.json. Sender accounts must use the IOTA seed, whereas recipient accounts can use an IOTA address. You basically run steps 1 and 2 three times (where step 2 is optional for the recipient account).
 4. Run the microservices in terminals to see what they do:
 ```
 # from one terminal:
-python nutrient_microservice.py /dev/ttyXXXX
+python3 nutrient_microservice.py /dev/ttyXXXX
 
 # from another terminal:
-python iota_microservice.py /dev/ttyXXXX
+python3 iota_microservice.py /dev/ttyXXXX
 
 # from another terminal:
-python microbit_to_mqtt.py /dev/ttyXXXX
+python3 microbit_to_mqtt.py /dev/ttyXXXX
 ```
 5. Flip the Micro:bit left and right, while clicking button A.  If all goes well, you should observe see MQTT traffic. 
 
@@ -115,7 +107,7 @@ After an IOTA transaction is issued and confirmed, the Micro:bit will display th
 conda create -n iota python=3
 conda activate iota
 
-pip install -r requirements.txt
+pip install -r docker\requirements.txt
 ```
 
 Install mosquitto (tested with 64 bit version): https://mosquitto.org/download/
