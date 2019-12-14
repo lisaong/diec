@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 docker run -it \
     -v ~/diec:/code \
-    lisaong/rpi-pyota:1.0
+    lisaong/rpi-buster-pyota:1.0
