@@ -10,6 +10,7 @@ RUN apt-get update \
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        libffi-dev \
         libssl-dev \
         mosquitto \
         mosquitto-clients \
