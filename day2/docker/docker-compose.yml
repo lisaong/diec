@@ -1,0 +1,17 @@
+version: '3'
+services:
+  broker:
+    image: eclipse-mosquitto
+    ports:
+      - '1883'
+
+  iota:
+    image: lisaong/rpi-buster-pyota:1.0
+    volumes:
+      - /home/ohl/diec:/code
+    privileged: true
+    depends_on:
+      - broker
+    command: >
+      sh -c "cd /code/day2/feeder 
+      && python3 iota_microservice.py /dev/ttyACM0 --hostname broker"
