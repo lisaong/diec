@@ -80,16 +80,11 @@ Running the microservices:
 python3 iota_client.py --gen_address
 ```
 3. Edit feeder/iota_wallets.json. Sender accounts must use the IOTA seed, whereas recipient accounts can use an IOTA address. You basically run steps 1 and 2 three times (where step 2 is optional for the recipient account).
-4. Run the microservices in terminals to see what they do:
+4. Run the microservices, update the shell variable below with the actual serial port path:
 ```
-# from one terminal:
-python3 nutrient_microservice.py /dev/ttyXXXX
+export MICROBIT_PORT=/dev/ttyACM0
 
-# from another terminal:
-python3 iota_microservice.py /dev/ttyXXXX
-
-# from another terminal:
-python3 microbit_to_mqtt.py /dev/ttyXXXX
+docker-compose up
 ```
 5. Flip the Micro:bit left and right, while clicking button A.  If all goes well, you should observe see MQTT traffic. 
 
