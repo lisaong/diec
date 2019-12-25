@@ -1,3 +1,9 @@
+# Set the following environment variables before running
+# docker-compose up
+#
+# MICROBIT_PORT=/dev/ttyACM0
+
+# this version number is for compose, not the orchestration
 version: '3'
 services:
   broker:
@@ -14,7 +20,7 @@ services:
       - broker
     command: >
       sh -c "cd /code/feeder 
-      && python3 microbit_to_mqtt.py /dev/ttyACM0 --hostname broker"
+      && python3 microbit_to_mqtt.py ${MICROBIT_PORT} --hostname broker"
 
   nutrient:
     image: lisaong/rpi-buster-pyota:1.0
@@ -24,7 +30,7 @@ services:
       - broker
     command: >
       sh -c "cd /code/feeder 
-      && python3 nutrient_microservice.py /dev/ttyACM0 --hostname broker"
+      && python3 nutrient_microservice.py ${MICROBIT_PORT} --hostname broker"
 
   iota:
     image: lisaong/rpi-buster-pyota:1.0
@@ -34,4 +40,4 @@ services:
       - broker
     command: >
       sh -c "cd /code/feeder 
-      && python3 iota_microservice.py /dev/ttyACM0 --hostname broker"
+      && python3 iota_microservice.py ${MICROBIT_PORT} --hostname broker"
