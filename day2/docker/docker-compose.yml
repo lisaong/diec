@@ -5,11 +5,31 @@ services:
     ports:
       - '1883'
 
-  iota:
+  microbit:
     image: lisaong/rpi-buster-pyota:1.0
     volumes:
       - /home/ohl/diec:/code
     privileged: true
+    depends_on:
+      - broker
+    command: >
+      sh -c "cd /code/day2/feeder 
+      && python3 microbit_to_mqtt.py /dev/ttyACM0 --hostname broker"
+
+  nutrient:
+    image: lisaong/rpi-buster-pyota:1.0
+    volumes:
+      - /home/ohl/diec:/code
+    depends_on:
+      - broker
+    command: >
+      sh -c "cd /code/day2/feeder 
+      && python3 nutrient_microservice.py /dev/ttyACM0 --hostname broker"
+
+  iota:
+    image: lisaong/rpi-buster-pyota:1.0
+    volumes:
+      - /home/ohl/diec:/code
     depends_on:
       - broker
     command: >
