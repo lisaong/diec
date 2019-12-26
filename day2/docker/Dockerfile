@@ -12,7 +12,6 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libffi-dev \
         libssl-dev \
-        mosquitto \
         mosquitto-clients \
         python3-dev \
         python3-pip \
