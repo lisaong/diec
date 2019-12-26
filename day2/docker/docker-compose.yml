@@ -12,7 +12,7 @@ services:
       - '1883'
 
   microbit:
-    image: lisaong/rpi-buster-pyota:1.0
+    image: lisaong/rpi-buster-pyota:1.1
     volumes:
       - ..:/code
     privileged: true
@@ -23,7 +23,7 @@ services:
       && python3 microbit_to_mqtt.py ${MICROBIT_PORT} --hostname broker"
 
   nutrient:
-    image: lisaong/rpi-buster-pyota:1.0
+    image: lisaong/rpi-buster-pyota:1.1
     volumes:
       - ..:/code
     depends_on:
@@ -33,7 +33,7 @@ services:
       && python3 nutrient_microservice.py ${MICROBIT_PORT} --hostname broker"
 
   iota:
-    image: lisaong/rpi-buster-pyota:1.0
+    image: lisaong/rpi-buster-pyota:1.1
     volumes:
       - ..:/code
     depends_on:
