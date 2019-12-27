@@ -1,8 +1,4 @@
-# Set the following environment variables before running
-# docker-compose up
-#
-# MICROBIT_PORT=/dev/ttyACM0
-
+# Day2 Workshop Orchestration
 # this version number is for compose, not the orchestration
 version: '3'
 services:
