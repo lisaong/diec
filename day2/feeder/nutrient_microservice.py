@@ -148,9 +148,10 @@ class NutrientMicroservice(MqttMicroservice):
 
         # TODO: fingerprinting using sensor data instead
         # of this naive approach
-        last_gest = data[-1]['gest_common'] # (gesture, count)
-        if (id == '123' and last_gest[0] == 'left' or
-            id == '456' and last_gest[0] == 'right'):
+        # last_gest = data[-1]['gest_common'] # (gesture, count)
+        # if (id == '123' and last_gest[0] == 'left' or
+        #    id == '456' and last_gest[0] == 'right'):
+        if (id == '123' or id == '456'):
             result = base_plan
             result['id'] = id
             print('nutrient profile', result)
