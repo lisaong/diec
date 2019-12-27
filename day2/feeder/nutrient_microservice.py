@@ -124,13 +124,13 @@ class NutrientMicroservice(MqttMicroservice):
                 results[-1][k + '_mean'] = mean(ld[k])
                 results[-1][k + '_std'] = stdev(ld[k])
 
-        print('analyze:', results)
+        print('analyze:', len(results))
         return results
 
     def combine(data):
         """Combines all the different lists into 1 list"""
         results = reduce(lambda x, y: x + y, data) 
-        print('combine:', results)
+        print('combine:', len(results))
         return results
 
     def get_nutrient_profile(self, id, data):
