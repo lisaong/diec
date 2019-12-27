@@ -103,7 +103,6 @@ class NutrientMicroservice(MqttMicroservice):
            - heading
            - temperature
         """
-        print('analyze')
         window_size = 10
         num_windows = len(data) // window_size
 
@@ -125,12 +124,14 @@ class NutrientMicroservice(MqttMicroservice):
                 results[-1][k + '_mean'] = mean(ld[k])
                 results[-1][k + '_std'] = stdev(ld[k])
 
+        print('analyze:', results)
         return results
 
     def combine(data):
         """Combines all the different lists into 1 list"""
-        print('combine')
-        return reduce(lambda x, y: x + y, data)
+        results = reduce(lambda x, y: x + y, data) 
+        print('combine:', results)
+        return results
 
     def get_nutrient_profile(self, id, data):
         """Applies a simple heuristic to determine nutrient profile"""
@@ -152,7 +153,7 @@ class NutrientMicroservice(MqttMicroservice):
             id == '456' and last_gest[0] == 'right'):
             result = base_plan
             result['id'] = id
-
+            print('nutrient profile', result)
         return result
 
 if __name__ == '__main__':
