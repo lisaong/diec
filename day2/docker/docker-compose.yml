@@ -1,6 +1,6 @@
 # Day2 Workshop Orchestration
 # this version number is for compose, not the orchestration
-version: '3'
+version: '3.7'
 services:
   broker:
     image: eclipse-mosquitto
