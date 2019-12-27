@@ -13,15 +13,13 @@ from iota.crypto.types import Seed
 from pprint import pprint
 import argparse
 import time
+import os
 
 # https://docs.iota.org/docs/getting-started/0.1/references/iota-networks#devnet
 node_config = {
     # https://github.com/iota-community/one-command-tangle
-    'url': 'http://<EC2_URL_here>:14265', # TODO: update
-
-    # Devnet
-    #'url': 'https://nodes.devnet.iota.org:443',
-
+    # Then set the IOTA_TANGLE_URL environment variable
+    'url': os.environ['IOTA_TANGLE_URL'],
     'min_weight_magnitude': 9
 }
 
