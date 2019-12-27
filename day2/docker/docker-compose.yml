@@ -38,6 +38,8 @@ services:
       - ..:/code
     depends_on:
       - broker
+    environment:
+      IOTA_TANGLE_URL: ${IOTA_TANGLE_URL}
     command: >
       sh -c "cd /code/feeder 
       && python3 iota_microservice.py ${MICROBIT_PORT} --hostname broker"
