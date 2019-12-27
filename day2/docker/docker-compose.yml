@@ -10,6 +10,8 @@ services:
     image: eclipse-mosquitto
     ports:
       - '1883'
+    logging:
+      driver: none
 
   microbit:
     image: lisaong/rpi-buster-pyota:1.0
