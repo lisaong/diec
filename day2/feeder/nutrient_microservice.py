@@ -33,6 +33,7 @@ class NutrientMicroservice(MqttMicroservice):
 
     def on_message(self, topic, payload):
         """Specialised message handler for this service"""
+        print(topic, payload)
         if 'arrival' in topic:
             self.on_arrival(payload)
         else:
