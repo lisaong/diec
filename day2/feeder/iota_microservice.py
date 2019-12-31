@@ -60,7 +60,7 @@ class IotaMicroservice(MqttMicroservice):
         return bundle_hash
 
     def test(self):
-        payload = json.loads("pub: {'vitamin A': 15, 'vitamin D3': 20, 'omega-3': 20, 'omega-6': 23, 'lysine': 18, 'id': '123'}")
+        payload = json.loads("{'vitamin A': 15, 'vitamin D3': 20, 'omega-3': 20, 'omega-6': 23, 'lysine': 18, 'id': '123'}")
         while(True):
             self.on_message('iota', payload)
     
