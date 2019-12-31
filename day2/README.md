@@ -80,13 +80,14 @@ Running the microservices:
 python3 iota_client.py --gen_address
 ```
 3. Edit feeder/iota_wallets.json. Sender accounts must use the IOTA seed, whereas recipient accounts can use an IOTA address. You basically run steps 1 and 2 three times (where step 2 is optional for the recipient account).
-4. Run the microservices, update the shell variable below with the actual serial port path:
+4. Edit docker/.env to update the IOTA Tangle url and Micro:bit serial port path.
+5. Run compose
 ```
-export MICROBIT_PORT=/dev/ttyACM0
-
-docker-compose up
+cd ~/diec/day2/docker
+docker-compose up -d
+docker-compose logs -f -t
 ```
-5. Flip the Micro:bit left and right, while clicking button A.  If all goes well, you should observe see MQTT traffic. 
+6. Flip the Micro:bit left and right, while clicking button A or B. If all goes well, you should observe traffic like the following:
 
 | Topic | Publisher | Key Subscriber | Payload |
 | -- | -- | -- | -- |
@@ -96,6 +97,36 @@ docker-compose up
 |/dev/ttyXXXX/dispenser|iota_microservice.py|microbit_to_mqtt.py|IOTA bundle hash of completed transaction|
 
 After an IOTA transaction is issued and confirmed, the Micro:bit will display the bundle hash on its screen.
+
+```
+microbit_1  | 2019-12-31T10:36:49.864805335Z pub: {'ts_ms': 47490, 'gest': 'face up', 'accX_mg': -268, 'accY_mg':60, 'accZ_mg': -976, 'temp_C': 30, 'head_degN': 261}
+microbit_1  | 2019-12-31T10:36:49.865019554Z pub: {'ts_ms': 47611, 'gest': 'face up', 'accX_mg': -272, 'accY_mg':64, 'accZ_mg': -984, 'temp_C': 30, 'head_degN': 263}
+microbit_1  | 2019-12-31T10:36:49.865098512Z pub: {'ts_ms': 47730, 'gest': 'face up', 'accX_mg': -260, 'accY_mg':64, 'accZ_mg': -976, 'temp_C': 30, 'head_degN': 263}
+microbit_1  | 2019-12-31T10:36:49.865164606Z pub: {'ts_ms': 47851, 'gest': 'face up', 'accX_mg': -264, 'accY_mg':56, 'accZ_mg': -972, 'temp_C': 30, 'head_degN': 262}
+nutrient_1  | 2019-12-31T10:36:53.322551427Z /dev/ttyACM0/stream {'ts_ms': 44876, 'gest': 'face up', 'accX_mg': -268, 'accY_mg': 52, 'accZ_mg': -972, 'temp_C': 30, 'head_degN': 262}
+
+<etc>
+
+nutrient_1  | 2019-12-31T10:36:54.989229448Z nutrient profile {'vitamin A': 15, 'vitamin D3': 20, 'omega-3': 20, 'omega-6': 23, 'lysine': 18, 'id': '123'}
+nutrient_1  | 2019-12-31T10:36:54.989346791Z pub: {'vitamin A': 15, 'vitamin D3': 20, 'omega-3': 20, 'omega-6': 23, 'lysine': 18, 'id': '123'}
+nutrient_1  | 2019-12-31T10:36:54.989380646Z /dev/ttyACM0/stream {'ts_ms': 53335, 'gest': 'face up', 'accX_mg': 24, 'accY_mg': 252, 'accZ_mg': -896, 'temp_C': 30, 'head_degN': 271}
+nutrient_1  | 2019-12-31T10:36:54.989412364Z /dev/ttyACM0/stream {'ts_ms': 53454, 'gest': 'face up', 'accX_mg': 312, 'accY_mg': -4, 'accZ_mg': -440, 'temp_C': 30, 'head_degN': 279}
+nutrient_1  | 2019-12-31T10:36:54.989451271Z /dev/ttyACM0/arrival {'ts': 53572, 'id': '123\r\nface up'}
+nutrient_1  | 2019-12-31T10:36:55.221156948Z /dev/ttyACM0/arrival {'ts': 53674, 'id': '123'}
+
+<etc>
+
+nutrient_1  | 2019-12-31T10:36:55.454948875Z load: offset 500
+nutrient_1  | 2019-12-31T10:36:55.455083197Z clean
+nutrient_1  | 2019-12-31T10:36:55.455118041Z analyze: 0
+nutrient_1  | 2019-12-31T10:36:55.455149031Z combine: 14
+iota_1      | 2019-12-31T10:36:57.737318509Z Sending iotas ...
+iota_1      | 2019-12-31T10:36:57.737468405Z    Sender seed: SEED99999999999999999999999999999999999999999999999999999999999999999999999999999
+iota_1      | 2019-12-31T10:36:57.737513092Z    Recipient address: XQKBUNOERH9CJLLRQTNOLMWBJYUCGXORVNGEOEMBHNCPRVVBNSNNUOJMZODVUJXCOMMYXVLVNNJMBQMYX
+iota_1      | 2019-12-31T10:36:57.737547884Z    Amount (iotas): 76
+iota_1      | 2019-12-31T10:36:57.737580436Z    Change address: FJHSSHBZTAKQNDTIKJYCZBOZDGSZANCZSWCNWUOCZXFADNOQSYAHEJPXRLOVPNOQFQXXGEGVDGICLMOXX
+
+```
 
 ### Windows
 ```
