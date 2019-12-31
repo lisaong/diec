@@ -1,15 +1,13 @@
-# Set the following environment variables before running
-# docker-compose up
-#
-# MICROBIT_PORT=/dev/ttyACM0
-
+# Day2 Workshop Orchestration
 # this version number is for compose, not the orchestration
-version: '3'
+version: '3.7'
 services:
   broker:
     image: eclipse-mosquitto
     ports:
       - '1883'
+    logging:
+      driver: 'none'
 
   microbit:
     image: lisaong/rpi-buster-pyota:1.0
@@ -38,6 +36,9 @@ services:
       - ..:/code
     depends_on:
       - broker
+    environment:
+      - IOTA_TANGLE_URL=${IOTA_TANGLE_URL}
+      - PYTHONUNBUFFERED=TRUE
     command: >
       sh -c "cd /code/feeder 
       && python3 iota_microservice.py ${MICROBIT_PORT} --hostname broker"

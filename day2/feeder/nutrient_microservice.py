@@ -33,6 +33,7 @@ class NutrientMicroservice(MqttMicroservice):
 
     def on_message(self, topic, payload):
         """Specialised message handler for this service"""
+        print(topic, payload)
         if 'arrival' in topic:
             self.on_arrival(payload)
         else:
@@ -103,7 +104,6 @@ class NutrientMicroservice(MqttMicroservice):
            - heading
            - temperature
         """
-        print('analyze')
         window_size = 10
         num_windows = len(data) // window_size
 
@@ -125,12 +125,14 @@ class NutrientMicroservice(MqttMicroservice):
                 results[-1][k + '_mean'] = mean(ld[k])
                 results[-1][k + '_std'] = stdev(ld[k])
 
+        print('analyze:', len(results))
         return results
 
     def combine(data):
         """Combines all the different lists into 1 list"""
-        print('combine')
-        return reduce(lambda x, y: x + y, data)
+        results = reduce(lambda x, y: x + y, data) 
+        print('combine:', len(results))
+        return results
 
     def get_nutrient_profile(self, id, data):
         """Applies a simple heuristic to determine nutrient profile"""
@@ -147,12 +149,13 @@ class NutrientMicroservice(MqttMicroservice):
 
         # TODO: fingerprinting using sensor data instead
         # of this naive approach
-        last_gest = data[-1]['gest_common'] # (gesture, count)
-        if (id == '123' and last_gest[0] == 'left' or
-            id == '456' and last_gest[0] == 'right'):
+        # last_gest = data[-1]['gest_common'] # (gesture, count)
+        # if (id == '123' and last_gest[0] == 'left' or
+        #    id == '456' and last_gest[0] == 'right'):
+        if (id == '123' or id == '456'):
             result = base_plan
             result['id'] = id
-
+            print('nutrient profile', result)
         return result
 
 if __name__ == '__main__':
