@@ -67,5 +67,5 @@ class IotaMicroservice(MqttMicroservice):
 if __name__ == '__main__':
     service = IotaMicroservice()
     service.parse_args('IOTA Microservice')
-    #service.run()
-    service.test()
+    service.run()
+    #service.test()
