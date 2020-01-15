@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-docker run -u $(id -u):$(id -g) -it \
+docker run -it \
     -v ~/diec:/code \
     lisaong/rpi-buster-tf2.0:1.0
