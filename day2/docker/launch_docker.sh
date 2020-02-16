@@ -4,5 +4,5 @@
 docker run -it --privileged \
     -v ~/diec:/code \
     -e IOTA_TANGLE_URL=${IOTA_TANGLE_URL:-http://your_ec2_url:14265} \
-    -e MICROBIT_PORT=/dev/ttyACM0 \     
+    --env-file=.env \     
     lisaong/rpi-buster-pyota:1.0
