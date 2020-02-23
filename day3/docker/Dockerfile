@@ -23,7 +23,12 @@ RUN curl -L -O https://github.com/lhelontra/tensorflow-on-arm/releases/download/
     && pip3 --no-cache-dir install \
             tensorflow-2.0.0-cp37-none-linux_armv7l.whl
 
+RUN pip3 --no-cache-dir install \
+         Cython==0.28.5 \
+         scikit-learn==0.22
+
 WORKDIR "/code"
 
 # Test
-RUN python3 -c "import tensorflow as tf; print('tensorflow', tf.__version__);"
+RUN python3 -c "import tensorflow as tf; print('tensorflow', tf.__version__); \
+     import sklearn; print('scikit-learn', sklearn.__version__);"
