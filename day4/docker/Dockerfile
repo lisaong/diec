@@ -1,4 +1,4 @@
-FROM lisaong/rpi-buster-tf2.0:1.0
+FROM lisaong/rpi-buster-tf2.0:1.1
 
 RUN pip3 --no-cache-dir install \
             pyserial-asyncio \
