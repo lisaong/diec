@@ -1,4 +1,7 @@
-FROM balenalib/raspberrypi3:buster
+# https://esa.github.io/pygmo/install.html
+
+# Builder
+FROM balenalib/raspberrypi3:buster as builder
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends --fix-missing \
@@ -13,5 +16,18 @@ RUN apt-get update \
 RUN  apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR "/code"
+WORKDIR /app
+RUN  git clone https://github.com/esa/pagmo.git
+WORKDIR /app/pagmo
+
+RUN  mkdir build /install \
+    && cd build \
+    && cmake ../ -DCMAKE_INSTALL_PREFIX=/install \
+    && cmake --build . \
+    && cmake --build . --target install
+
+# Production
+# FROM balenalib/raspberrypi3:buster
+
+# WORKDIR "/code"
 
