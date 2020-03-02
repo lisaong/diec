@@ -21,9 +21,12 @@ RUN  apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
+# https://esa.github.io/pagmo2/install.html
 RUN git clone https://github.com/esa/pagmo2.git
 WORKDIR /app/pagmo2
 
+# https://www.theimpossiblecode.com/blog/intel-tbb-on-raspberry-pi/
 RUN  mkdir build /install \
     && cd build \
     && cmake ../ -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_BUILD_TYPE=Release \
