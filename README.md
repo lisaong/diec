@@ -3,4 +3,8 @@
 - [day1](day1/README.md)
 - [day2](day2/README.md)
 - [day3](day3/README.md)
+  - [Neural Network Optimisation](day3/pyswarms_v_tensorflow.ipynb)
+  - [Job Shop Scheduling Problem](day3/pygmo_scheduling.ipynb)
 - [day4](day4/README.md)
+  - [RL EasyAgents Example](day4/rl_easyagents_orso.ipynb)
+  - [Policy Gradients Example](day4/policy_gradient_example.ipynb)
