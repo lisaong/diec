@@ -27,6 +27,7 @@ WORKDIR /app/pagmo2
 RUN  mkdir build /install \
     && cd build \
     && cmake ../ -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_BUILD_TYPE=Release \
+       -DCMAKE_CXX_FLAGS="-DTBB_USE_GCC_BUILTINS=1 -D__TBB_64BIT_ATOMICS=0" \
     && cmake --build . \
     && cmake --build . --target install
 
