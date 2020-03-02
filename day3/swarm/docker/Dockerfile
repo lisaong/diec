@@ -21,8 +21,8 @@ RUN  apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-RUN  git clone https://github.com/esa/pagmo.git
-WORKDIR /app/pagmo
+RUN git clone https://github.com/esa/pagmo2.git
+WORKDIR /app/pagmo2
 
 RUN  mkdir build /install \
     && cd build \
