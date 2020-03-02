@@ -13,6 +13,10 @@ RUN apt-get update \
         python3-dev python3-pip python3-setuptools \
         python3-numpy python3-scipy
 
+RUN curl -L -O https://github.com/abhiTronix/TBB_Raspberry_pi/raw/master/libtbb-dev_4.5-1_armhf.deb \
+    && dpkg -i libtbb-dev_4.5-1_armhf.deb \
+    && ldconfig
+
 RUN  apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
