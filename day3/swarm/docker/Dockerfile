@@ -26,7 +26,7 @@ WORKDIR /app/pagmo
 
 RUN  mkdir build /install \
     && cd build \
-    && cmake ../ -DCMAKE_INSTALL_PREFIX=/install \
+    && cmake ../ -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_BUILD_TYPE=Release \
     && cmake --build . \
     && cmake --build . --target install
 
