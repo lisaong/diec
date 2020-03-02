@@ -26,12 +26,12 @@ RUN git clone https://github.com/esa/pagmo2.git
 WORKDIR /tmp/pagmo2
 
 # https://www.theimpossiblecode.com/blog/intel-tbb-on-raspberry-pi/
-RUN  mkdir build /app \
-    && cd build \
-    && cmake ../ -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_BUILD_TYPE=Release \
-       -DCMAKE_CXX_FLAGS="-DTBB_USE_GCC_BUILTINS=1 -D__TBB_64BIT_ATOMICS=0" \
-    && cmake --build . \
-    && cmake --build . --target install
+RUN  mkdir build /app && \
+    cd build && \
+    cmake ../ -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_BUILD_TYPE=Release \
+       -DCMAKE_CXX_FLAGS="-DTBB_USE_GCC_BUILTINS=1 -D__TBB_64BIT_ATOMICS=0" && \
+    cmake --build . && \
+    cmake --build . --target install
 
 WORKDIR /app
 
@@ -55,11 +55,12 @@ RUN virtualenv . && \
 WORKDIR /tmp
 RUN git clone https://github.com/esa/pygmo2.git
 WORKDIR /tmp/pygmo2
-RUN  mkdir build \
-    && cd build \
-    && cmake ../ -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_BUILD_TYPE=Release \
-    && cmake --build . \
-    && cmake --build . --target install
+RUN  mkdir build && \
+    cd build && \
+    /app/bin/activate && \
+    cmake ../ -DCMAKE_INSTALL_PREFIX=/app/pybind11 -DCMAKE_BUILD_TYPE=Release \
+    cmake --build . && \
+    cmake --build . --target install
 
 WORKDIR /app
 RUN . bin/activate && \
