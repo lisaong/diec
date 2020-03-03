@@ -35,13 +35,9 @@ RUN  mkdir build /app && \
 
 WORKDIR /app
 
+# Setup virtualenv for multi-stage build
 RUN pip3 install --no-cache-dir \
       virtualenv
-
-# https://pybind11.readthedocs.io/en/master/basics.html
-RUN git clone https://github.com/pybind/pybind11.git && \
-    cd pybind11 && \
-    python3 setup.py install
 
 RUN virtualenv . && \
      . bin/activate && \
@@ -49,21 +45,41 @@ RUN virtualenv . && \
        cloudpickle \
        dill \
        matplotlib \
-       numpy
+       numpy \
+       pytest
+
+# https://pybind11.readthedocs.io/en/master/basics.html
+RUN . bin/activate && \
+    cd /tmp && \
+    git clone https://github.com/pybind/pybind11.git && \
+    cd pybind11 && \
+    cmake . -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build . && \
+    cmake --build . --target install
 
 # https://esa.github.io/pygmo2/install.html
 WORKDIR /tmp
 RUN git clone https://github.com/esa/pygmo2.git
-WORKDIR /tmp/pygmo2
-RUN  mkdir build && \
+WORKDIR /app
+RUN . bin/activate && \    
+    cd /tmp/pygmo2 && \
+    mkdir build && \
     cd build && \
-    /app/bin/activate && \
-    cmake ../ -DCMAKE_INSTALL_PREFIX=/app/pybind11 -DCMAKE_BUILD_TYPE=Release \
+    cmake ../ -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_PREFIX_PATH=/app/lib/python3.7/site-packages && \
     cmake --build . && \
     cmake --build . --target install
 
+# pygmo2 needs libf77blas.so, libatomic.so
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      libatlas-base-dev \
+      libatomic1
+
 WORKDIR /app
 RUN . bin/activate && \
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/app/lib && ldconfig && \
+    export LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 && \
     python3 -c "import pygmo; pygmo.test.run_test_suite()"
 
 # Production stage
