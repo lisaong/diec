@@ -1,3 +1,4 @@
+# Build stage
 FROM balenalib/raspberrypi3:buster as builder
 
 RUN apt-get update \
