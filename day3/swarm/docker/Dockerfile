@@ -1,5 +1,3 @@
-# https://esa.github.io/pygmo/install.html
-
 # Build stage
 FROM balenalib/raspberrypi3:buster as builder
 
