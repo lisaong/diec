@@ -106,3 +106,4 @@ RUN . bin/activate && \
     export LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 && \
     python3 -c "import pygmo; pygmo.test.run_test_suite()"
 
+WORKDIR /code
