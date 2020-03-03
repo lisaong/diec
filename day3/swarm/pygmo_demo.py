@@ -1,6 +1,7 @@
 #
-# Demonstration of running PyGMO to solve the Job Shop/Flow Shop Scheduling problem
-# (https://en.wikipedia.org/wiki/Flow_shop_scheduling)
+# Demonstration of using PyGMO to solve the Job Shop Scheduling problem.
+# Refer to pygmo_scheduling.ipynb for more explanation.
+# (https://en.wikipedia.org/wiki/Job_shop_scheduling)
 #
 
 import pygmo as pg
