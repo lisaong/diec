@@ -1,6 +1,3 @@
-# https://esa.github.io/pygmo/install.html
-
-# Build stage
 FROM balenalib/raspberrypi3:buster as builder
 
 RUN apt-get update \
@@ -79,14 +76,12 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libboost-all-dev \
         libatlas-base-dev \
-        libatomic1
+        libatomic1 \
+    && rm -rf /var/lib/apt/lists*
 
 RUN curl -L -O https://github.com/abhiTronix/TBB_Raspberry_pi/raw/master/libtbb-dev_4.5-1_armhf.deb \
     && dpkg -i libtbb-dev_4.5-1_armhf.deb \
     && ldconfig
-
-RUN  apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
 
 ENV LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1
 
