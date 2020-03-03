@@ -83,20 +83,26 @@ RUN . bin/activate && \
     python3 -c "import pygmo; pygmo.test.run_test_suite()"
 
 # Production stage
-# FROM balenalib/raspberrypi3:buster
-#COPY --from=builder /install /install
+FROM balenalib/raspberrypi3:buster
+COPY --from=builder /app /app
+COPY --from=builder /app/lib/* /usr/lib/
 
-#RUN apt-get update \
-#    && apt-get install -y --no-install-recommends \
-#        python3-dev python3-pip python3-setuptools \
-#        libboost-all-dev
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3-pip python3-setuptools \
+        libboost-all-dev \
+        libatlas-base-dev \
+        libatomic1
 
-#RUN curl -L -O https://github.com/abhiTronix/TBB_Raspberry_pi/raw/master/libtbb-dev_4.5-1_armhf.deb \
-#    && dpkg -i libtbb-dev_4.5-1_armhf.deb \
-#    && ldconfig
+RUN curl -L -O https://github.com/abhiTronix/TBB_Raspberry_pi/raw/master/libtbb-dev_4.5-1_armhf.deb \
+    && dpkg -i libtbb-dev_4.5-1_armhf.deb \
+    && ldconfig
 
-#RUN  apt-get clean \
-#    && rm -rf /var/lib/apt/lists/*
+RUN  apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-#WORKDIR /code
+WORKDIR /app
+RUN . bin/activate && \
+    export LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 && \
+    python3 -c "import pygmo; pygmo.test.run_test_suite()"
 
