@@ -6,6 +6,7 @@
 
 import pygmo as pg
 import numpy as np
+import time
 
 # constants for accessing the tuples
 JOB = 0
@@ -120,7 +121,7 @@ if __name__ == "__main__":
     jobs_list = [(i, *task) for i in range(len(jobs_data)) for task in jobs_data[i]]
 
     # Create the problem
-    prob = pg.problem(jobshop_function(jobs=jobs_list), max_schedule_time=12)
+    prob = pg.problem(jobshop_function(jobs=jobs_list, max_schedule_time=12))
     print(prob)
 
     # Optimise
@@ -129,6 +130,9 @@ if __name__ == "__main__":
     pop = pg.population(prob, size=population_size, seed=123)
     algo = pg.algorithm(pg.gaco(gen=iterations, ker=population_size, seed=123))
     algo.set_verbosity(1000)
-    pop = algo.evolve(pop)
 
-    print(f'solution: {pop.champion_x}, fitness value: {pop.champion_f}')
+    tic = time.perf_counter()
+    pop = algo.evolve(pop)
+    tock = time.perf_counter()
+
+    print(f'solution: {pop.champion_x}, fitness value: {pop.champion_f} ({tock-tic:.3f} seconds)')
