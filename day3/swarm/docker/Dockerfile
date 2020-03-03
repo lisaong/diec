@@ -101,9 +101,10 @@ RUN curl -L -O https://github.com/abhiTronix/TBB_Raspberry_pi/raw/master/libtbb-
 RUN  apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+ENV LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1
+
 WORKDIR /app
 RUN . bin/activate && \
-    export LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 && \
     python3 -c "import pygmo; pygmo.test.run_test_suite()"
 
 COPY run.sh .
