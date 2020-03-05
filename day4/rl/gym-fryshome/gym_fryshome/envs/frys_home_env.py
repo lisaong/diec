@@ -7,6 +7,8 @@
 
 import gym
 from gym import spaces
+import numpy as np
+import random
 
 class FrysHomeEnv(gym.Env):
   """Custom Environment describing Fry's home  
