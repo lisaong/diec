@@ -76,7 +76,7 @@ class FrysHomeEnv(gym.Env):
     reward = self.rewards[prev_state][action]
 
     # check if we've reached our goal
-    done = (self.prev_state == self.goal or self.state == self.goal)
+    done = (prev_state == self.goal or self.state == self.goal)
 
     # get the next observation
     obs = self.state
