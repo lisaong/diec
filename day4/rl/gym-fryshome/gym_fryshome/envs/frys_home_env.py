@@ -84,5 +84,10 @@ class FrysHomeEnv(gym.Env):
     return obs, reward, done, {}
 
   def render(self, mode='human', close=True):
+    """Print state of the current environment"""
     print(f'Current room: {self.state}')
     print(f'Reached goal: {self.state == self.goal}')
+
+  def action_space_sample(self):
+    """Randomly select an action (a room)"""
+    return random.randint(0, self.num_rooms)
