@@ -59,7 +59,7 @@ class FrysHomeEnv(gym.Env):
     """Reset the environment to an initial state"""
 
     # Randomly initialise the state
-    self.state = random.randint(0, self.num_rooms)
+    self.state = random.randint(0, self.self.num_rooms-1)
 
     # Return the observation (same as the state in our case)
     obs = self.state
@@ -90,4 +90,4 @@ class FrysHomeEnv(gym.Env):
 
   def action_space_sample(self):
     """Randomly select an action (a room)"""
-    return random.randint(0, self.num_rooms)
+    return random.randint(0, self.num_rooms-1)
