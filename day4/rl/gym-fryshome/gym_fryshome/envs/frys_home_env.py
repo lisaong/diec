@@ -20,22 +20,10 @@ class FrysHomeEnv(gym.Env):
   # render to the current display or terminal
   metadata = {'render.modes': ['human']}
 
-  def __init__(self):
+  def __init__(self, rewards):
     super(FrysHomeEnv, self).__init__()
 
-    # Initialise the rewards matrix according to the graph above
-    # Where:
-    #  state: current room, action: next room
-    #  dimensions (row=state, col=actions)
-    #  A value of -1 means there is no adjacent path from room_i to room_j
-    #  (for example, room_0 to room_0 has, room_0 to room_5)
-    self.rewards = np.array([[-1, -1, -1, -1,  0, -1], # action 0
-                             [-1, -1, -1,  0, -1, 0],  # action 1
-                             [-1, -1, -1,  0, -1, -1], # etc
-                             [-1,  0,  0, -1,  0, -1],
-                             [ 0, -1, -1,  0, -1,  0],
-                             [-1, 100, -1, -1, 100, 100]])
-    
+    self.rewards = rewards
     self.num_rooms = self.rewards.shape[0]
 
     # Action space describes all possible actions that can be taken
