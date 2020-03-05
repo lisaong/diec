@@ -1,1 +1,1 @@
-from gym_fryshome.envs.frys_home import FrysHomeEnv
+from gym_fryshome.envs.frys_home_env import FrysHomeEnv
