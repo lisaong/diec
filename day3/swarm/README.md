@@ -2,6 +2,10 @@
 
 ## Job Shop Scheduling
 
+![image](job_shop_scheduling.png)
+
+Image Credit: Google
+
 Explanation of the problem: [Colab Notebook](pygmo_scheduling.ipynb)
 
 Running on Raspberry Pi 3 or 4:
