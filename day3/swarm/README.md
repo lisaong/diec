@@ -7,7 +7,7 @@ Explanation of the problem: [Colab Notebook](pygmo_scheduling.ipynb)
 Running on Raspberry Pi 3 or 4:
 1. Launch the Docker container 
 ```
-cd docker
+cd day3/swarm/docker
 sh launch_docker.sh
 ```
 
