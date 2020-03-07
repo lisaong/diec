@@ -1,6 +1,6 @@
 # Reinforcement Learning on Edge Computing
 
-## Path Finding with OpenAI Gym
+## Path Finding with OpenAI Gym on Raspberry Pi
 
 ![image](path_finding_intro.png)
 
