@@ -6,6 +6,6 @@
   - [Neural Network Optimisation](day3/swarm/pyswarms_v_tensorflow.ipynb)
   - [Job Shop Scheduling Problem](day3/swarm/README.md)
 - [day4](day4/README.md)
-  - [RL Path Finding](day4/rl/path_finding_demo.ipynb)
+  - [RL Path Finding](day4/rl/README.md)
   - [RL EasyAgents Example](day4/rl/rl_easyagents_orso.ipynb)
   - [Policy Gradients Example](day4/rl/policy_gradient_example.ipynb)
