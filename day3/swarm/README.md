@@ -1,6 +1,6 @@
 # Swarm Computing Applications on Edge Computing
 
-## Job Shop Scheduling
+## Job Shop Scheduling in Raspberry Pi using Ant Colony Optimization
 
 ![image](job_shop_scheduling.png)
 
