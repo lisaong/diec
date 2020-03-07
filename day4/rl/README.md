@@ -4,7 +4,7 @@
 
 ![image](path_finding_intro.png)
 
-Explanation of the problem: [Colab Notebook](path_finding_demo.ipynb)
+Explanation of the problem: [Colab Notebook](path_finding_demo.ipynb), [Q-Learning Intro Slides](https://github.com/lisaong/diec/blob/master/day4/rl/some%20intro%20slides.pdf)
 
 Running on Raspberry Pi 3 or 4:
 1. Launch the Docker container 
