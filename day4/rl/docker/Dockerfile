@@ -1,8 +1,7 @@
 FROM lisaong/rpi-buster-tf2.0:1.1
 
 RUN pip3 --no-cache-dir install \
-  gym \
-  bashplotlib
+  gym
 
 # Install our example custom environment
 # https://pip.pypa.io/en/stable/reference/pip_install/#git

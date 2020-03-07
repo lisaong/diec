@@ -118,4 +118,12 @@ if __name__ == "__main__":
 
   env.close()
 
-  # todo: plot to terminal!
+  print('======Q-values:======')
+  print(agent.Q)
+
+  print('======Best paths:======')
+  room_with_beer = 5
+  for initial_state in range(room_with_beer+1):
+    print(agent.best_path(initial_state))
+
+
