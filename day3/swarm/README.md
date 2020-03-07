@@ -4,7 +4,7 @@
 
 ![image](job_shop_scheduling.png)
 
-Image Credit: Google
+(Image Credit: [Google](https://developers.google.com/optimization/scheduling/job_shop))
 
 Explanation of the problem: [Colab Notebook](pygmo_scheduling.ipynb)
 
