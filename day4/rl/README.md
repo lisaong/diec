@@ -1,6 +1,8 @@
-# Reinforcement Learning (Self-Learning) in Edge Computing
+# Reinforcement Learning on Edge Computing
 
-## Path Finding using OpenAI Gym
+## Path Finding with OpenAI Gym
+
+![image](path_finding_intro.png)
 
 Explanation of the problem: [Colab Notebook](path_finding_demo.ipynb)
 

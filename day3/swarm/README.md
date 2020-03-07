@@ -1,4 +1,4 @@
-# Swarm Computing Applications in Edge Computing
+# Swarm Computing Applications on Edge Computing
 
 ## Job Shop Scheduling
 
