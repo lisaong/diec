@@ -15,7 +15,7 @@ DURATION = 2
 
 class jobshop_function:
   def __init__(self, jobs, max_schedule_time=20):
-    """ jobs: list of jobs (job_id, machine_id, duration)
+    """ jobs: list of tasks (job_id, machine_id, duration)
         max_schedule_time: maximum time allowed for the schedule
     """
     self.jobs = jobs_list
