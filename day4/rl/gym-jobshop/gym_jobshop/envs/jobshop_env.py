@@ -122,7 +122,7 @@ class JobshopEnv(gym.Env):
     pre, post = self.tasks.get_related_tasks(id)
 
     # Task not already assigned
-    if task.end_time != -1
+    if task.end_time != -1:
       reward -= 100
 
     # Task assigned in correct order and no overlap
