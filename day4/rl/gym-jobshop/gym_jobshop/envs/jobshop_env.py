@@ -12,7 +12,6 @@ from collections import OrderedDict
 
 class TaskList:
   def __init__ (self, jobs_data):
-    
     num_jobs = len(jobs_data)
     self.tasks = [Task(i, *task) for i in range(num_jobs)
        for task in jobs_data[i]]
@@ -20,6 +19,11 @@ class TaskList:
     self.jobs_to_tasks = {i:[] for i in range(num_jobs)}
     for i in range(len(self.tasks)):
       self.jobs_to_tasks[self.tasks[i].job_id].append(i)
+
+    num_machines = 1 + max(t[0] for j in jobs_data for t in j)
+    self.machines_to_tasks = {i: [] for i in range(num_machines)}
+    for i in range(len(self.tasks)):
+      self.machines_to_tasks[self.tasks[i].machine_id].append(i)
 
   def reset(self):
     for t in self.tasks:
@@ -137,24 +141,34 @@ class JobshopEnv(gym.Env):
     start_time = action['start_time']
 
     task = self.tasks.get_task(id)
-    pre, post = self.tasks.get_related_tasks(id)
+    end_time = start_time + task.processing_time
 
-    # Task not already assigned
-    if task.end_time != -1:
+    pre, post = self.tasks.get_related_tasks(id)
+    machine_tasks = self.tasks.machines_to_tasks[task.machine_id]
+
+    # Task already assigned
+    if task.is_scheduled():
       reward -= 100
 
-    # Task assigned in correct order and no overlap
-    pre_tasks = [self.tasks.get_task(p) for p in pre]
-    for pre in pre_tasks:
-      if pre.end_time != -1 and pre.end_time <= start_time:
-        reward += 10
-    
-    post_tasks = [self.tasks.get_task(p) for p in post]
-    for post in post_tasks:
-      if post.end_time != -1 and post.start_time >= start_time:
-        reward += 10
+    # Machine already in use 
+    for mt in machine_tasks:
+      mtask = self.tasks.get_task(mt)
+      if mt != id and mtask.is_scheduled() and \
+        mtask.start_time >= start_time or \
+          mtask.end_time <= end_time:
+        reward -= 100
 
-    # TODO: machine not double assigned
+    if reward >= 0:
+      # Task assigned in correct order and no overlap
+      pre_tasks = [self.tasks.get_task(p) for p in pre]
+      for pre in pre_tasks:
+        if pre.end_time != -1 and pre.end_time <= start_time:
+          reward += 10
+      
+      post_tasks = [self.tasks.get_task(p) for p in post]
+      for post in post_tasks:
+        if post.end_time != -1 and post.start_time >= start_time:
+          reward += 10
 
     # Rewards:
     # All tasks assigned
