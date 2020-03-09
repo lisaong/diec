@@ -13,7 +13,8 @@ from collections import OrderedDict
 class TaskList:
   def __init__ (self, jobs_data):
     num_jobs = len(jobs_data)
-    self.tasks = [Task(i, *task) for i in range(num_jobs) for task in jobs_data[i]]
+    self.tasks = [Task(i, *task) for i in range(num_jobs)
+       for task in jobs_data[i]]
 
     self.jobs_to_tasks = {i:[] for i in range(num_jobs)}
     for i in range(len(self.tasks)):
@@ -43,6 +44,10 @@ class TaskList:
     post = task_ids[task_ids > task_id]
     return pre, post
 
+  def __repr__(self):
+    return '\n'.join([f'{i}: {self.tasks[i].__repr__()}'
+      for i in range(len(self.tasks))])
+
 class Task:
   def __init__(self, job_id, machine_id, processing_time):
     self.job_id = job_id
@@ -57,6 +62,10 @@ class Task:
   def schedule(self, start_time):
     self.start_time = start_time
     self.end_time = self.start_time + self.processing_time
+
+  def __repr__(self):
+    return f'Job: {self.job_id}, Machine: {self.machine_id}, \
+Start: {self.start_time}, End: {self.end_time}'
 
 class JobshopEnv(gym.Env):
   """Custom Environment for a Job Shop Scheduling Problem
@@ -154,14 +163,16 @@ class JobshopEnv(gym.Env):
     # check if we've reached our goal
 
     # take the action
-    observation = self.tasks.schedule_task(action['task_id'], action['start_time'])
+    observation = self.tasks.schedule_task(action['task_id'],
+      action['start_time'])
 
     # get the next observation
     return obs, reward, done, {}
 
   def render(self, mode='human', close=True):
     """Print state of the current environment"""
-    print(f'Current room: {self.state}, Reached goal: {self.state == self.goal}')
+    print(f'Tasks: {self.tasks}')
+    print(f'Makespan: {self.makespan}')
 
 # Unit test
 if __name__ == "__main__":
@@ -176,8 +187,11 @@ if __name__ == "__main__":
   obs = env.reset()
   print(obs)
 
-  action = env.action_space.sample()
-  print(action)
+  for i in range(5):
+    action = env.action_space.sample()
+    print(action)
 
-  reward = env.calculate_reward(action)
-  print(reward)
+    print(env.tasks)
+
+    reward = env.calculate_reward(action)
+    print(reward)
