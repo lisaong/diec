@@ -12,6 +12,7 @@ from collections import OrderedDict
 
 class TaskList:
   def __init__ (self, jobs_data):
+    
     num_jobs = len(jobs_data)
     self.tasks = [Task(i, *task) for i in range(num_jobs)
        for task in jobs_data[i]]
@@ -23,6 +24,7 @@ class TaskList:
   def reset(self):
     for t in self.tasks:
       t.reset()
+    return self.get_makespan()
 
   def length(self):
     return len(self.tasks)
@@ -32,10 +34,19 @@ class TaskList:
 
   def schedule_task(self, task_id, start_time):
     self.get_task(task_id).schedule(start_time)
-    return 0 # TODO: return makespan
+    return self.get_makespan()
+
+  def get_makespan(self):
+    # find the tasks that started (end_time)
+    start_times = [t.start_time for t in self.tasks if t.is_scheduled()]
+    end_times = [t.end_time for t in self.tasks if t.is_scheduled()]
+
+    if len(end_times) > 0:
+      return max(end_times) - min(start_times)
+    else:
+      return 0 # nothing has been scheduled
 
   def get_related_tasks(self, task_id):
-    """Gets the sibling tasks for a given task_id"""
     task_ids = np.array(self.jobs_to_tasks[self.tasks[task_id].job_id])
 
     pre = task_ids[task_ids < task_id]
@@ -60,6 +71,9 @@ class Task:
   def schedule(self, start_time):
     self.start_time = start_time
     self.end_time = self.start_time + self.processing_time
+
+  def is_scheduled(self):
+    return self.end_time != -1
 
   def __repr__(self):
     return f'Job: {self.job_id}, Machine: {self.machine_id}, \
@@ -115,10 +129,7 @@ class JobshopEnv(gym.Env):
 
   def reset(self):
     """Reset the environment to an initial state"""
-    self.tasks.reset()
-    self.makespan = 0
-
-    return self.makespan
+    return self.tasks.reset()
 
   def calculate_reward(self, action):
     reward = 0
@@ -144,6 +155,7 @@ class JobshopEnv(gym.Env):
         reward += 10
 
     # TODO: machine not double assigned
+
 
     # Rewards:
     # All tasks assigned
@@ -188,11 +200,8 @@ if __name__ == "__main__":
 
   for i in range(5):
     action = env.action_space.sample()
-    print(action)
+    print(f'action: {action}')
 
-    reward, done = env.calculate_reward(action)
-    print(reward, done)
-    
-    obs = env.step(action)
-    print(obs)
+    obs, reward, done, info = env.step(action)
+    print(f'obs: {obs}, reward: {reward}, done: {done}')
     print(env.tasks)
