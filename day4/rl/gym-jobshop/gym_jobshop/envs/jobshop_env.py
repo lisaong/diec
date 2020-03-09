@@ -146,16 +146,15 @@ class JobshopEnv(gym.Env):
     # Task assigned in correct order and no overlap
     pre_tasks = [self.tasks.get_task(p) for p in pre]
     for pre in pre_tasks:
-      if pre.end_time != -1 and pre.end_time <= task.start_time:
+      if pre.end_time != -1 and pre.end_time <= start_time:
         reward += 10
     
     post_tasks = [self.tasks.get_task(p) for p in post]
     for post in post_tasks:
-      if post.end_time != -1 and post.start_time >= task.end_time:
+      if post.end_time != -1 and post.start_time >= start_time:
         reward += 10
 
     # TODO: machine not double assigned
-
 
     # Rewards:
     # All tasks assigned
