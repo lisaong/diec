@@ -31,10 +31,8 @@ class TaskList:
     return self.tasks[task_id]
 
   def schedule_task(self, task_id, start_time):
-    self.get_task().schedule(start_time)
-
-    # TODO: update
-    return self.makespan
+    self.get_task(task_id).schedule(start_time)
+    return 0 # TODO: return makespan
 
   def get_related_tasks(self, task_id):
     """Gets the sibling tasks for a given task_id"""
@@ -153,7 +151,7 @@ class JobshopEnv(gym.Env):
     # Machine not busy
     # Makespan is short
 
-    return reward
+    return reward, False # TODO
 
   def step(self, action):
     """Execute one step within the environment"""
@@ -167,7 +165,7 @@ class JobshopEnv(gym.Env):
       action['start_time'])
 
     # get the next observation
-    return obs, reward, done, {}
+    return observation, reward, done, {}
 
   def render(self, mode='human', close=True):
     """Print state of the current environment"""
@@ -186,12 +184,15 @@ if __name__ == "__main__":
   env = JobshopEnv(jobs_data)
   obs = env.reset()
   print(obs)
+  print(env.tasks)
 
   for i in range(5):
     action = env.action_space.sample()
     print(action)
 
+    reward, done = env.calculate_reward(action)
+    print(reward, done)
+    
+    obs = env.step(action)
+    print(obs)
     print(env.tasks)
-
-    reward = env.calculate_reward(action)
-    print(reward)
