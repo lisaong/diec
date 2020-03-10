@@ -153,7 +153,7 @@ class JobshopEnv(gym.Env):
     # Constraint 1
     # Task already assigned
     if task.is_scheduled():
-      reward -= 100
+      reward -= 1
 
     # Constraint 2
     # Machine already in use 
@@ -162,28 +162,28 @@ class JobshopEnv(gym.Env):
       if mt != id and mtask.is_scheduled() and \
         mtask.start_time >= start_time or \
           mtask.end_time <= end_time:
-        reward -= 100
+        reward -= 1
 
     # Constraint 3
     # Makespan exceeded
     self.makespan = self.tasks.get_makespan()
     if self.makespan >= self.max_schedule_time:
-      reward -= 100
+      reward -= 1
 
     if reward >= 0:
       # Task assigned in correct order and no overlap
       pre_tasks = [self.tasks.get_task(p) for p in pre]
       for pre in pre_tasks:
         if pre.is_scheduled() and pre.end_time <= start_time:
-          reward += 200
+          reward += 50
       
       post_tasks = [self.tasks.get_task(p) for p in post]
       for post in post_tasks:
         if post.is_scheduled() and post.start_time >= start_time:
-          reward += 200
+          reward += 50
 
       # reward shorter makespans
-      reward += (self.max_schedule_time - makespan)
+      reward += (self.max_schedule_time - makespan)*50
 
     return reward
 
