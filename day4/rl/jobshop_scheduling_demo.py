@@ -18,6 +18,7 @@ def RunAgent(env, agent, episode_count, steps_per_episode):
             print(f'action: {action}')
 
             obs, reward, done, info = env.step(action)
+            print(obs)
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
@@ -42,24 +43,27 @@ class QLearningTDAgent:
     alpha: how much prior knowledge to include
     verbose: whether to print debugging messages
     """
-    def __init__(self, jobs_data, gamma=.8, alpha=.1, verbose=False):
-        self.action_space = action_space
+    def __init__(self, jobs_data, action_space, gamma=.8, alpha=.1, verbose=False):
         self.gamma = gamma
         self.alpha = alpha
         self.verbose = verbose
+        self.action_space = action_space
 
         # utility for parsing jobs data
         self.tasks = jsenv.TaskList(jobs_data)
 
         # Q-values (aka the "brain" of the agent)
-        # TODO
+        self.Q = dict()
 
     def act(self, observation, reward, done):
-        
+        # TODO
+        # update Q values
+        action = self.action_space.sample()
 
+        key = f'{observation}_{action.items()}'
+        print(key)
 
-        return self.action_space.sample()
-
+        return action
 
 if __name__ == "__main__":
     # Each job is a list of multiple tasks: (machine_id, processing_time)
@@ -72,7 +76,7 @@ if __name__ == "__main__":
     env = gym.make('gym_jobshop:jobshop-v0', 
         jobs_data=jobs_data, max_schedule_time=20, verbose=True)
 
-    agent = RandomAgent(env.action_space)
+    agent = QLearningTDAgent(jobs_data, env.action_space)
 
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks

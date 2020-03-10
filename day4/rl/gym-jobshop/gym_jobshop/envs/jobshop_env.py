@@ -24,14 +24,16 @@ class TaskList:
     for i in range(len(self.tasks)):
       self.machines_to_tasks[self.tasks[i].machine_id].append(i)
 
-    self.observations = {
-      'latest_tasks': [0] * self.num_machines,
-      'end_times':  [0] * self.num_machines
-    }
+    self.reset()
 
   def reset(self):
     for t in self.tasks:
       t.reset()
+
+    self.observations = {
+      'latest_tasks': [0] * self.num_machines,
+      'end_times':  [0] * self.num_machines
+    }
     return self.get_makespan()
 
   def length(self):
