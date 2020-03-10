@@ -96,7 +96,7 @@ class JobshopEnv(gym.Env):
   # render to the current display or terminal
   metadata = {'render.modes': ['human']}
 
-  def __init__(self, jobs, max_schedule_time=20):
+  def __init__(self, jobs_data, max_schedule_time=20):
     """ jobs_data: list of jobs, where
           each job is a list of multiple tasks: (machine_id, processing_time)
 
@@ -196,8 +196,8 @@ class JobshopEnv(gym.Env):
     observation = self.tasks.schedule_task(action['task_id'],
       action['start_time'])
 
-    # check if we've reached our goal
-    done = self.tasks.all_tasks_scheduled()
+    # check if we've reached our goal or failed
+    done = self.tasks.all_tasks_scheduled() or (reward < 0)
 
     return observation, reward, done, {}
 

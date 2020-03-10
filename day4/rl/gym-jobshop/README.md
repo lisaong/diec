@@ -8,6 +8,6 @@ pip3 --no-cache-dir install -e "git+https://github.com/lisaong/diec#egg=gym_jobs
 
 To install locally:
 ```
-cd gym-jobshop
-pip3 install -e .
+cd diec/day4/rl
+pip3 install -e gym-jobshop
 ```
