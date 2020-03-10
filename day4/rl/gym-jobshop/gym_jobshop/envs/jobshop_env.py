@@ -8,7 +8,6 @@
 import gym
 from gym import spaces
 import numpy as np
-from collections import OrderedDict
 
 class TaskList:
   def __init__ (self, jobs_data):
@@ -20,10 +19,15 @@ class TaskList:
     for i in range(len(self.tasks)):
       self.jobs_to_tasks[self.tasks[i].job_id].append(i)
 
-    num_machines = 1 + max(t[0] for j in jobs_data for t in j)
-    self.machines_to_tasks = {i: [] for i in range(num_machines)}
+    self.num_machines = 1 + max(t[0] for j in jobs_data for t in j)
+    self.machines_to_tasks = {i: [] for i in range(self.num_machines)}
     for i in range(len(self.tasks)):
       self.machines_to_tasks[self.tasks[i].machine_id].append(i)
+
+    self.observations = {
+      'latest_tasks': [0] * self.num_machines,
+      'end_times':  [0] * self.num_machines
+    }
 
   def reset(self):
     for t in self.tasks:
@@ -37,8 +41,14 @@ class TaskList:
     return self.tasks[task_id]
 
   def schedule_task(self, task_id, start_time):
-    self.get_task(task_id).schedule(start_time)
-    return self.get_makespan()
+    task = self.get_task(task_id)
+    task.schedule(start_time)
+
+    # update observations
+    machine_id = task.machine_id
+    self.observations['latest_tasks'][machine_id] = task_id
+    self.observations['end_times'][machine_id] = task.end_time
+    return self.observations
 
   def get_makespan(self):
     # find the tasks that started (end_time)
@@ -125,10 +135,18 @@ class JobshopEnv(gym.Env):
       'start_time' : spaces.Discrete(self.max_schedule_time)
     })
 
-    # Observation space describes the valid observations in the environment
-    # here, we can track makespan
-    self.observation_space = spaces.Discrete(max_schedule_time)
-
+    # Observation space describes the valid states
+    # states may be used by the agent to determine the next action
+    # here, we observe the latest tasks scheduled per machine
+    # and their end-times
+    # https://github.com/openai/gym/blob/master/gym/spaces/multi_discrete.py
+    task_vec = [self.tasks.length()] * self.tasks.num_machines
+    times_vec = [self.max_schedule_time] * self.tasks.num_machines
+    self.observation_space = spaces.Dict({
+      'latest_tasks':  spaces.MultiDiscrete(task_vec),
+      'end_times':  spaces.MultiDiscrete(times_vec)
+    })
+        
     # Rewards range describes the min and max possible rewards
     # This is the default range, but we'll specify it explicitly below:
     self.reward_range = (-float('inf'), float('inf'))
