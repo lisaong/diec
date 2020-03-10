@@ -57,6 +57,9 @@ class TaskList:
     post = task_ids[task_ids > task_id]
     return pre, post
 
+  def all_tasks_scheduled(self):
+    return sum([t.is_scheduled() for t in self.tasks]) == len(self.tasks)
+
   def __repr__(self):
     return '\n'.join([f'{i}: {self.tasks[i].__repr__()}'
       for i in range(len(self.tasks))])
@@ -129,10 +132,11 @@ class JobshopEnv(gym.Env):
     self.reward_range = (-float('inf'), float('inf'))
 
     # Initialise our state
-    self.tasks.reset()
+    self.reset()
 
   def reset(self):
     """Reset the environment to an initial state"""
+    self.makespan = 0
     return self.tasks.reset()
 
   def calculate_reward(self, action):
@@ -158,38 +162,40 @@ class JobshopEnv(gym.Env):
           mtask.end_time <= end_time:
         reward -= 100
 
+    # Makespan exceeded
+    self.makespan = self.tasks.get_makespan()
+    if self.makespan >= self.max_schedule_time:
+      reward -= 100
+
     if reward >= 0:
       # Task assigned in correct order and no overlap
       pre_tasks = [self.tasks.get_task(p) for p in pre]
       for pre in pre_tasks:
-        if pre.end_time != -1 and pre.end_time <= start_time:
-          reward += 10
+        if pre.is_scheduled() and pre.end_time <= start_time:
+          reward += 200
       
       post_tasks = [self.tasks.get_task(p) for p in post]
       for post in post_tasks:
-        if post.end_time != -1 and post.start_time >= start_time:
-          reward += 10
+        if post.is_scheduled() and post.start_time >= start_time:
+          reward += 200
 
-    # Rewards:
-    # All tasks assigned
-    # Task assigned in proper order
-    # Machine not busy
-    # Makespan is short
+      # reward shorter makespans
+      reward += (self.max_schedule_time - makespan)
 
-    return reward, False # TODO
+    return reward
 
   def step(self, action):
     """Execute one step within the environment"""
     # calculate the reward
-    reward, done = self.calculate_reward(action)
+    reward = self.calculate_reward(action)
 
-    # check if we've reached our goal
-
-    # take the action
+    # take the action and get the next observation
     observation = self.tasks.schedule_task(action['task_id'],
       action['start_time'])
 
-    # get the next observation
+    # check if we've reached our goal
+    done = self.tasks.all_tasks_scheduled()
+
     return observation, reward, done, {}
 
   def render(self, mode='human', close=True):
@@ -208,8 +214,7 @@ if __name__ == "__main__":
 
   env = JobshopEnv(jobs_data)
   obs = env.reset()
-  print(obs)
-  print(env.tasks)
+  env.render()
 
   for i in range(5):
     action = env.action_space.sample()
@@ -217,4 +222,4 @@ if __name__ == "__main__":
 
     obs, reward, done, info = env.step(action)
     print(f'obs: {obs}, reward: {reward}, done: {done}')
-    print(env.tasks)
+    env.render()
