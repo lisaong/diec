@@ -150,10 +150,12 @@ class JobshopEnv(gym.Env):
     pre, post = self.tasks.get_related_tasks(id)
     machine_tasks = self.tasks.machines_to_tasks[task.machine_id]
 
+    # Constraint 1
     # Task already assigned
     if task.is_scheduled():
       reward -= 100
 
+    # Constraint 2
     # Machine already in use 
     for mt in machine_tasks:
       mtask = self.tasks.get_task(mt)
@@ -162,6 +164,7 @@ class JobshopEnv(gym.Env):
           mtask.end_time <= end_time:
         reward -= 100
 
+    # Constraint 3
     # Makespan exceeded
     self.makespan = self.tasks.get_makespan()
     if self.makespan >= self.max_schedule_time:
