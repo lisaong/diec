@@ -39,6 +39,20 @@ def RunRandomAgent(jobs_data, episode_count, steps_per_episode):
 
         env.close()
 
+class QLearningTDAgent:
+    """Q-Learning Agent with Temporal Differencing
+    gamma: the discount factor in considering future rewards
+    alpha: how much prior knowledge to include
+    verbose: whether to print debugging messages
+    """
+    self.gamma = gamma
+    self.alpha = alpha
+    self.verbose = verbose
+
+    # Store Q-learning memory
+    # Value of assigning a task's start time?
+
+
 if __name__ == "__main__":
     # Each job is a list of multiple tasks: (machine_id, processing_time)
     jobs_data = [
