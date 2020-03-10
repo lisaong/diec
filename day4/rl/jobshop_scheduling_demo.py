@@ -4,6 +4,7 @@
 #
 
 import gym
+import gym_jobshop.envs.jobshop_env as jsenv
 import numpy as numpy
 
 class RandomAgent:
@@ -16,11 +17,7 @@ class RandomAgent:
     def act(self, observation, reward, done):
         return self.action_space.sample()
 
-def RunRandomAgent(jobs_data, episode_count, steps_per_episode):
-    env = gym.make('gym_jobshop:jobshop-v0', 
-        jobs_data=jobs_data, max_schedule_time=20, verbose=True)
-    agent = RandomAgent(env.action_space)
-
+def RunAgent(env, agent, episode_count, steps_per_episode):
     done = False
     reward = 0
 
@@ -45,12 +42,18 @@ class QLearningTDAgent:
     alpha: how much prior knowledge to include
     verbose: whether to print debugging messages
     """
-    self.gamma = gamma
-    self.alpha = alpha
-    self.verbose = verbose
-
     # Store Q-learning memory
-    # Value of assigning a task's start time?
+    def __init__(self, jobs_data, gamma=.8, alpha=.1, verbose=False):
+        self.action_space = action_space
+        self.gamma = gamma
+        self.alpha = alpha
+        self.verbose = verbose
+
+        # utility for parsing jobs data
+        self.tasks = jsenv.TaskList(jobs_data)
+
+    def act(self, observation, reward, done):
+        return self.action_space.sample()
 
 
 if __name__ == "__main__":
@@ -61,6 +64,10 @@ if __name__ == "__main__":
         [(1, 4), (2, 3)]  # Job2
     ]
 
+    env = gym.make('gym_jobshop:jobshop-v0', 
+        jobs_data=jobs_data, max_schedule_time=20, verbose=True)
+
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks
-    RunRandomAgent(jobs_data, episode_count=100, steps_per_episode=10)
+    agent = RandomAgent(env.action_space)
+    RunAgent(env, agent, episode_count=100, steps_per_episode=10)
