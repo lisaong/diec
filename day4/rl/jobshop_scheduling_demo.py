@@ -7,16 +7,6 @@ import gym
 import gym_jobshop.envs.jobshop_env as jsenv
 import numpy as numpy
 
-class RandomAgent:
-    """The world's simplest agent!
-      https://github.com/openai/gym/blob/master/examples/agents/random_agent.py
-    """
-    def __init__(self, action_space):
-        self.action_space = action_space
-
-    def act(self, observation, reward, done):
-        return self.action_space.sample()
-
 def RunAgent(env, agent, episode_count, steps_per_episode):
     done = False
     reward = 0
@@ -36,13 +26,22 @@ def RunAgent(env, agent, episode_count, steps_per_episode):
 
         env.close()
 
+class RandomAgent:
+    """The world's simplest agent!
+      https://github.com/openai/gym/blob/master/examples/agents/random_agent.py
+    """
+    def __init__(self, action_space):
+        self.action_space = action_space
+
+    def act(self, observation, reward, done):
+        return self.action_space.sample()
+
 class QLearningTDAgent:
     """Q-Learning Agent with Temporal Differencing
     gamma: the discount factor in considering future rewards
     alpha: how much prior knowledge to include
     verbose: whether to print debugging messages
     """
-    # Store Q-learning memory
     def __init__(self, jobs_data, gamma=.8, alpha=.1, verbose=False):
         self.action_space = action_space
         self.gamma = gamma
@@ -52,7 +51,13 @@ class QLearningTDAgent:
         # utility for parsing jobs data
         self.tasks = jsenv.TaskList(jobs_data)
 
+        # Q-values (aka the "brain" of the agent)
+        # TODO
+
     def act(self, observation, reward, done):
+        
+
+
         return self.action_space.sample()
 
 
@@ -67,7 +72,8 @@ if __name__ == "__main__":
     env = gym.make('gym_jobshop:jobshop-v0', 
         jobs_data=jobs_data, max_schedule_time=20, verbose=True)
 
+    agent = RandomAgent(env.action_space)
+
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks
-    agent = RandomAgent(env.action_space)
     RunAgent(env, agent, episode_count=100, steps_per_episode=10)
