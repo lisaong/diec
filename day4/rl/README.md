@@ -17,7 +17,6 @@ sh launch_docker.sh
 
 2. From the Docker container:
 ```
-# Activate the virtual environment, then run the script
 cd /code/day4/rl
 python3 path_finding_demo.py
 ```
@@ -52,4 +51,23 @@ Episode finished after 12 timesteps
 [3, 4, 5]
 [4, 5]
 [5, 5]
+```
+
+## Job Shop Scheduling with OpenAI Gym on Raspberry Pi
+
+![image](../../day3/swarm/job_shop_scheduling.png)
+
+Running on Raspberry Pi 3 or 4:
+1. Launch the Docker container 
+```
+cd day4/rl/docker
+sh launch_docker.sh
+```
+
+2. From the Docker container:
+```
+# Install the gym environment, then run the script
+cd /code/day4/rl
+pip3 -e install gym-jobshop
+python3 jobshop_scheduling_demo.py
 ```
