@@ -153,21 +153,24 @@ class JobshopEnv(gym.Env):
     # Constraint 1
     # Task already assigned
     if task.is_scheduled():
+      print(f'Task already scheduled')
       reward -= 1
 
     # Constraint 2
-    # Machine already in use 
-    for mt in machine_tasks:
-      mtask = self.tasks.get_task(mt)
-      if mt != id and mtask.is_scheduled() and \
-        mtask.start_time >= start_time or \
-          mtask.end_time <= end_time:
-        reward -= 1
+    # Machine already in use
+    mtasks = [self.tasks.get_task(mt) for mt in machine_tasks if mt != id]
+    overlap = [mt.is_scheduled() for mt in mtasks 
+      if mt.is_scheduled() and
+        (mt.start_time >= start_time or mt.end_time <= end_time)]
+    if overlap:
+      print(f'Machine overlap')
+      reward -= 1
 
     # Constraint 3
     # Makespan exceeded
     self.makespan = self.tasks.get_makespan()
     if self.makespan >= self.max_schedule_time:
+      print(f'Makespan exceeded')
       reward -= 1
 
     if reward >= 0:
@@ -183,7 +186,7 @@ class JobshopEnv(gym.Env):
           reward += 50
 
       # reward shorter makespans
-      reward += (self.max_schedule_time - makespan)*50
+      reward += (self.max_schedule_time - self.makespan)*50
 
     return reward
 
@@ -226,3 +229,7 @@ if __name__ == "__main__":
     obs, reward, done, info = env.step(action)
     print(f'obs: {obs}, reward: {reward}, done: {done}')
     env.render()
+
+    if done:
+      print(f'took {i+1} action(s)')
+      break
