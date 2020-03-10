@@ -1,1 +1,1 @@
-from gym_jobshop.envs.jobshop_env import JobshopEnv
+from gym_jobshop.envs.jobshop_env import JobshopEnv, TaskList
