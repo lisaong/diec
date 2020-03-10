@@ -34,7 +34,7 @@ class TaskList:
       'latest_tasks': [0] * self.num_machines,
       'end_times':  [0] * self.num_machines
     }
-    return self.get_makespan()
+    return self.observations
 
   def length(self):
     return len(self.tasks)
@@ -192,11 +192,11 @@ class JobshopEnv(gym.Env):
 
     # Constraint 3
     # Makespan exceeded
-    self.makespan = self.tasks.get_makespan()
-    if self.makespan >= self.max_schedule_time:
+    makespan = self.tasks.get_makespan()
+    if makespan >= self.max_schedule_time:
       reward -= 1
       if self.verbose:
-        print(f'DEBUG: Makespan exceeded: {self.makespan}')
+        print(f'DEBUG: Makespan exceeded: {makespan}')
 
     if reward >= 0:
       # Task assigned in correct order and no overlap
@@ -211,7 +211,7 @@ class JobshopEnv(gym.Env):
           reward += 50
 
       # reward shorter makespans
-      reward += (self.max_schedule_time - self.makespan)*50
+      reward += (self.max_schedule_time - makespan)*50
 
     return reward
 
@@ -232,7 +232,7 @@ class JobshopEnv(gym.Env):
   def render(self, mode='human', close=True):
     """Print state of the current environment"""
     print(f'Tasks: {self.tasks}')
-    print(f'Makespan: {self.makespan}')
+    print(f'Makespan: {self.tasks.get_makespan()}')
 
 # Unit test
 if __name__ == "__main__":
