@@ -17,7 +17,8 @@ class RandomAgent:
         return self.action_space.sample()
 
 def RunRandomAgent(jobs_data, episode_count, steps_per_episode):
-    env = gym.make('gym_jobshop:jobshop-v0', jobs_data=jobs_data, max_schedule_time=20)
+    env = gym.make('gym_jobshop:jobshop-v0', 
+        jobs_data=jobs_data, max_schedule_time=20, verbose=True)
     agent = RandomAgent(env.action_space)
 
     done = False

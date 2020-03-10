@@ -96,7 +96,7 @@ class JobshopEnv(gym.Env):
   # render to the current display or terminal
   metadata = {'render.modes': ['human']}
 
-  def __init__(self, jobs_data, max_schedule_time=20):
+  def __init__(self, jobs_data, max_schedule_time=20, verbose=False):
     """ jobs_data: list of jobs, where
           each job is a list of multiple tasks: (machine_id, processing_time)
 
@@ -108,11 +108,13 @@ class JobshopEnv(gym.Env):
           ]
 
         max_schedule_time: maximum time allowed for the schedule
+        verbose: whether to print debug messages
     """
     super(JobshopEnv, self).__init__()
 
     self.tasks = TaskList(jobs_data)
     self.max_schedule_time = max_schedule_time
+    self.verbose = verbose
 
     # https://gym.openai.com/docs/#observations
     # Action space describes all possible actions that can be taken
@@ -153,8 +155,9 @@ class JobshopEnv(gym.Env):
     # Constraint 1
     # Task already assigned
     if task.is_scheduled():
-      print(f'Task already scheduled')
       reward -= 1
+      if self.verbose:
+        print(f'DEBUG: Task already scheduled: {id}')
 
     # Constraint 2
     # Machine already in use
@@ -163,15 +166,17 @@ class JobshopEnv(gym.Env):
       if mt.is_scheduled() and
         (mt.start_time >= start_time or mt.end_time <= end_time)]
     if overlap:
-      print(f'Machine overlap')
       reward -= 1
+      if self.verbose:
+        print(f'DEBUG: Machine overlap: {task.machine_id}')
 
     # Constraint 3
     # Makespan exceeded
     self.makespan = self.tasks.get_makespan()
     if self.makespan >= self.max_schedule_time:
-      print(f'Makespan exceeded')
       reward -= 1
+      if self.verbose:
+        print(f'DEBUG: Makespan exceeded: {self.makespan}')
 
     if reward >= 0:
       # Task assigned in correct order and no overlap
