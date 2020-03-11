@@ -10,7 +10,19 @@ from gym import spaces
 import numpy as np
 
 class TaskList:
+  """Used to track the state of tasks in a Job Shop Environment
+  """
   def __init__ (self, jobs_data):
+    """jobs_data: list of jobs, where
+        each job is a list of multiple tasks: (machine_id, processing_time)
+
+    Example:
+      jobs_data = [
+        [(0, 3), (1, 2), (2, 2)],  # Job0
+        [(0, 2), (2, 1), (1, 4)],  # Job1
+        [(1, 4), (2, 3)]  # Job2
+      ]
+    """
     num_jobs = len(jobs_data)
     self.tasks = [Task(i, *task) for i in range(num_jobs)
        for task in jobs_data[i]]
@@ -27,6 +39,8 @@ class TaskList:
     self.reset()
 
   def reset(self):
+    """Reset the state of all tasks
+    """
     for t in self.tasks:
       t.reset()
 
@@ -37,12 +51,21 @@ class TaskList:
     return self.observations
 
   def length(self):
+    """Return the total number of tasks
+    """
     return len(self.tasks)
 
   def get_task(self, task_id):
+    """Retrieve a task
+    task_id: the task index
+    """
     return self.tasks[task_id]
 
   def schedule_task(self, task_id, start_time):
+    """Schedule a task
+    task_id: the task index
+    start_time: the task start time
+    """
     task = self.get_task(task_id)
     task.schedule(start_time)
 
@@ -53,7 +76,9 @@ class TaskList:
     return self.observations
 
   def get_makespan(self):
-    # find the tasks that started (end_time)
+    """Return the makespan (duration of the earliest start time
+    to the latest end time)
+    """
     start_times = [t.start_time for t in self.tasks if t.is_scheduled()]
     end_times = [t.end_time for t in self.tasks if t.is_scheduled()]
 
@@ -63,6 +88,10 @@ class TaskList:
       return 0 # nothing has been scheduled
 
   def get_related_tasks(self, task_id):
+    """Return all tasks related to the current task. Here "related to"
+    means sharing the same job
+    task_id: the task index
+    """
     task_ids = np.array(self.jobs_to_tasks[self.tasks[task_id].job_id])
 
     pre = task_ids[task_ids < task_id]
@@ -70,6 +99,8 @@ class TaskList:
     return pre, post
 
   def all_tasks_scheduled(self):
+    """Return whether all tasks have been scheduled
+    """
     return sum([t.is_scheduled() for t in self.tasks]) == len(self.tasks)
 
   def __repr__(self):
@@ -77,21 +108,33 @@ class TaskList:
       for i in range(len(self.tasks))])
 
 class Task:
+  """Encapsulates the state of a task in a Job Shop Environment
+  """
   def __init__(self, job_id, machine_id, processing_time):
+    """job_id: the job id this task belongs to
+    machine_id: the machine id that this task must run
+    processing_time: the task processing time
+    """
     self.job_id = job_id
     self.machine_id = machine_id
     self.processing_time = processing_time
     self.reset()
 
   def reset(self):
+    """Reset this task
+    """
     self.start_time = 0
     self.end_time = -1
 
   def schedule(self, start_time):
+    """Schedule this task
+    """
     self.start_time = start_time
     self.end_time = self.start_time + self.processing_time
 
   def is_scheduled(self):
+    """Return whether this task has already been scheduled
+    """
     return self.end_time != -1
 
   def __repr__(self):
@@ -104,23 +147,22 @@ class JobshopEnv(gym.Env):
   For details on the gym.Env class:
   https://github.com/openai/gym/blob/master/gym/core.py
   """
-
   # render to the current display or terminal
   metadata = {'render.modes': ['human']}
 
   def __init__(self, jobs_data, max_schedule_time=20, verbose=False):
-    """ jobs_data: list of jobs, where
+    """jobs_data: list of jobs, where
           each job is a list of multiple tasks: (machine_id, processing_time)
 
-        Example:
-          jobs_data = [
-            [(0, 3), (1, 2), (2, 2)],  # Job0
-            [(0, 2), (2, 1), (1, 4)],  # Job1
-            [(1, 4), (2, 3)]  # Job2
-          ]
+    Example:
+      jobs_data = [
+        [(0, 3), (1, 2), (2, 2)],  # Job0
+        [(0, 2), (2, 1), (1, 4)],  # Job1
+        [(1, 4), (2, 3)]  # Job2
+      ]
 
-        max_schedule_time: maximum time allowed for the schedule
-        verbose: whether to print debug messages
+    max_schedule_time: maximum time allowed for the schedule
+    verbose: whether to print debug messages
     """
     super(JobshopEnv, self).__init__()
 
@@ -157,11 +199,15 @@ class JobshopEnv(gym.Env):
     self.reset()
 
   def reset(self):
-    """Reset the environment to an initial state"""
+    """Reset the environment to an initial state
+    """
     self.makespan = 0
     return self.tasks.reset()
 
   def calculate_reward(self, action):
+    """Compute the reward for taking an action
+    action: the action being considered
+    """
     reward = 0
     id = action['task_id']
     start_time = action['start_time']
@@ -216,7 +262,9 @@ class JobshopEnv(gym.Env):
     return reward
 
   def step(self, action):
-    """Execute one step within the environment"""
+    """Take an action
+    action: the action being taken
+    """
     # calculate the reward
     reward = self.calculate_reward(action)
 
@@ -230,7 +278,8 @@ class JobshopEnv(gym.Env):
     return observation, reward, done, {}
 
   def render(self, mode='human', close=True):
-    """Print state of the current environment"""
+    """Print state of the current environment
+    """
     print(f'Tasks: {self.tasks}')
     print(f'Makespan: {self.tasks.get_makespan()}')
 
