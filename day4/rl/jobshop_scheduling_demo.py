@@ -100,6 +100,29 @@ class QLearningTDAgent:
             print(f'DEBUG (Agent): Valid Actions: {valid_actions}')
         return valid_actions
 
+    def get_QValues(self, observation, actions):
+        """Returns the Q values for a state and set of actions
+        observation: the current state
+        action: the action
+        """
+        result = []
+        for action in actions:
+            key = f'{observation}_{action}'
+            if key not in self.Q:
+                self.Q[key] = 0.
+
+            result.append(self.Q[key])
+        return np.array(result)
+
+    def set_QValue(self, observation, action, value):
+        """Updates a Q-value
+        observation: the state
+        action: the action
+        value: the Q-value
+        """
+        key = f'{observation}_{action}'
+        self.Q[key] = value
+
     def act(self, observation, reward, done):
         """Update the Q-values, then take an action
         observation: current state
@@ -112,15 +135,35 @@ class QLearningTDAgent:
         # randomly select the next action/observation from valid actions
         valid_actions = self._get_valid_actions(observation)
         action = valid_actions[np.random.choice(len(valid_actions))]
-
-        # find the maximum Q-value for future actions
-        # an action is (task_id, start_time)
-        next_observation = observation.copy()
         task = self.tasks.get_task(action['task_id'])
 
+        # find the maximum Q-value for any future actions
+        next_observation = observation.copy()
         next_observation['available_times'][task.machine_id] = action['start_time'] \
             + task.processing_time
         next_observation['is_scheduled'][action['task_id']] = 1
+        next_valid_actions = self._get_valid_actions(next_observation)
+
+        max_future_reward = 0.
+        if len(next_valid_actions) > 0:
+            max_future_reward = self.get_QValues(next_observation, next_valid_actions).max()
+        else:
+            max_future_reward = 100 # done
+
+        if self.verbose:
+            print(f'DEBUG (Agent): Action: {action}, next state: {next_observation}, \
+max future reward: {max_future_reward:.3f}')
+
+        # update the Q matrix
+        # this is where temporal difference is applied
+        # Note: past action's reward is used instead of current action's reward
+        old_value = self.get_QValues(observation, [action])[0]
+        new_value = old_value + \
+            self.alpha * (reward + self.gamma + max_future_reward - old_value)
+        self.set_QValue(observation, action, new_value)
+
+        if self.verbose >= 10:
+            print(f'DEBUG (Agent): Q-values\n{self.Q.values()}')
 
         return action
 
@@ -135,7 +178,7 @@ if __name__ == "__main__":
     env = gym.make('gym_jobshop:jobshop-v0', 
         jobs_data=jobs_data, max_schedule_time=20)
 
-    agent = QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12, verbose=True)
+    agent = QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12, verbose=1)
 
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks
