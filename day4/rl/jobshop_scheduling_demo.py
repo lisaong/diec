@@ -92,14 +92,16 @@ class QLearningTDAgent:
                 valid_actions.append(self._create_action(task_id, start_time))
 
             else: # task assigned to machine
+                # randomly select a task for a machine
                 # add the next related task with start time = end time
                 _, post = self.tasks.get_related_tasks(t)
+                print(t, post)
                 if len(post) > 0:
                     task_id = post[0]
                     machine_id = self.tasks.get_task(task_id).machine_id
                     start_time = end_times[machine_id]
-
                     valid_actions.append(self._create_action(task_id, start_time))
+                    print(self._create_action(task_id, start_time))
         return valid_actions
 
     def act(self, observation, reward, done):
@@ -114,9 +116,6 @@ class QLearningTDAgent:
         # randomly select the next action/observation from valid actions
         valid_actions = self._get_valid_actions(observation)
         action = valid_actions[np.random.choice(len(valid_actions))]
-
-        key = f'{observation}_{action.items()}'
-        print(key)
 
         # find the maximum Q-value for future actions
         # an action is (task_id, start_time)
