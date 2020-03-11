@@ -233,14 +233,23 @@ class JobshopEnv(gym.Env):
 
     # Constraint 2
     # Machine already in use
-    mtasks = [self.tasks.get_task(mt) for mt in machine_tasks if mt != id]
-    overlap = [mt.is_scheduled() for mt in mtasks 
-      if mt.is_scheduled() and
-        (mt.start_time >= start_time or mt.end_time <= end_time)]
+    # To detect this case, we collect all the start and end times
+    # for scheduled/to-be-run tasks on the machine, sort by start times,
+    # then flatten the tuples into [start, end, start, end, ...]
+    # none of the times should overlap
+    mtasks = [(self.tasks.get_task(mt).start_time, self.tasks.get_task(mt).end_time)
+      for mt in machine_tasks if (mt != id and self.tasks.get_task(mt).is_scheduled())]
+    mtasks.append((start_time, end_time))
+    mtasks.sort(key=lambda t:t[0])
+    flattened = np.array([t for ts in mtasks for t in ts])
+    overlap = sum(flattened[:-1] > flattened[1:]) > 0
+    if self.verbose:
+      print(f'DEBUG: Checking for overlap: {flattened}')
+
     if overlap:
       reward -= 1
       if self.verbose:
-        print(f'DEBUG: Machine overlap: {task.machine_id}')
+        print(f'DEBUG: Machine overlap: {task.machine_id}, {flattened}')
 
     # Constraint 3
     # Makespan exceeded
@@ -298,13 +307,13 @@ if __name__ == "__main__":
     [(1, 4), (2, 3)]  # Job2
   ]
 
-  env = JobshopEnv(jobs_data)
+  env = JobshopEnv(jobs_data, verbose=True)
   obs = env.reset()
   env.render()
 
-  for i in range(5):
+  for i in range(10):
     action = env.action_space.sample()
-    print(f'action: {action}')
+    print(f'==={i}===\naction: {action}')
 
     obs, reward, done, info = env.step(action)
     print(f'obs: {obs}, reward: {reward}, done: {done}')

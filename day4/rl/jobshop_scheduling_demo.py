@@ -13,6 +13,7 @@ def RunAgent(env, agent, episode_count, steps_per_episode):
     reward = 0
 
     for episode in range(episode_count):
+        print(f'======Episode {episode}======')
         obs = env.reset()
         for s in range(steps_per_episode):
             action = agent.act(obs, reward, done)
@@ -110,12 +111,22 @@ class QLearningTDAgent:
         if done:
             return None
         
-        # randomly select the next action/observation
-        valid_actions = self._get_valid_actions(observation) 
+        # randomly select the next action/observation from valid actions
+        valid_actions = self._get_valid_actions(observation)
         action = valid_actions[np.random.choice(len(valid_actions))]
 
         key = f'{observation}_{action.items()}'
         print(key)
+
+        # find the maximum Q-value for future actions
+        # an action is (task_id, start_time)
+        next_observation = observation.copy()
+        task = self.tasks.get_task(action['task_id'])
+        next_observation['latest_tasks'][task.machine_id] = action['task_id']
+        next_observation['end_times'][task.machine_id] = action['start_time'] \
+            + task.processing_time
+
+        print(f'Next observation: {next_observation}')
 
         return action
 
