@@ -176,10 +176,17 @@ if __name__ == "__main__":
     ]
 
     env = gym.make('gym_jobshop:jobshop-v0', 
-        jobs_data=jobs_data, max_schedule_time=20)
+        jobs_data=jobs_data, max_schedule_time=12)
 
-    agent = QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12, verbose=1)
+    agents = [
+        RandomAgent(env.action_space),
+        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12)
+    ]
 
-    # in order for all tasks to be scheduled,
-    # steps_per_episode should exceed number of tasks
-    RunAgent(env, agent, episode_count=100, steps_per_episode=10)
+    for agent in agents:
+        print(f'\n*********{agent}*********')
+
+        env.reset()
+        # in order for all tasks to be scheduled,
+        # steps_per_episode should exceed number of tasks
+        RunAgent(env, agent, episode_count=100, steps_per_episode=10)
