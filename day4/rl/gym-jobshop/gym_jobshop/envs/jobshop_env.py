@@ -234,8 +234,11 @@ class JobshopEnv(gym.Env):
   def calculate_reward(self, action):
     """Compute the reward for taking an action
     action: the action being considered
+
+    Returns the reward and any error info
     """
     reward = 0
+    error_info = ''
     id = action['task_id']
     start_time = action['start_time']
 
@@ -249,6 +252,7 @@ class JobshopEnv(gym.Env):
     # Task already assigned
     if task.is_scheduled():
       reward -= 1
+      error_info = 'Duplicate Scheduling'
       if self.verbose:
         print(f'DEBUG (Env): Task already scheduled: {id}')
 
@@ -269,6 +273,7 @@ class JobshopEnv(gym.Env):
 
     if overlap:
       reward -= 1
+      error_info = 'Machine Overlap'
       if self.verbose:
         print(f'DEBUG (Env): Machine overlap: {task.machine_id}, {flattened}')
 
@@ -277,6 +282,7 @@ class JobshopEnv(gym.Env):
     makespan = self.tasks.get_makespan()
     if makespan >= self.max_schedule_time:
       reward -= 1
+      error_info = 'Makespan Exceeded'
       if self.verbose:
         print(f'DEBUG (Env): Makespan exceeded: {makespan}')
 
@@ -295,14 +301,14 @@ class JobshopEnv(gym.Env):
       # reward shorter makespans
       reward += (self.max_schedule_time - makespan)*50
 
-    return reward
+    return reward, error_info
 
   def step(self, action):
     """Take an action
     action: the action being taken
     """
     # calculate the reward
-    reward = self.calculate_reward(action)
+    reward, error_info = self.calculate_reward(action)
 
     # take the action and get the next observation
     observation = self.tasks.schedule_task(action['task_id'],
@@ -311,7 +317,10 @@ class JobshopEnv(gym.Env):
     # check if we've reached our goal or failed
     done = self.tasks.all_tasks_scheduled() or (reward < 0)
 
-    return observation, reward, done, {}
+    info = {}
+    if len(error_info):
+      info['errors'] = error_info
+    return observation, reward, done, info
 
   def render(self, mode='human', close=True):
     """Print state of the current environment
@@ -337,7 +346,7 @@ if __name__ == "__main__":
     print(f'==={i}===\naction: {action}')
 
     obs, reward, done, info = env.step(action)
-    print(f'obs: {obs}, reward: {reward}, done: {done}')
+    print(f'obs: {obs}, reward: {reward}, done: {done}, info: {info}')
     env.render()
 
     if done:
