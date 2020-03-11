@@ -23,10 +23,9 @@ def RunAgent(env, agent, episode_count, steps_per_episode):
         obs = env.reset()
         for s in range(steps_per_episode):
             action = agent.act(obs, reward, done)
-            print(f'action: {action}')
-
             obs, reward, done, info = env.step(action)
-            print(obs)
+
+            print(f'{action}, {obs}, {reward}, {done}, {info}')
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
@@ -160,9 +159,8 @@ class QLearningTDAgent:
             print(f'DEBUG (Agent): Action: {action}, next state: {next_observation}, \
 max future reward: {max_future_reward:.3f}')
 
-        # update the Q matrix
-        # this is where temporal difference is applied
-        # Note: past action's reward is used instead of current action's reward
+        # update the Q matrix using Temporal Difference
+        # Note: the previous action's reward is used here of the current action's reward
         old_value = self.get_QValues(observation, [action])[0]
         new_value = old_value + \
             self.alpha * (reward + self.gamma + max_future_reward - old_value)
@@ -172,6 +170,12 @@ max future reward: {max_future_reward:.3f}')
             print(f'DEBUG (Agent): Q-values\n{self.Q.values()}')
 
         return action
+
+    def get_best_schedule(self):
+        """Returns the scheduling actions based on highest Q-values
+        """
+        pass
+
 
 if __name__ == "__main__":
     # Each job is a list of multiple tasks: (machine_id, processing_time)
