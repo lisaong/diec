@@ -78,22 +78,31 @@ class QLearningTDAgent:
         # currently assigned to each machine
         valid_actions = []
 
-        machines_to_tasks = self.tasks.get_machines_to_tasks()
         latest_tasks = observation['latest_tasks']
         end_times = observation['end_times']
         n = len(latest_tasks)
 
+        is_scheduled = np.array(self.tasks.get_tasks_is_scheduled())
+        available_tasks = np.where(is_scheduled == 0)
+        available_tasks_by_machine = {
+            m_id : [tid]
+        }
+
+        # for each machine
+        # randomly select a task
+        # set the start time to the end time of its machine
         for i, t, e in zip(range(n), latest_tasks, end_times):
             if e == 0: # no tasks assigned to machine (yet)
                 # randomly select a task for a machine
                 task_id = np.random.choice(np.array(machines_to_tasks[i]))
                 start_time = np.random.choice(self.max_schedule_time)
-
                 valid_actions.append(self._create_action(task_id, start_time))
 
             else: # task assigned to machine
-                # randomly select a task for a machine
-                # add the next related task with start time = end time
+                # randomly select a remaining task
+
+                start_time = np.random.choice(self.max_schedule_time)
+
                 _, post = self.tasks.get_related_tasks(t)
                 print(t, post)
                 if len(post) > 0:
