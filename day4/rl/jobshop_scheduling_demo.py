@@ -69,48 +69,32 @@ class QLearningTDAgent:
         # the current observation
         self.Q = dict()
 
-    def _create_action(self, task_id, start_time):
-        return OrderedDict([('task_id', task_id),
-            ('start_time', start_time)])
-
     def _get_valid_actions(self, observation):
         # Gets all possible actions based on what is
         # currently assigned to each machine
         valid_actions = []
+        start_times = np.array(observation['available_times'])
+        is_scheduled = np.array(observation['is_scheduled'])
 
-        latest_tasks = observation['latest_tasks']
-        end_times = observation['end_times']
-        n = len(latest_tasks)
+        # get the indices where condition is true
+        candidate_task_ids = np.where(is_scheduled == 0)[0] # [0]: true, [1]: false
+        candidate_tasks = [(i, self.tasks.get_task(i)) for i in candidate_task_ids]
 
-        is_scheduled = np.array(self.tasks.get_tasks_is_scheduled())
-        available_tasks = np.where(is_scheduled == 0)
-        available_tasks_by_machine = {
-            m_id : [tid]
-        }
+        # create a mapping of available candidate tasks for each machine
+        machines_to_tasks = {i:[] for i in range(len(start_times))}
+        for c in candidate_tasks:
+            machines_to_tasks[c[1].machine_id].append(c[0])
 
-        # for each machine
-        # randomly select a task
+        # for each machine, randomly select one task
         # set the start time to the end time of its machine
-        for i, t, e in zip(range(n), latest_tasks, end_times):
-            if e == 0: # no tasks assigned to machine (yet)
-                # randomly select a task for a machine
-                task_id = np.random.choice(np.array(machines_to_tasks[i]))
-                start_time = np.random.choice(self.max_schedule_time)
-                valid_actions.append(self._create_action(task_id, start_time))
+        for (machine_id, tasks_ids), start_time in zip(machines_to_tasks.items(), start_times):
+            if len(tasks_ids) > 0:
+                task_id = np.random.choice(tasks_ids)
+                valid_actions.append(OrderedDict([('task_id', task_id),
+                    ('start_time', start_time)]))
 
-            else: # task assigned to machine
-                # randomly select a remaining task
-
-                start_time = np.random.choice(self.max_schedule_time)
-
-                _, post = self.tasks.get_related_tasks(t)
-                print(t, post)
-                if len(post) > 0:
-                    task_id = post[0]
-                    machine_id = self.tasks.get_task(task_id).machine_id
-                    start_time = end_times[machine_id]
-                    valid_actions.append(self._create_action(task_id, start_time))
-                    print(self._create_action(task_id, start_time))
+        if self.verbose:
+            print(f'DEBUG (Agent): Valid Actions: {valid_actions}')
         return valid_actions
 
     def act(self, observation, reward, done):
@@ -130,11 +114,10 @@ class QLearningTDAgent:
         # an action is (task_id, start_time)
         next_observation = observation.copy()
         task = self.tasks.get_task(action['task_id'])
-        next_observation['latest_tasks'][task.machine_id] = action['task_id']
-        next_observation['end_times'][task.machine_id] = action['start_time'] \
-            + task.processing_time
 
-        print(f'Next observation: {next_observation}')
+        next_observation['available_times'][task.machine_id] = action['start_time'] \
+            + task.processing_time
+        next_observation['is_scheduled'][action['task_id']] = 1
 
         return action
 
@@ -149,7 +132,7 @@ if __name__ == "__main__":
     env = gym.make('gym_jobshop:jobshop-v0', 
         jobs_data=jobs_data, max_schedule_time=20, verbose=True)
 
-    agent = QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20)
+    agent = QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20, verbose=True)
 
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks

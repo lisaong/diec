@@ -247,7 +247,7 @@ class JobshopEnv(gym.Env):
     if task.is_scheduled():
       reward -= 1
       if self.verbose:
-        print(f'DEBUG: Task already scheduled: {id}')
+        print(f'DEBUG (Env): Task already scheduled: {id}')
 
     # Constraint 2
     # Machine already in use
@@ -262,12 +262,12 @@ class JobshopEnv(gym.Env):
     flattened = np.array([t for ts in mtasks for t in ts])
     overlap = sum(flattened[:-1] > flattened[1:]) > 0
     if self.verbose:
-      print(f'DEBUG: Checking for overlap: {flattened}')
+      print(f'DEBUG (Env): Checking for overlap: {flattened}')
 
     if overlap:
       reward -= 1
       if self.verbose:
-        print(f'DEBUG: Machine overlap: {task.machine_id}, {flattened}')
+        print(f'DEBUG (Env): Machine overlap: {task.machine_id}, {flattened}')
 
     # Constraint 3
     # Makespan exceeded
@@ -275,7 +275,7 @@ class JobshopEnv(gym.Env):
     if makespan >= self.max_schedule_time:
       reward -= 1
       if self.verbose:
-        print(f'DEBUG: Makespan exceeded: {makespan}')
+        print(f'DEBUG (Env): Makespan exceeded: {makespan}')
 
     if reward >= 0:
       # Task assigned in correct order and no overlap
