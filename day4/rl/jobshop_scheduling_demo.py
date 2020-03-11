@@ -49,6 +49,8 @@ Reward: {reward}, Done: {done}, Info: {info}')
             title=f'{agent.__class__.__name__} after {episode_count} episodes')
         plt.savefig(f'{agent.__class__.__name__}_{episode_count}.png')
 
+    return success_history
+
 class RandomAgent:
     """The world's simplest agent!
       https://github.com/openai/gym/blob/master/examples/agents/random_agent.py
@@ -58,6 +60,9 @@ class RandomAgent:
 
     def act(self, observation, reward, done):
         return self.action_space.sample()
+    
+    def get_best_schedule(self):
+        pass # not implemented
 
 class QLearningTDAgent:
     """Q-Learning Agent with Temporal Differencing
@@ -87,6 +92,16 @@ class QLearningTDAgent:
         # Q-values (aka the "brain" of the agent)
         # These are the values of taking an action given
         # the current observation
+        # Schema:
+        # {
+        #   '[1, 1, 0, 0, 0, 1, 0, 0]' : 
+        #   {
+        #      action1: value1,
+        #      action2: value2,
+        #   }
+        # }
+        # Non-string keys may also be used but we are opting
+        # for readability
         self.Q = dict()
 
     def _get_valid_actions(self, observation):
@@ -117,18 +132,26 @@ class QLearningTDAgent:
             print(f'DEBUG (Agent): Valid Actions: {valid_actions}')
         return valid_actions
 
-    def get_QValues(self, observation, actions):
+    def get_QValues(self, observation, actions=None):
         """Returns the Q values for a state and set of actions
         observation: the current state
-        action: the action
+        action: the set of actions, or None for all actions
         """
         result = []
-        for action in actions:
-            key = f'{observation}_{action}'
-            if key not in self.Q:
-                self.Q[key] = 0.
+        obs_key = f'{observation}'
+        if obs_key not in self.Q:
+            self.Q[obs_key] = {}
 
-            result.append(self.Q[key])
+        if actions is None:
+            result = self.Q[obs_key].values()
+
+        else:
+            for action in actions:
+                action_key = f'{action}'
+                if action_key not in self.Q[obs_key]:
+                    self.Q[obs_key][f'{action}'] = 0.
+
+                result.append(self.Q[obs_key][action_key])
         return np.array(result)
 
     def set_QValue(self, observation, action, value):
@@ -137,8 +160,12 @@ class QLearningTDAgent:
         action: the action
         value: the Q-value
         """
-        key = f'{observation}_{action}'
-        self.Q[key] = value
+        obs_key = f'{observation}'
+        action_key = f'{action}'
+        if obs_key not in self.Q:
+            self.Q[obs_key] = {}
+
+        self.Q[obs_key][action_key] = value
 
     def act(self, observation, reward, done):
         """Update the Q-values, then take an action
@@ -178,14 +205,19 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
         self.set_QValue(observation, action, new_value)
 
         if self.verbose >= 10:
-            print(f'DEBUG (Agent): Q-values\n{self.Q.values()}')
+            print(f'DEBUG (Agent): Q-values for {observation}\n\
+{self.get_QValues(observation)}')
 
         return action
 
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
         """
-        pass
+        is_scheduled = [0] * self.tasks.length()
+        #while (sum(is_scheduled) < self.tasks.length):
+            #Q
+
+            #pass
 
 if __name__ == "__main__":
     # Each job is a list of multiple tasks: (machine_id, processing_time)
@@ -200,7 +232,7 @@ if __name__ == "__main__":
 
     agents = [
         RandomAgent(env.action_space),
-        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12)
+        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12, verbose=10)
     ]
 
     for agent in agents:
@@ -209,4 +241,8 @@ if __name__ == "__main__":
         env.reset()
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
-        RunAgent(env, agent, episode_count=1000, steps_per_episode=10)
+        success_history = RunAgent(env, agent, episode_count=1000,
+            steps_per_episode=10)
+
+        if len(success_history):
+            agent.get_best_schedule()
