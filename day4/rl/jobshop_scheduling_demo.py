@@ -126,12 +126,22 @@ class QLearningTDAgent:
             if len(tasks_ids) > 0:
                 task_id = np.random.choice(tasks_ids)
                 start_time = np.random.choice(self.max_schedule_time)
-                valid_actions.append(OrderedDict([('task_id', task_id),
-                    ('start_time', start_time)]))
+                valid_actions.append(OrderedDict([('task_id', int(task_id)),
+                    ('start_time', int(start_time))]))
 
         if self.verbose:
             print(f'DEBUG (Agent): Valid Actions: {valid_actions}')
         return valid_actions
+
+    def _observation_to_key(self, observation):
+        return f'{observation["is_scheduled"]}'
+
+    def _action_to_key(self, action):
+        return f'{action["task_id"]}_{action["start_time"]}'
+
+    def _key_to_action(self, action_key):
+        parts = action_key.split('_')
+        return OrderedDict([('task_id', parts[0]), ('start_time', parts[1])])
 
     def get_QValues(self, observation, actions=None):
         """Returns the Q values for a state and set of actions
@@ -142,7 +152,7 @@ class QLearningTDAgent:
         else a np.array is returned
         """
         result = []
-        obs_key = f'{observation["is_scheduled"]}'
+        obs_key = self._observation_to_key(observation)
         if obs_key not in self.Q:
             self.Q[obs_key] = {}
 
@@ -150,7 +160,7 @@ class QLearningTDAgent:
             return self.Q[obs_key]
         else:
             for action in actions:
-                action_key = f'{action}'
+                action_key = self._action_to_key(action)
                 if action_key not in self.Q[obs_key]:
                     self.Q[obs_key][action_key] = 0.
 
@@ -163,8 +173,8 @@ class QLearningTDAgent:
         action: the action
         value: the Q-value
         """
-        obs_key = f'{observation["is_scheduled"]}'
-        action_key = f'{action}'
+        obs_key = self._observation_to_key(observation)
+        action_key = self._action_to_key(action)
         if obs_key not in self.Q:
             self.Q[obs_key] = {}
 
@@ -221,16 +231,14 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
         while (sum(is_scheduled) < len(is_scheduled)):
             observation = OrderedDict([('is_scheduled', is_scheduled)])
             action_Qvalues = self.get_QValues(observation)
-            print(len(self.Q.keys()))
-            print(action_Qvalues)
 
             # sort by highest Q-value
-            action_Qvalues_desc = sorted(action_Qvalues.items(),
+            sorted_Qvalues = sorted(action_Qvalues.items(),
                 key=lambda item:item[1], reverse=True)
-            print(action_Qvalues_desc)
-            action = action_Qvalues_desc.keys()[0]
-            print(action)
-            is_scheduled[action['task_id']] = 1
+            best_action = self._key_to_action(sorted_Qvalues[0][0])
+            print(best_action['task_id'])
+
+            is_scheduled[best_action['task_id']] = 1
 
 if __name__ == "__main__":
     # Each job is a list of multiple tasks: (machine_id, processing_time)
