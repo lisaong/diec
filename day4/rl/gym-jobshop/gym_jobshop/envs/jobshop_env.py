@@ -54,6 +54,11 @@ class TaskList:
     """
     return len(self.tasks)
 
+  def get_num_machines(self):
+    """Return the total number of machines
+    """
+    return len(self.machines_to_tasks)
+
   def get_task(self, task_id):
     """Retrieve a task
     task_id: the task index
@@ -221,7 +226,6 @@ class JobshopEnv(gym.Env):
   def reset(self):
     """Reset the environment to an initial state
     """
-    self.makespan = 0
     return self.tasks.reset()
 
   def calculate_reward(self, action):
@@ -310,7 +314,7 @@ class JobshopEnv(gym.Env):
     # check if we've reached our goal or failed
     done = self.tasks.all_tasks_scheduled() or (reward < 0)
 
-    info = {}
+    info = {'makespan': self.tasks.get_makespan()}
     if len(error_info):
       info['errors'] = error_info
     return observation, reward, done, info
@@ -321,7 +325,6 @@ class JobshopEnv(gym.Env):
     print(f'Job-view:\n{self.tasks}')
 
     print(f'\nMachine-view:')
-
     for machine, tasks in self.tasks.get_machines_to_tasks().items():
       task_info = []
       for t in tasks:
@@ -351,9 +354,6 @@ class JobshopEnv(gym.Env):
 
       print(f'\nMachine {machine}:{timeline}')
       print(status)
-
-    print(f'\nMakespan: {self.tasks.get_makespan()}')
-
 
 # Unit test
 if __name__ == "__main__":
