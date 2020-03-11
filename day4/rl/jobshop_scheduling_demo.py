@@ -34,16 +34,18 @@ Reward: {reward}, Done: {done}, Info: {info}')
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
                 if np.sum(obs['is_scheduled']) == len(obs['is_scheduled']):
-                    success_history.append(s+1)
+                    success_history.append([s+1, info['makespan']])
                 break
 
         env.close()
 
-    print(f'Passing rate: {len(success_history)/episode_count * 100:.2f}')
+    print(f'Passing rate: {len(success_history)/episode_count * 100:.2f}%')
 
     if (len(success_history)):
         fig, ax = plt.subplots()
-        ax.plot(success_history)
+        data = np.array(success_history)
+        ax.scatter(data[:, 0], data[:, 1])
+        ax.set(xlabel='num actions', ylabel='makespan')
         plt.show()
 
 class RandomAgent:
@@ -90,7 +92,6 @@ class QLearningTDAgent:
         # Gets all possible actions based on what is
         # currently assigned to each machine
         valid_actions = []
-        start_times = np.array(observation['available_times'])
         is_scheduled = np.array(observation['is_scheduled'])
 
         # get the indices where condition is true
@@ -98,15 +99,16 @@ class QLearningTDAgent:
         candidate_tasks = [(i, self.tasks.get_task(i)) for i in candidate_task_ids]
 
         # create a mapping of available candidate tasks for each machine
-        machines_to_tasks = {i:[] for i in range(len(start_times))}
+        machines_to_tasks = {i:[] for i in range(self.tasks.get_num_machines())}
         for c in candidate_tasks:
             machines_to_tasks[c[1].machine_id].append(c[0])
 
         # for each machine, randomly select one task
-        # set the start time to the end time of its machine
-        for (machine_id, tasks_ids), start_time in zip(machines_to_tasks.items(), start_times):
+        # select a random start time
+        for machine_id, tasks_ids in machines_to_tasks.items():
             if len(tasks_ids) > 0:
                 task_id = np.random.choice(tasks_ids)
+                start_time = np.random.choice(self.max_schedule_time)
                 valid_actions.append(OrderedDict([('task_id', task_id),
                     ('start_time', start_time)]))
 
@@ -153,8 +155,6 @@ class QLearningTDAgent:
 
         # find the maximum Q-value for any future actions
         next_observation = observation.copy()
-        next_observation['available_times'][task.machine_id] = action['start_time'] \
-            + task.processing_time
         next_observation['is_scheduled'][action['task_id']] = 1
         next_valid_actions = self._get_valid_actions(next_observation)
 
