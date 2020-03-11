@@ -44,12 +44,11 @@ class TaskList:
     for t in self.tasks:
       t.reset()
 
-    self.observations = {
-      'latest_tasks': [0] * self.num_machines,
-      'end_times':  [0] * self.num_machines,
+    self.observation = {
+      'available_times':  [0] * self.num_machines,
       'is_scheduled':  [0] * self.length()
     }
-    return self.observations
+    return self.observation
 
   def length(self):
     """Return the total number of tasks
@@ -75,13 +74,12 @@ class TaskList:
     task = self.get_task(task_id)
     task.schedule(start_time)
 
-    # update observations
+    # update observation
     machine_id = task.machine_id
-    self.observations['latest_tasks'][machine_id] = task_id
-    self.observations['end_times'][machine_id] = task.end_time
-    self.observations['is_scheduled'][task_id] = 1
+    self.observation['available_times'][machine_id] = task.end_time
+    self.observation['is_scheduled'][task_id] = 1
 
-    return self.observations
+    return self.observation
 
   def get_makespan(self):
     """Return the makespan (duration of the earliest start time
@@ -202,23 +200,18 @@ class JobshopEnv(gym.Env):
     #
     # Example:
     #  {
-    #   'latest_tasks': [0, 6, 4], - machine 0: no task (because end_time is 0),
-    #                                machine 1: task 6
-    #                                machine 2: task 4
-    #   'end_times': [0, 23, 18], - machine 0 unscheduled,
-    #                               machine 1 end_time 23
-    #                               machine 2 end_time 18
+    #   'available_times': [0, 23, 18], - machine 0 available,
+    #                               machine 1 available at 23
+    #                               machine 2 available at 18
     #   'is_scheduled': [0, 0, 1, 0, 1, 0, 1, 1] - tasks 2, 4, 6, 7 already scheduled
     #                                              tasks 0, 1, 3, 5 not yet scheduled
     #  }
     #
-    task_vec = [self.tasks.length()] * self.tasks.num_machines
     times_vec = [self.max_schedule_time] * self.tasks.num_machines
     is_scheduled_vec = [2] * self.tasks.length()
 
     self.observation_space = spaces.Dict({
-      'latest_tasks':  spaces.MultiDiscrete(task_vec),
-      'end_times':  spaces.MultiDiscrete(times_vec),
+      'available_times':  spaces.MultiDiscrete(times_vec),
       'is_scheduled': spaces.MultiDiscrete(is_scheduled_vec)
     })
         
