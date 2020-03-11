@@ -45,7 +45,8 @@ Reward: {reward}, Done: {done}, Info: {info}')
         fig, ax = plt.subplots()
         data = np.array(success_history)
         ax.scatter(data[:, 0], data[:, 1])
-        ax.set(xlabel='num actions', ylabel='makespan')
+        ax.set(xlabel='num actions', ylabel='makespan',
+            title=f'{agent.__class__.__name__} after {episode_count} episodes')
         plt.show()
 
 class RandomAgent:
@@ -208,4 +209,4 @@ if __name__ == "__main__":
         env.reset()
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
-        RunAgent(env, agent, episode_count=100, steps_per_episode=10)
+        RunAgent(env, agent, episode_count=1000, steps_per_episode=10)
