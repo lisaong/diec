@@ -336,18 +336,27 @@ class JobshopEnv(gym.Env):
         if task.is_scheduled():
           task_info.append((t, task.start_time, task.end_time))
 
-      status = 'idle'
+      status = ''
       timeline = ''
       if len(task_info) > 0:
         task_info.sort(key=lambda t:t[1]) # sort by start time
+        prev = 0
+
         for ti in task_info:
-          status = (' ' * ti[1]) + f'{ti[0]}' * (ti[2] - ti[1])
+          if prev > ti[1]: # overlap
+            status += '\n' + (' ' * ti[1]) + f'{ti[0]}' * (ti[2] - ti[1])
+          else:
+            status += (' ' * (ti[1] - prev)) + f'{ti[0]}' * (ti[2] - ti[1])
+          prev = ti[2]
+
         timeline = ['-'] * max(task_info, key=lambda t:t[2])[2]
         if len(timeline) >= 5:
           timeline[::5] = ['|' for t in timeline[::5]]
-        timeline = ''.join(timeline)
+        timeline = '\n' + ''.join(timeline)
+      else:
+        status = 'idle'
 
-      print(f'\nMachine {machine}:\n{timeline}')
+      print(f'\nMachine {machine}:{timeline}')
       print(status)
 
     print(f'\nMakespan: {self.tasks.get_makespan()}')

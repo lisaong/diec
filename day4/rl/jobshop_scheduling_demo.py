@@ -179,7 +179,6 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
         """
         pass
 
-
 if __name__ == "__main__":
     # Each job is a list of multiple tasks: (machine_id, processing_time)
     jobs_data = [
