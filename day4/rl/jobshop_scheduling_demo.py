@@ -10,13 +10,14 @@ import gym
 import gym_jobshop.envs.jobshop_env as jsenv
 import numpy as np
 from collections import OrderedDict
+import matplotlib.pyplot as plt
 
 def RunAgent(env, agent, episode_count, steps_per_episode):
     done = False
     reward = 0
 
-    # track history of pass / fail
-    pass_count = 0
+    # track history of success
+    success_history = []
 
     for episode in range(episode_count):
         print(f'======Episode {episode}======')
@@ -32,13 +33,18 @@ Reward: {reward}, Done: {done}, Info: {info}')
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
-                pass_count += \
-                    np.sum(obs['is_scheduled']) == len(obs['is_scheduled'])
+                if np.sum(obs['is_scheduled']) == len(obs['is_scheduled']):
+                    success_history.append(s+1)
                 break
 
         env.close()
 
-    print(f'Passing rate: {pass_count/episode_count * 100:.2f}')
+    print(f'Passing rate: {len(success_history)/episode_count * 100:.2f}')
+
+    if (len(success_history)):
+        fig, ax = plt.subplots()
+        ax.plot(success_history)
+        plt.show()
 
 class RandomAgent:
     """The world's simplest agent!
