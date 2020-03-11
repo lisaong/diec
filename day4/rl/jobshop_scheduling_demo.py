@@ -10,6 +10,7 @@ import gym
 import gym_jobshop.envs.jobshop_env as jsenv
 import numpy as np
 from collections import OrderedDict
+from copy import deepcopy
 import matplotlib.pyplot as plt
 
 def RunAgent(env, agent, episode_count, steps_per_episode):
@@ -184,7 +185,7 @@ class QLearningTDAgent:
         task = self.tasks.get_task(action['task_id'])
 
         # find the maximum Q-value for any future actions
-        next_observation = observation.copy()
+        next_observation = deepcopy(observation)
         next_observation['is_scheduled'][action['task_id']] = 1
         next_valid_actions = self._get_valid_actions(next_observation)
 
@@ -254,7 +255,7 @@ if __name__ == "__main__":
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
         success_history = RunAgent(env, agent, episode_count=100,
-            steps_per_episode=10)
+            steps_per_episode=20)
 
         if len(success_history):
             agent.get_best_schedule()
