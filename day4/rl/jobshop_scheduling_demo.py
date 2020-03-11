@@ -47,7 +47,7 @@ Reward: {reward}, Done: {done}, Info: {info}')
         ax.scatter(data[:, 0], data[:, 1])
         ax.set(xlabel='num actions', ylabel='makespan',
             title=f'{agent.__class__.__name__} after {episode_count} episodes')
-        plt.show()
+        plt.savefig(f'{agent.__class__.__name__}_{episode_count}.png')
 
 class RandomAgent:
     """The world's simplest agent!

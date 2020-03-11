@@ -71,3 +71,6 @@ cd /code/day4/rl
 pip3 -e install gym-jobshop
 python3 jobshop_scheduling_demo.py
 ```
+
+Example result after 1000 iterations using QLearning:
+![history](QLearningTDAgent_1000.png)
