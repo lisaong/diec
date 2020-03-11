@@ -27,13 +27,14 @@ def RunAgent(env, agent, episode_count, steps_per_episode):
 
             print(f'Action: {action}, State: {obs}, \
 Reward: {reward}, Done: {done}, Info: {info}')
+            env.render()
+
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
                 pass_count += \
                     np.sum(obs['is_scheduled']) == len(obs['is_scheduled'])
                 break
-            env.render()
 
         env.close()
 
