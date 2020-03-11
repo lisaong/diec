@@ -156,6 +156,9 @@ Start: {self.start_time}, End: {self.end_time}'
 
 class JobshopEnv(gym.Env):
   """Custom Environment for a Job Shop Scheduling Problem
+
+  For details on the scheduling problem:
+  https://developers.google.com/optimization/scheduling/job_shop
   
   For details on the gym.Env class:
   https://github.com/openai/gym/blob/master/gym/core.py

@@ -1,6 +1,9 @@
 #
 # Demonstration of Reinforcement Learning using Temporal
-# Differencing for Jobshop Scheduling.
+# Differencing for Job Shop Scheduling.
+#
+# Job Shop scheduling problem:
+# https://developers.google.com/optimization/scheduling/job_shop
 #
 
 import gym
@@ -130,9 +133,9 @@ if __name__ == "__main__":
     ]
 
     env = gym.make('gym_jobshop:jobshop-v0', 
-        jobs_data=jobs_data, max_schedule_time=20, verbose=True)
+        jobs_data=jobs_data, max_schedule_time=20)
 
-    agent = QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20, verbose=True)
+    agent = QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12, verbose=True)
 
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks
