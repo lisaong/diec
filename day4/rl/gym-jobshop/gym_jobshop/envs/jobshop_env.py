@@ -325,8 +325,33 @@ class JobshopEnv(gym.Env):
   def render(self, mode='human', close=True):
     """Print state of the current environment
     """
-    print(f'Tasks: {self.tasks}')
-    print(f'Makespan: {self.tasks.get_makespan()}')
+    print(f'Job-view:\n{self.tasks}')
+
+    print(f'\nMachine-view:')
+
+    for machine, tasks in self.tasks.get_machines_to_tasks().items():
+      task_info = []
+      for t in tasks:
+        task = self.tasks.get_task(t)
+        if task.is_scheduled():
+          task_info.append((t, task.start_time, task.end_time))
+
+      status = 'idle'
+      timeline = ''
+      if len(task_info) > 0:
+        task_info.sort(key=lambda t:t[1]) # sort by start time
+        for ti in task_info:
+          status = (' ' * ti[1]) + f'{ti[0]}' * (ti[2] - ti[1])
+        timeline = ['-'] * max(task_info, key=lambda t:t[2])[2]
+        if len(timeline) >= 5:
+          timeline[::5] = ['|' for t in timeline[::5]]
+        timeline = ''.join(timeline)
+
+      print(f'\nMachine {machine}:\n{timeline}')
+      print(status)
+
+    print(f'\nMakespan: {self.tasks.get_makespan()}')
+
 
 # Unit test
 if __name__ == "__main__":
@@ -343,7 +368,7 @@ if __name__ == "__main__":
 
   for i in range(10):
     action = env.action_space.sample()
-    print(f'==={i}===\naction: {action}')
+    print(f'======{i}======\naction: {action}')
 
     obs, reward, done, info = env.step(action)
     print(f'obs: {obs}, reward: {reward}, done: {done}, info: {info}')
