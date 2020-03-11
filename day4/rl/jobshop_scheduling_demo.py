@@ -15,6 +15,9 @@ def RunAgent(env, agent, episode_count, steps_per_episode):
     done = False
     reward = 0
 
+    # track history of pass / fail
+    pass_count = 0
+
     for episode in range(episode_count):
         print(f'======Episode {episode}======')
         obs = env.reset()
@@ -27,10 +30,13 @@ def RunAgent(env, agent, episode_count, steps_per_episode):
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
+                pass_count += (np.sum(obs['is_scheduled']) == len(obs['is_scheduled']))
                 break
             env.render()
 
         env.close()
+
+    print(f'Passing rate: {pass_count/episode_count * 100:.2f}')
 
 class RandomAgent:
     """The world's simplest agent!
