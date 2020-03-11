@@ -25,11 +25,13 @@ def RunAgent(env, agent, episode_count, steps_per_episode):
             action = agent.act(obs, reward, done)
             obs, reward, done, info = env.step(action)
 
-            print(f'{action}, {obs}, {reward}, {done}, {info}')
+            print(f'Action: {action}, State: {obs}, \
+Reward: {reward}, Done: {done}, Info: {info}')
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
-                pass_count += (np.sum(obs['is_scheduled']) == len(obs['is_scheduled']))
+                pass_count += \
+                    np.sum(obs['is_scheduled']) == len(obs['is_scheduled'])
                 break
             env.render()
 
@@ -151,16 +153,17 @@ class QLearningTDAgent:
 
         max_future_reward = 0.
         if len(next_valid_actions) > 0:
-            max_future_reward = self.get_QValues(next_observation, next_valid_actions).max()
+            max_future_reward = \
+                self.get_QValues(next_observation, next_valid_actions).max()
         else:
             max_future_reward = 100 # done
 
         if self.verbose:
-            print(f'DEBUG (Agent): Action: {action}, next state: {next_observation}, \
-max future reward: {max_future_reward:.3f}')
+            print(f'DEBUG (Agent): Action: {action}, \
+next state: {next_observation}, max future reward: {max_future_reward:.3f}')
 
         # update the Q matrix using Temporal Difference
-        # Note: the previous action's reward is used here of the current action's reward
+        # Note: the previous action's reward is used instead
         old_value = self.get_QValues(observation, [action])[0]
         new_value = old_value + \
             self.alpha * (reward + self.gamma + max_future_reward - old_value)
