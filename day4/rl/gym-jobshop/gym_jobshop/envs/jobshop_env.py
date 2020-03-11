@@ -45,7 +45,6 @@ class TaskList:
       t.reset()
 
     self.observation = {
-      'available_times':  [0] * self.num_machines,
       'is_scheduled':  [0] * self.length()
     }
     return self.observation
@@ -76,7 +75,6 @@ class TaskList:
 
     # update observation
     machine_id = task.machine_id
-    self.observation['available_times'][machine_id] = task.end_time
     self.observation['is_scheduled'][task_id] = 1
 
     return self.observation
@@ -198,14 +196,10 @@ class JobshopEnv(gym.Env):
     # Observation space describes the valid states
     # states may be used by the agent to determine the next action
     # here, we observe the latest tasks scheduled per machine
-    # and their end-times
     # https://github.com/openai/gym/blob/master/gym/spaces/multi_discrete.py
     #
     # Example:
     #  {
-    #   'available_times': [0, 23, 18], - machine 0 available,
-    #                               machine 1 available at 23
-    #                               machine 2 available at 18
     #   'is_scheduled': [0, 0, 1, 0, 1, 0, 1, 1] - tasks 2, 4, 6, 7 already scheduled
     #                                              tasks 0, 1, 3, 5 not yet scheduled
     #  }
@@ -214,7 +208,6 @@ class JobshopEnv(gym.Env):
     is_scheduled_vec = [2] * self.tasks.length()
 
     self.observation_space = spaces.Dict({
-      'available_times':  spaces.MultiDiscrete(times_vec),
       'is_scheduled': spaces.MultiDiscrete(is_scheduled_vec)
     })
         
