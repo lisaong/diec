@@ -35,32 +35,29 @@ class QLearningTDAgent:
     reward: reward from the previous action (unused)
     done: whether the episode is completed
     """
-    state = observation
-    if done:
-      return state # no change, we are done
-
     # randomly select the next action/observation
-    valid_actions = self._get_valid_actions(state)
+    valid_actions = self._get_valid_actions(observation)
     action = np.random.choice(valid_actions)
-    next_observation = action
 
-    # find the maximum Q-value for all future actions
-    all_actions = self._get_valid_actions(next_observation)
-    future_rewards = self.Q[next_observation][all_actions]
+    if not done:
+      # find the maximum Q-value for all future actions
+      next_observation = action
+      all_actions = self._get_valid_actions(next_observation)
+      future_rewards = self.Q[next_observation][all_actions]
 
-    print(f'Action: {action}, next state: {next_observation}, \
-all actions: {all_actions}, all future rewards: {future_rewards}, \
-max future reward: {future_rewards.max():.3f}')
+      print(f'Action: {action}, next state: {next_observation}, \
+  all actions: {all_actions}, all future rewards: {future_rewards}, \
+  max future reward: {future_rewards.max():.3f}')
 
-    # update the Q matrix
-    # this is where temporal difference is applied
-    old_value = self.Q[state][action]
-    self.Q[state][action] = old_value + \
-      self.alpha * (self.rewards[state][action] + \
-                  self.gamma * future_rewards.max() - old_value)
+      # update the Q matrix
+      # this is where temporal difference is applied
+      old_value = self.Q[observation][action]
+      self.Q[observation][action] = old_value + \
+        self.alpha * (self.rewards[observation][action] + \
+                    self.gamma * future_rewards.max() - old_value)
 
-    if self.verbose:
-      print(f'Q-values:\n{self.Q}')
+      if self.verbose:
+        print(f'Q-values:\n{self.Q}')
 
     return action
 
