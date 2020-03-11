@@ -62,7 +62,7 @@ class TaskList:
     return self.tasks[task_id]
 
   def schedule_task(self, task_id, start_time):
-    """Schedule a task
+    """Schedule a task and returns the observation
     task_id: the task index
     start_time: the task start time
     """
@@ -91,6 +91,7 @@ class TaskList:
     """Return all tasks related to the current task. Here "related to"
     means sharing the same job
     task_id: the task index
+    This returns a tuple of lists: pretasks, posttasks
     """
     task_ids = np.array(self.jobs_to_tasks[self.tasks[task_id].job_id])
 
