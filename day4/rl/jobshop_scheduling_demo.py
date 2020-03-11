@@ -136,20 +136,22 @@ class QLearningTDAgent:
         """Returns the Q values for a state and set of actions
         observation: the current state
         action: the set of actions, or None for all actions
+
+        If actions=None, a dictionary is returned, 
+        else a np.array is returned
         """
         result = []
-        obs_key = f'{observation}'
+        obs_key = f'{observation["is_scheduled"]}'
         if obs_key not in self.Q:
             self.Q[obs_key] = {}
 
         if actions is None:
-            result = self.Q[obs_key].values()
-
+            return self.Q[obs_key]
         else:
             for action in actions:
                 action_key = f'{action}'
                 if action_key not in self.Q[obs_key]:
-                    self.Q[obs_key][f'{action}'] = 0.
+                    self.Q[obs_key][action_key] = 0.
 
                 result.append(self.Q[obs_key][action_key])
         return np.array(result)
@@ -160,7 +162,7 @@ class QLearningTDAgent:
         action: the action
         value: the Q-value
         """
-        obs_key = f'{observation}'
+        obs_key = f'{observation["is_scheduled"]}'
         action_key = f'{action}'
         if obs_key not in self.Q:
             self.Q[obs_key] = {}
@@ -206,7 +208,7 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
 
         if self.verbose >= 10:
             print(f'DEBUG (Agent): Q-values for {observation}\n\
-{self.get_QValues(observation)}')
+{self.get_QValues(observation).values()}')
 
         return action
 
@@ -214,10 +216,20 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
         """Returns the scheduling actions based on highest Q-values
         """
         is_scheduled = [0] * self.tasks.length()
-        #while (sum(is_scheduled) < self.tasks.length):
-            #Q
 
-            #pass
+        while (sum(is_scheduled) < len(is_scheduled)):
+            observation = OrderedDict([('is_scheduled', is_scheduled)])
+            action_Qvalues = self.get_QValues(observation)
+            print(len(self.Q.keys()))
+            print(action_Qvalues)
+
+            # sort by highest Q-value
+            action_Qvalues_desc = sorted(action_Qvalues.items(),
+                key=lambda item:item[1], reverse=True)
+            print(action_Qvalues_desc)
+            action = action_Qvalues_desc.keys()[0]
+            print(action)
+            is_scheduled[action['task_id']] = 1
 
 if __name__ == "__main__":
     # Each job is a list of multiple tasks: (machine_id, processing_time)
@@ -231,7 +243,7 @@ if __name__ == "__main__":
         jobs_data=jobs_data, max_schedule_time=12)
 
     agents = [
-        RandomAgent(env.action_space),
+        #RandomAgent(env.action_space),
         QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12, verbose=10)
     ]
 
@@ -241,7 +253,7 @@ if __name__ == "__main__":
         env.reset()
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
-        success_history = RunAgent(env, agent, episode_count=1000,
+        success_history = RunAgent(env, agent, episode_count=100,
             steps_per_episode=10)
 
         if len(success_history):
