@@ -5,7 +5,8 @@
 
 import gym
 import gym_jobshop.envs.jobshop_env as jsenv
-import numpy as numpy
+import numpy as np
+from collections import OrderedDict
 
 def RunAgent(env, agent, episode_count, steps_per_episode):
     done = False
@@ -39,26 +40,79 @@ class RandomAgent:
 
 class QLearningTDAgent:
     """Q-Learning Agent with Temporal Differencing
+    jobs_data: list of jobs, where
+          each job is a list of multiple tasks: (machine_id, processing_time)
+    Example:
+      jobs_data = [
+        [(0, 3), (1, 2), (2, 2)],  # Job0
+        [(0, 2), (2, 1), (1, 4)],  # Job1
+        [(1, 4), (2, 3)]  # Job2
+      ]
+    max_schedule_time: maximum schedule time
     gamma: the discount factor in considering future rewards
     alpha: how much prior knowledge to include
     verbose: whether to print debugging messages
     """
-    def __init__(self, jobs_data, action_space, gamma=.8, alpha=.1, verbose=False):
+    def __init__(self, jobs_data, max_schedule_time=20,
+        gamma=.8, alpha=.1, verbose=False):
         self.gamma = gamma
         self.alpha = alpha
         self.verbose = verbose
-        self.action_space = action_space
+        self.max_schedule_time = max_schedule_time
 
         # utility for parsing jobs data
         self.tasks = jsenv.TaskList(jobs_data)
 
         # Q-values (aka the "brain" of the agent)
+        # These are the values of taking an action given
+        # the current observation
         self.Q = dict()
 
+    def _create_action(self, task_id, start_time):
+        return OrderedDict([('task_id', task_id),
+            ('start_time', start_time)])
+
+    def _get_valid_actions(self, observation):
+        # Gets all possible actions based on what is
+        # currently assigned to each machine
+        valid_actions = []
+
+        machines_to_tasks = self.tasks.get_machines_to_tasks()
+        latest_tasks = observation['latest_tasks']
+        end_times = observation['end_times']
+        n = len(latest_tasks)
+
+        for i, t, e in zip(range(n), latest_tasks, end_times):
+            if e == 0: # no tasks assigned to machine (yet)
+                # randomly select a task for a machine
+                task_id = np.random.choice(np.array(machines_to_tasks[i]))
+                start_time = np.random.choice(self.max_schedule_time)
+
+                valid_actions.append(self._create_action(task_id, start_time))
+
+            else: # task assigned to machine
+                # add the next related task with start time = end time
+                _, post = self.tasks.get_related_tasks(t)
+                if len(post) > 0:
+                    task_id = post[0]
+                    machine_id = self.tasks.get_task(task_id).machine_id
+                    start_time = end_times[machine_id]
+
+                    valid_actions.append(self._create_action(task_id, start_time))
+        return valid_actions
+
     def act(self, observation, reward, done):
-        # TODO
-        # update Q values
-        action = self.action_space.sample()
+        """Update the Q-values, then take an action
+        observation: current state
+        reward: reward from the previous action (unused)
+        done: whether the episode is completed
+        """
+        if done:
+            return None
+        
+        # randomly select the next action/observation
+        valid_actions = self._get_valid_actions(observation) 
+        action = valid_actions[np.random.choice(len(valid_actions))]
 
         key = f'{observation}_{action.items()}'
         print(key)
@@ -76,7 +130,7 @@ if __name__ == "__main__":
     env = gym.make('gym_jobshop:jobshop-v0', 
         jobs_data=jobs_data, max_schedule_time=20, verbose=True)
 
-    agent = QLearningTDAgent(jobs_data, env.action_space)
+    agent = QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20)
 
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks

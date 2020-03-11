@@ -61,6 +61,11 @@ class TaskList:
     """
     return self.tasks[task_id]
 
+  def get_machines_to_tasks(self):
+    """Returns the mapping of machines to tasks
+    """
+    return self.machines_to_tasks
+
   def schedule_task(self, task_id, start_time):
     """Schedule a task and returns the observation
     task_id: the task index
