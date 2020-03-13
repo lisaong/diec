@@ -75,3 +75,111 @@ python3 jobshop_scheduling_demo.py
 
 Number of successful episodes for 10000 iterations using QLearning:
 ![history](QLearningTDAgent_10000.png)
+
+Each episode begins with a clean slate, where 8 tasks (for 3 jobs) are to be scheduled on 3 machines. The tasks must run on its assigned machine, and in the specified order in the job.
+
+The episode starts with an action. For example, schedule task_id=3 at start_time=8. 
+
+If a task is scheduled without errors (i.e. no overlap, no out of order tasks), the reward is positive (e.g. 600):
+```
+======Episode 9999======
+Action: OrderedDict([('task_id', 3), ('start_time', 8)]), State: {'is_scheduled': [0, 0, 0, 1, 0, 0, 0, 0]}, Reward: 600, Done: False, Info: {'makespan': 2}
+Job-view:
+0: Job: 0, Machine: 0, Start: 0, End: -1
+1: Job: 0, Machine: 1, Start: 0, End: -1
+2: Job: 0, Machine: 2, Start: 0, End: -1
+3: Job: 1, Machine: 0, Start: 8, End: 10
+4: Job: 1, Machine: 2, Start: 0, End: -1
+5: Job: 1, Machine: 1, Start: 0, End: -1
+6: Job: 2, Machine: 1, Start: 0, End: -1
+7: Job: 2, Machine: 2, Start: 0, End: -1
+
+Machine-view:
+
+Machine 0:
+|----|----
+        33
+
+Machine 1:
+idle
+
+Machine 2:
+idle
+
+```
+
+When a task is scheduled with errors (e.g. machine overlap, or out-of-sequence tasks), the reward is negative (-1) and the episode is done:
+```
+Action: OrderedDict([('task_id', 7), ('start_time', 2)]), State: {'is_scheduled': [1, 0, 1, 1, 1, 0, 0, 1]}, Reward: -1, Done: True, Info: {'makespan': 8, 'errors': 'Machine Overlap'}
+Job-view:
+0: Job: 0, Machine: 0, Start: 2, End: 5
+1: Job: 0, Machine: 1, Start: 0, End: -1
+2: Job: 0, Machine: 2, Start: 7, End: 9
+3: Job: 1, Machine: 0, Start: 8, End: 10
+4: Job: 1, Machine: 2, Start: 3, End: 4
+5: Job: 1, Machine: 1, Start: 0, End: -1
+6: Job: 2, Machine: 1, Start: 0, End: -1
+7: Job: 2, Machine: 2, Start: 2, End: 5
+
+Machine-view:
+
+Machine 0:
+|----|----
+  000   33
+
+Machine 1:
+idle
+
+Machine 2:
+|----|---
+  777
+   4   22
+Episode finished after 5 actions
+
+```
+
+When all episodes are complete, the best schedule based on Q-values stored in the agent will be printed. Note that this schedule can still result in errors when the agent has not learnt an optimum policy (aka the objective of reinforcement learning!)
+
+Temporal Differencing Q-Learning for single-agent seems too naive to learn the optimum policy quickly, as it averages less than 5% passing rate for this experiment. It is still slightly better than the baseline (RandomAgent), which has 0% passing rate.
+
+Other experiments to try: Multi-agent learning, Deep Q-learning
+
+```
+Passing rate: 3.66%
+
+*********Best Schedule*********
+Makespan: 2, Errors: None
+Makespan: 5, Errors: None
+Makespan: 10, Errors: None
+Makespan: 10, Errors: None
+Makespan: 10, Errors: Machine Overlap
+Makespan: 10, Errors: None
+Makespan: 11, Errors: None
+Makespan: 11, Errors: Machine Overlap
+Job-view:
+0: Job: 0, Machine: 0, Start: 8, End: 11
+1: Job: 0, Machine: 1, Start: 3, End: 5
+2: Job: 0, Machine: 2, Start: 2, End: 4
+3: Job: 1, Machine: 0, Start: 11, End: 13
+4: Job: 1, Machine: 2, Start: 8, End: 9
+5: Job: 1, Machine: 1, Start: 5, End: 9
+6: Job: 2, Machine: 1, Start: 3, End: 7
+7: Job: 2, Machine: 2, Start: 7, End: 10
+
+Machine-view:
+
+Machine 0:
+|----|----|--
+        00033
+
+Machine 1:
+|----|---
+   11
+   6666
+     5555
+
+Machine 2:
+|----|----
+  22   777
+        4
+```
