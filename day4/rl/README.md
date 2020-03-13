@@ -140,46 +140,45 @@ Episode finished after 5 actions
 
 When all episodes are complete, the best schedule based on Q-values stored in the agent will be printed. Note that this schedule can still result in errors when the agent has not learnt an optimum policy (aka the objective of reinforcement learning!)
 
-Temporal Differencing Q-Learning for single-agent seems too naive to learn the optimum policy quickly, as it averages less than 5% passing rate for this experiment. It is still slightly better than the baseline (RandomAgent), which has 0% passing rate.
+Temporal Differencing Q-Learning for single-agent seems too naive to learn the optimum policy quickly, as it averages less than 1% passing rate for this experiment. It is still slightly better than the baseline (RandomAgent), which has 0% passing rate.
 
 Other experiments to try: Multi-agent learning, Deep Q-learning
 
 ```
-Passing rate: 3.66%
+Passing rate: 0.27%
 
 *********Best Schedule*********
-Makespan: 2, Errors: None
-Makespan: 5, Errors: None
+Makespan: 3, Errors: None
 Makespan: 10, Errors: None
 Makespan: 10, Errors: None
-Makespan: 10, Errors: Machine Overlap
-Makespan: 10, Errors: None
-Makespan: 11, Errors: None
+Makespan: 11, Errors: Out-of-sequence tasks
 Makespan: 11, Errors: Machine Overlap
+Makespan: 12, Errors: None
+Makespan: 14, Errors: Out-of-sequence tasks
+Makespan: 14, Errors: Machine Overlap
 Job-view:
-0: Job: 0, Machine: 0, Start: 8, End: 11
-1: Job: 0, Machine: 1, Start: 3, End: 5
-2: Job: 0, Machine: 2, Start: 2, End: 4
-3: Job: 1, Machine: 0, Start: 11, End: 13
-4: Job: 1, Machine: 2, Start: 8, End: 9
-5: Job: 1, Machine: 1, Start: 5, End: 9
-6: Job: 2, Machine: 1, Start: 3, End: 7
-7: Job: 2, Machine: 2, Start: 7, End: 10
+0: Job: 0, Machine: 0, Start: 7, End: 10
+1: Job: 0, Machine: 1, Start: 18, End: 20
+2: Job: 0, Machine: 2, Start: 15, End: 17
+3: Job: 1, Machine: 0, Start: 15, End: 17
+4: Job: 1, Machine: 2, Start: 17, End: 18
+5: Job: 1, Machine: 1, Start: 16, End: 20
+6: Job: 2, Machine: 1, Start: 6, End: 10
+7: Job: 2, Machine: 2, Start: 13, End: 16
 
 Machine-view:
 
 Machine 0:
-|----|----|--
-        00033
+|----|----|----|-
+       000     33
 
 Machine 1:
-|----|---
-   11
-   6666
-     5555
+|----|----|----|----
+      6666      5555
+                  11
 
 Machine 2:
-|----|----
-  22   777
-        4
+|----|----|----|--
+             777
+               224
 ```
