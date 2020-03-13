@@ -141,7 +141,8 @@ class QLearningTDAgent:
 
     def _key_to_action(self, action_key):
         parts = action_key.split('_')
-        return OrderedDict([('task_id', parts[0]), ('start_time', parts[1])])
+        return OrderedDict([('task_id', np.int64(parts[0])),
+            ('start_time', np.int64(parts[1]))])
 
     def get_QValues(self, observation, actions=None):
         """Returns the Q values for a state and set of actions
