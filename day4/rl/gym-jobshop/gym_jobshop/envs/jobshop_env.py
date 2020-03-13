@@ -283,20 +283,33 @@ class JobshopEnv(gym.Env):
       if self.verbose:
         print(f'DEBUG (Env): Makespan exceeded: {makespan}')
 
+    # Constraint 4
+    # Tasks must be in the right order
     if reward >= 0:
+      not_in_order = False
+
       # Task assigned in correct order and no overlap
       pre_tasks = [self.tasks.get_task(p) for p in pre]
       for pre in pre_tasks:
-        if pre.is_scheduled() and pre.end_time <= start_time:
-          reward += 50
-      
+        if not (pre.is_scheduled() and pre.end_time <= start_time):
+          not_in_order = True
+          break
+
       post_tasks = [self.tasks.get_task(p) for p in post]
       for post in post_tasks:
-        if post.is_scheduled() and post.start_time >= start_time:
-          reward += 50
+        if not (post.is_scheduled() and post.start_time >= start_time):
+          not_in_order = True
+          break
 
-      # reward shorter makespans
-      reward += (self.max_schedule_time - makespan)*50
+      if not_in_order:
+        reward -= 1
+        error_info = 'Out-of-sequence tasks'
+        if self.verbose:
+          print('DEBUG (Env): Out-of-sequence tasks')
+
+    # If we made it this far, none of the constraints have been violated
+    if reward >= 0:
+      reward += 5
 
     return reward, error_info
 
