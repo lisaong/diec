@@ -227,6 +227,7 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
         """
+        actions = []
         is_scheduled = [0] * self.tasks.length()
 
         while (sum(is_scheduled) < len(is_scheduled)):
@@ -237,9 +238,11 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
             sorted_Qvalues = sorted(action_Qvalues.items(),
                 key=lambda item:item[1], reverse=True)
             best_action = self._key_to_action(sorted_Qvalues[0][0])
-            print(best_action['task_id'])
+            actions.append(best_action)
 
             is_scheduled[best_action['task_id']] = 1
+
+        return actions
 
 if __name__ == "__main__":
     # Each job is a list of multiple tasks: (machine_id, processing_time)
@@ -263,8 +266,14 @@ if __name__ == "__main__":
         env.reset()
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
-        success_history = RunAgent(env, agent, episode_count=100,
+        success_history = RunAgent(env, agent, episode_count=10000,
             steps_per_episode=20)
 
         if len(success_history):
-            agent.get_best_schedule()
+            print('\n*********Best Schedule*********')
+            actions = agent.get_best_schedule()
+            env.reset()
+            for action in actions:
+                _, _, _, info = env.step(action)
+                print(f'Makespan: {info["makespan"]}, Errors: {info["errors"]}')
+            env.render()
