@@ -308,8 +308,9 @@ class JobshopEnv(gym.Env):
           print('DEBUG (Env): Out-of-sequence tasks')
 
     # If we made it this far, none of the constraints have been violated
+    # reward for more tasks scheduled without errors
     if reward >= 0:
-      reward += 5
+      reward += 50 * sum(self.tasks.get_tasks_is_scheduled())
 
     return reward, error_info
 
