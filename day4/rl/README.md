@@ -72,5 +72,5 @@ pip3 -e install gym-jobshop
 python3 jobshop_scheduling_demo.py
 ```
 
-Example result after 1000 iterations using QLearning:
-![history](QLearningTDAgent_1000.png)
+Number of successful episodes for 10000 iterations using QLearning:
+![history](QLearningTDAgent_10000.png)
