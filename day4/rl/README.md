@@ -69,6 +69,7 @@ sh launch_docker.sh
 # Install the gym environment, then run the script
 cd /code/day4/rl
 pip3 -e install gym-jobshop
+pip3 install matplotlib
 python3 jobshop_scheduling_demo.py
 ```
 
