@@ -35,7 +35,7 @@ Reward: {reward}, Done: {done}, Info: {info}')
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
                 if np.sum(obs['is_scheduled']) == len(obs['is_scheduled']):
-                    success_history.append([s+1, info['makespan']])
+                    success_history.append([episode, info['makespan']])
                 break
 
         env.close()
@@ -43,10 +43,12 @@ Reward: {reward}, Done: {done}, Info: {info}')
     print(f'Passing rate: {len(success_history)/episode_count * 100:.2f}%')
 
     if (len(success_history)):
+        # do a histogram of successes, as the number of actions would be 
+        # equivalent to the number of jobs
         fig, ax = plt.subplots()
         data = np.array(success_history)
-        ax.scatter(data[:, 0], data[:, 1])
-        ax.set(xlabel='num actions', ylabel='makespan',
+        ax.hist(data[:, 1])
+        ax.set(xlabel='makespan', ylabel='number of runs',
             title=f'{agent.__class__.__name__} after {episode_count} episodes')
         plt.savefig(f'{agent.__class__.__name__}_{episode_count}.png')
 
@@ -256,8 +258,11 @@ if __name__ == "__main__":
         jobs_data=jobs_data, max_schedule_time=12)
 
     agents = [
-        #RandomAgent(env.action_space),
-        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12, verbose=10)
+        # baseline
+        # RandomAgent(env.action_space),
+
+        # verbose=10 prints Q-values
+        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12) 
     ]
 
     for agent in agents:
@@ -275,5 +280,5 @@ if __name__ == "__main__":
             env.reset()
             for action in actions:
                 _, _, _, info = env.step(action)
-                print(f'Makespan: {info["makespan"]}, Errors: {info["errors"]}')
+                print(f'Makespan: {info["makespan"]}, Errors: {info.get("errors")}')
             env.render()
