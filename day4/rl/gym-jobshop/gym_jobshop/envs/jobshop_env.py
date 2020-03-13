@@ -326,8 +326,11 @@ class JobshopEnv(gym.Env):
 
     # check if we've reached our goal or failed
     done = self.tasks.all_tasks_scheduled() or (reward < 0)
+    makespan = self.tasks.get_makespan()
+    if self.tasks.all_tasks_scheduled():
+      reward += 100 * (self.max_schedule_time - makespan)
 
-    info = {'makespan': self.tasks.get_makespan()}
+    info = {'makespan': makespan}
     if len(error_info):
       info['errors'] = error_info
     return observation, reward, done, info
