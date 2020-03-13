@@ -255,14 +255,14 @@ if __name__ == "__main__":
     ]
 
     env = gym.make('gym_jobshop:jobshop-v0', 
-        jobs_data=jobs_data, max_schedule_time=12)
+        jobs_data=jobs_data, max_schedule_time=20)
 
     agents = [
         # baseline
         # RandomAgent(env.action_space),
 
         # verbose=10 prints Q-values
-        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=12) 
+        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20) 
     ]
 
     for agent in agents:
