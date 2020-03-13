@@ -122,5 +122,3 @@ if __name__ == "__main__":
   room_with_beer = 5
   for initial_state in range(room_with_beer+1):
     print(agent.best_path(initial_state))
-
-
