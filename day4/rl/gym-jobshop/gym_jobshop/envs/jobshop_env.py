@@ -291,13 +291,13 @@ class JobshopEnv(gym.Env):
       # Task assigned in correct order and no overlap
       pre_tasks = [self.tasks.get_task(p) for p in pre]
       for pre in pre_tasks:
-        if not (pre.is_scheduled() and pre.end_time <= start_time):
+        if pre.is_scheduled() and pre.end_time >= start_time:
           not_in_order = True
           break
 
       post_tasks = [self.tasks.get_task(p) for p in post]
       for post in post_tasks:
-        if not (post.is_scheduled() and post.start_time >= start_time):
+        if post.is_scheduled() and post.start_time <= start_time:
           not_in_order = True
           break
 
