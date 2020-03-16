@@ -195,7 +195,9 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
             assert(f'{observation} has no Q values yet, will generate a start time')
             is_scheduled = observation['is_scheduled']
             task_id = (np.array(is_scheduled) == 0).argmax()
-            start_time = np.array(is_scheduled).max() + 1
+            last_scheduled_task = self.tasks.get_task(np.array(is_scheduled).argmax())
+            start_time = np.array(is_scheduled).max() + last_scheduled_task.processing_time
+
             best_action = OrderedDict([('task_id', task_id), ('start_time', start_time)])
 
         return best_action
