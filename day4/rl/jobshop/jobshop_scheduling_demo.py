@@ -9,6 +9,7 @@
 
 import gym
 import matplotlib.pyplot as plt
+import numpy as np
 
 # our agents
 from random_agent import RandomAgent
