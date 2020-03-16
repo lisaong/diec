@@ -10,6 +10,7 @@
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation
+from tensorflow.keras.optimizers import Adam
 
 class DQNAgent:
     """Deep Q-Learning Agent
@@ -19,20 +20,23 @@ class DQNAgent:
     def __init__(self, observation_space, action_space, verbose=False):
         self.verbose = verbose
 
+        # 1 neural network per task to predict the Q values of start time
+        # given the input observation
         input_size = observation_space.shape
-        n_nets = action_space['task_id'].n
-        output_size = action_space['start_time']
+        n_models = action_space['task_id'].n
+        output_size = action_space['start_time'].n
         
-        action_size = action_space['task_id'].n * \
-            action_space['start_time'].n
+        self.models = []
+        for i in range(n_models):
+            model = Sequential([
+                Dense(input_size*4, input_dim=input_size, activation='relu'),
+                Dense(input_size*4, activation='relu'),
+                Dense(output_size, activation='linear')
+            ])
 
-        # create neural network
-        self.model = Sequential([
-            Dense(input_size*4, input_dim=input_size, activation='relu'),
-            Dense(input_size*4, activation='relu'),
-            Dense(action_size, activation='softmax')
-        ])
-
+            # start with a slow learning rate as we are fitting incrementally
+            model.compile(loss='mse', optimizer=Adam(lr=1e-3))
+            self.models.append(model)
 
     def act(self, observation, reward, done):
         

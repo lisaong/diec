@@ -138,46 +138,43 @@ Episode finished after 5 actions
 
 When all episodes are complete, the best schedule based on Q-values stored in the agent will be printed. Note that this schedule can still result in errors when the agent has not learnt an optimum policy (aka the objective of reinforcement learning!)
 
-Temporal Differencing Q-Learning for single-agent seems too naive to learn the optimum policy quickly, as it averages less than 1% passing rate for this experiment. It is still slightly better than the baseline (RandomAgent), which has 0% passing rate.
+Temporal Differencing Q-Learning for single-agent seems too naive to learn the optimum policy quickly, resulting in best schedule with errors. It is still better than the baseline (RandomAgent), which has 0% passing rate.
 
 Other experiments to try: Multi-agent learning, Deep Q-learning
 
 ```
-
-Passing rate: 57.03%
+Passing rate: 55.23%
 
 *********Best Schedule*********
-Makespan: 3, Errors: None
-Makespan: 21, Errors: None
-Makespan: 21, Errors: Makespan Exceeded
-Makespan: 21, Errors: Makespan Exceeded
-Makespan: 21, Errors: Out-of-sequence tasks
-Makespan: 21, Errors: Makespan Exceeded
-Makespan: 25, Errors: Out-of-sequence tasks
-Makespan: 26, Errors: Out-of-sequence tasks
+Makespan: 2, Errors: None
+Makespan: 6, Errors: None
+Makespan: 7, Errors: None
+Makespan: 15, Errors: Out-of-sequence tasks
+Makespan: 15, Errors: None
+Makespan: 17, Errors: None
+Makespan: 19, Errors: Out-of-sequence tasks
+Makespan: 20, Errors: Out-of-sequence tasks
 Job-view:
-0: Job: 0, Machine: 0, Start: 8, End: 11
-1: Job: 0, Machine: 1, Start: 20, End: 22
-2: Job: 0, Machine: 2, Start: 12, End: 14
-3: Job: 1, Machine: 0, Start: 1, End: 3
-4: Job: 1, Machine: 2, Start: 21, End: 22
-5: Job: 1, Machine: 1, Start: 22, End: 26
-6: Job: 2, Machine: 1, Start: 23, End: 27
-7: Job: 2, Machine: 2, Start: 19, End: 22
+0: Job: 0, Machine: 0, Start: 17, End: 20
+1: Job: 0, Machine: 1, Start: 21, End: 23
+2: Job: 0, Machine: 2, Start: 23, End: 25
+3: Job: 1, Machine: 0, Start: 14, End: 16
+4: Job: 1, Machine: 2, Start: 25, End: 26
+5: Job: 1, Machine: 1, Start: 6, End: 10
+6: Job: 2, Machine: 1, Start: 14, End: 18
+7: Job: 2, Machine: 2, Start: 18, End: 21
 
 Machine-view:
 
 Machine 0:
-|----|----|
- 33     000
+|----|----|----|----
+              33 000
 
 Machine 1:
-|----|----|----|----|----|-
-                    115555
-                       6666
+|----|----|----|----|--
+      5555    6666   11
 
 Machine 2:
-|----|----|----|----|-
-            22     777
-                     4
+|----|----|----|----|----|
+                  777  224
 ```
