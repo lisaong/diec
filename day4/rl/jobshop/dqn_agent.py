@@ -90,11 +90,12 @@ class DQNAgent:
                 action = self.action_space.sample()
             else:
                 # exploitation, find the model with the highest Q value
-                Q_values = np.array([model.predict(observation['is_scheduled'])[0]
+                Q_values = np.array([model.predict([observation['is_scheduled']])[0]
                     for model in self.models])
-                
-                task_id = Q_values.argmax()
-                start_time = Q_values[task_id].max()
+
+                # task, start_time with the highest Q-value
+                task_id = Q_values.argmax(axis=1).argmax()
+                start_time = Q_values[task_id].argmax()
                 action = OrderedDict([('task_id', task_id), ('start_time', start_time)])
 
             self.prev_observation = observation
@@ -114,7 +115,7 @@ class DQNAgent:
                 target = reward
             else:
                 # find the maximum Q-value for all future actions
-                max_future_reward = np.array([model.predict(next_obs['is_scheduled'])[0]
+                max_future_reward = np.array([model.predict([next_obs['is_scheduled']])[0]
                     for model in self.models]).max()
 
                 # apply Temporal Difference
