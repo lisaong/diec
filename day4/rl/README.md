@@ -143,38 +143,38 @@ Temporal Differencing Q-Learning for single-agent seems too naive to learn the o
 Other experiments to try: Multi-agent learning, Deep Q-learning
 
 ```
-Passing rate: 55.23%
+Passing rate: 9.27%
 
 *********Best Schedule*********
-Makespan: 2, Errors: None
-Makespan: 6, Errors: None
-Makespan: 7, Errors: None
-Makespan: 15, Errors: Out-of-sequence tasks
-Makespan: 15, Errors: None
-Makespan: 17, Errors: None
+Makespan: 4, Errors: None
+Makespan: 12, Errors: None
+Makespan: 18, Errors: None
+Makespan: 18, Errors: Out-of-sequence tasks
+Makespan: 18, Errors: Out-of-sequence tasks
 Makespan: 19, Errors: Out-of-sequence tasks
-Makespan: 20, Errors: Out-of-sequence tasks
+Makespan: 23, Errors: None
+Makespan: 26, Errors: Out-of-sequence tasks
 Job-view:
-0: Job: 0, Machine: 0, Start: 17, End: 20
-1: Job: 0, Machine: 1, Start: 21, End: 23
-2: Job: 0, Machine: 2, Start: 23, End: 25
-3: Job: 1, Machine: 0, Start: 14, End: 16
-4: Job: 1, Machine: 2, Start: 25, End: 26
-5: Job: 1, Machine: 1, Start: 6, End: 10
-6: Job: 2, Machine: 1, Start: 14, End: 18
-7: Job: 2, Machine: 2, Start: 18, End: 21
+0: Job: 0, Machine: 0, Start: 19, End: 22
+1: Job: 0, Machine: 1, Start: 4, End: 6
+2: Job: 0, Machine: 2, Start: 19, End: 21
+3: Job: 1, Machine: 0, Start: 4, End: 6
+4: Job: 1, Machine: 2, Start: 22, End: 23
+5: Job: 1, Machine: 1, Start: 10, End: 14
+6: Job: 2, Machine: 1, Start: 23, End: 27
+7: Job: 2, Machine: 2, Start: 27, End: 30
 
 Machine-view:
 
 Machine 0:
-|----|----|----|----
-              33 000
+|----|----|----|----|-
+    33             000
 
 Machine 1:
-|----|----|----|----|--
-      5555    6666   11
+|----|----|----|----|----|-
+    11    5555         6666
 
 Machine 2:
-|----|----|----|----|----|
-                  777  224
+|----|----|----|----|----|----
+                   22 4    777
 ```
