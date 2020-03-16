@@ -8,7 +8,7 @@ import numpy as np
 from collections import OrderedDict
 from copy import deepcopy
 
-import gym_jobshop.envs.jobshop_env as jsenv
+import gym_jobshop.envs.jobshop_env as jobshop_env
 
 class QLearningTDAgent:
     """Q-Learning Agent with Temporal Differencing
@@ -33,7 +33,7 @@ class QLearningTDAgent:
         self.max_schedule_time = max_schedule_time
 
         # utility for parsing jobs data
-        self.tasks = jsenv.TaskList(jobs_data)
+        self.tasks = jobshop_env.TaskList(jobs_data)
 
         # Q-values (aka the "brain" of the agent)
         # These are the values of taking an action given
