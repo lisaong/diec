@@ -12,7 +12,7 @@ import random
 from collections import deque, OrderedDict
 
 import tensorflow as tf
-if tf.__version__ < 2.0:
+if float(tf.__version__.split('.')[0]) < 2.0:
     raise(Exception(f'Tensorflow >= 2.0 required, current version: {tf.__version__}'))
 
 from tensorflow.keras.models import Sequential
