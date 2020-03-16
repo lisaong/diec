@@ -75,12 +75,15 @@ class TaskList:
     task_id: the task index
     start_time: the task start time
     """
+    # start_time = 0 means task has not been scheduled
+    if start_time <= 0:
+      raise Exception('start_time should be > 0')
     task = self.get_task(task_id)
     task.schedule(start_time)
 
     # update observation
     machine_id = task.machine_id
-    self.observation['is_scheduled'][task_id] = 1
+    self.observation['is_scheduled'][task_id] = start_time
 
     return self.observation
 
@@ -200,18 +203,19 @@ class JobshopEnv(gym.Env):
 
     # Observation space describes the valid states
     # states may be used by the agent to determine the next action
-    # here, we observe the latest tasks scheduled per machine
+    # here, we observe the latest tasks scheduled per machine, with their
+    # (non-zero) start times specified.
     # https://github.com/openai/gym/blob/master/gym/spaces/multi_discrete.py
     #
     # Example:
     #  {
-    #   'is_scheduled': [0, 0, 1, 0, 1, 0, 1, 1] - tasks 2, 4, 6, 7 already scheduled
-    #                                              tasks 0, 1, 3, 5 not yet scheduled
+    #   'is_scheduled': [0, 0, 1, 0, 5, 0, 10, 1] - tasks 2, 4, 6, 7 already scheduled
+    #                                               tasks 0, 1, 3, 5 not yet scheduled
     #  }
     #
-    times_vec = [self.max_schedule_time] * self.tasks.num_machines
-    is_scheduled_vec = [2] * self.tasks.length()
+    is_scheduled_vec = [self.max_schedule_time] * self.tasks.length()
 
+    # A dictionary give flexibility to add other observations in the future
     self.observation_space = spaces.Dict({
       'is_scheduled': spaces.MultiDiscrete(is_scheduled_vec)
     })
