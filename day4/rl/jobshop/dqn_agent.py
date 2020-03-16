@@ -38,7 +38,7 @@ class DQNAgent:
 
         # 1 neural network per task to predict the Q values of start time
         # given the input observation
-        input_size = observation_space.shape
+        input_size = observation_space.spaces['is_scheduled'].shape[0]
         n_models = action_space['task_id'].n
         output_size = action_space['start_time'].n
 
@@ -66,7 +66,7 @@ class DQNAgent:
         self.prev_action = None
 
     def _not_restarted(self, observation):
-        return all(observation['is_scheduled'])
+        return any(observation['is_scheduled'])
 
     def act(self, observation, reward, done):
         """Update the Q-values, then take an action
@@ -90,7 +90,7 @@ class DQNAgent:
                 action = self.action_space.sample()
             else:
                 # exploitation, find the model with the highest Q value
-                Q_values = np.array([model.predict(observation)[0]
+                Q_values = np.array([model.predict(observation['is_scheduled'])[0]
                     for model in self.models])
                 
                 task_id = Q_values.argmax()
@@ -114,7 +114,7 @@ class DQNAgent:
                 target = reward
             else:
                 # find the maximum Q-value for all future actions
-                max_future_reward = np.array([model.predict(next_obs)[0]
+                max_future_reward = np.array([model.predict(next_obs['is_scheduled'])[0]
                     for model in self.models]).max()
 
                 # apply Temporal Difference

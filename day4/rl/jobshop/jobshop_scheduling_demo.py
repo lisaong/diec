@@ -75,7 +75,7 @@ if __name__ == "__main__":
         # verbose=10 prints Q-values
         #QLearningTDAgent(jobs_data=jobs_data, epsilon=.4, max_schedule_time=20)
 
-        DQNAgent(jobs_data, env.observation_space, env.action_space)
+        DQNAgent(env.observation_space, env.action_space)
     ]
 
     for agent in agents:
