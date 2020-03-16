@@ -93,10 +93,9 @@ class DQNAgent:
                 Q_values = np.array([model.predict([observation['is_scheduled']])[0]
                     for model in self.models])
 
-                # task, start_time with the highest Q-value
-                task_id = Q_values.argmax(axis=1).argmax()
-                start_time = Q_values[task_id].argmax()
-                action = OrderedDict([('task_id', task_id), ('start_time', start_time)])
+                # find task, start_time with the highest Q-value
+                ind = np.unravel_index(np.argmax(Q_values, axis=None), Q_values.shape)
+                action = OrderedDict([('task_id', ind[0]), ('start_time', ind[1])])
 
             self.prev_observation = observation
             self.prev_action = action
@@ -120,7 +119,7 @@ class DQNAgent:
 
                 # apply Temporal Difference
                 task_id = action['task_id']
-                old_value = self.models[task_id].predict(s)[0]
+                old_value = self.models[task_id].predict([obs['is_scheduled']])[0]
                 target = old_value + \
                     self.alpha * (reward + self.gamma * max_future_reward - old_value)
 
