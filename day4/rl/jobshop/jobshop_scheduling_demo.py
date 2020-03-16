@@ -34,7 +34,7 @@ Reward: {reward}, Done: {done}, Info: {info}')
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
-                if np.sum(obs['is_scheduled']) == len(obs['is_scheduled']):
+                if all(obs['is_scheduled']):
                     success_history.append([episode, info['makespan']])
                 break
 
@@ -97,7 +97,7 @@ class QLearningTDAgent:
         # the current observation
         # Schema:
         # {
-        #   '[1, 1, 0, 0, 0, 1, 0, 0]' : 
+        #   '[1, 5, 0, 0, 0, 10, 0, 0]' : 
         #   {
         #      action1: value1,
         #      action2: value2,
@@ -127,7 +127,9 @@ class QLearningTDAgent:
         for machine_id, tasks_ids in machines_to_tasks.items():
             if len(tasks_ids) > 0:
                 task_id = np.random.choice(tasks_ids)
-                start_time = np.random.choice(self.max_schedule_time)
+
+                # start time must be > 0
+                start_time = np.random.choice(self.max_schedule_time-1) + 1
                 valid_actions.append(OrderedDict([('task_id', int(task_id)),
                     ('start_time', int(start_time))]))
 
@@ -199,13 +201,12 @@ class QLearningTDAgent:
 
         # find the maximum Q-value for any future actions
         next_observation = deepcopy(observation)
-        next_observation['is_scheduled'][action['task_id']] = 1
+        next_observation['is_scheduled'][action['task_id']] = action['start_time']
         next_valid_actions = self._get_valid_actions(next_observation)
 
         max_future_reward = 0.
         if len(next_valid_actions) > 0:
-            max_future_reward = \
-                self.get_QValues(next_observation, next_valid_actions).max()
+            max_QValue = self.get_QValues(next_observation, next_valid_actions).max()
         else:
             max_future_reward = 100 # done
 
@@ -232,17 +233,27 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
         actions = []
         is_scheduled = [0] * self.tasks.length()
 
-        while (sum(is_scheduled) < len(is_scheduled)):
+        # all() returns True if all elements are true, or if is_scheduled is empty
+        while (not all(is_scheduled)):
             observation = OrderedDict([('is_scheduled', is_scheduled)])
             action_Qvalues = self.get_QValues(observation)
 
-            # sort by highest Q-value
-            sorted_Qvalues = sorted(action_Qvalues.items(),
-                key=lambda item:item[1], reverse=True)
-            best_action = self._key_to_action(sorted_Qvalues[0][0])
-            actions.append(best_action)
+            if len(action_Qvalues):
+                # sort by highest Q-value
+                sorted_Qvalues = sorted(action_Qvalues.items(),
+                    key=lambda item:item[1], reverse=True)
+                best_action = self._key_to_action(sorted_Qvalues[0][0])
+                actions.append(best_action)
+                is_scheduled[best_action['task_id']] = best_action['start_time']
+            else:
+                # no Q-values associated with this observation, use logic to generate the start time
+                assert(f'{observation} has no stored Q values, will generate a start time')
+                task_id = (np.array(is_scheduled) == 0).argmax()
+                start_time = np.array(is_scheduled).max() + 1
+                best_action = OrderedDict([('task_id', task_id), ('start_time', start_time)])
 
-            is_scheduled[best_action['task_id']] = 1
+                actions.append(best_action)
+                is_scheduled[best_action['task_id']] = best_action['start_time']
 
         return actions
 
@@ -262,7 +273,7 @@ if __name__ == "__main__":
         # RandomAgent(env.action_space),
 
         # verbose=10 prints Q-values
-        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20) 
+        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20, verbose=10)
     ]
 
     for agent in agents:
@@ -271,7 +282,7 @@ if __name__ == "__main__":
         env.reset()
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
-        success_history = RunAgent(env, agent, episode_count=10000,
+        success_history = RunAgent(env, agent, episode_count=20000,
             steps_per_episode=20)
 
         if len(success_history):
