@@ -71,8 +71,8 @@ cd /code/day4/rl/jobshop
 python3 jobshop_scheduling_demo.py
 ```
 
-Number of successful episodes for 10000 iterations using QLearning:
-![history](jobshop/QLearningTDAgent_10000.png)
+Number of successful episodes for 20000 iterations using QLearning:
+![history](jobshop/QLearningTDAgent_20000.png)
 
 Each episode begins with a clean slate, where 8 tasks (for 3 jobs) are to be scheduled on 3 machines. The tasks must run on its assigned machine, and in the specified order in the job.
 

@@ -206,10 +206,7 @@ class QLearningTDAgent:
 
         max_future_reward = 0.
         if len(next_valid_actions) > 0:
-            # only look at non-negative max Q values
             max_QValue = self.get_QValues(next_observation, next_valid_actions).max()
-            if max_QValue > 0:
-                max_future_reward = max_QValue
         else:
             max_future_reward = 100 # done
 
