@@ -37,7 +37,7 @@ Reward: {reward}, Done: {done}, Info: {info}')
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
-                if all(obs['is_scheduled']) and reward > 0:
+                if all(obs['is_scheduled']) and not info.get("errors"):
                     success_history.append([episode, info['makespan']])
                 break
 
