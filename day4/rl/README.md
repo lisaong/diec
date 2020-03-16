@@ -2,11 +2,11 @@
 
 ## Path Finding with OpenAI Gym on Raspberry Pi
 
-![image](path_finding_intro.png)
+![image](path_finding/path_finding_intro.png)
 
 (Inspiration: http://mnemstudio.org/path-finding-q-learning-tutorial.htm, Futurama)
 
-Explanation of the problem: [Colab Notebook](path_finding_demo.ipynb), [Q-Learning Intro Slides](https://github.com/lisaong/diec/blob/master/day4/rl/some%20intro%20slides.pdf)
+Explanation of the problem: [Colab Notebook](path_finding/path_finding_demo.ipynb), [Q-Learning Intro Slides](https://github.com/lisaong/diec/blob/master/day4/rl/some%20intro%20slides.pdf)
 
 Running on Raspberry Pi 3 or 4:
 1. Launch the Docker container 
@@ -17,7 +17,7 @@ sh launch_docker.sh
 
 2. From the Docker container:
 ```
-cd /code/day4/rl
+cd /code/day4/rl/path_finding
 python3 path_finding_demo.py
 ```
 
@@ -67,14 +67,12 @@ sh launch_docker.sh
 2. From the Docker container:
 ```
 # Install the gym environment, then run the script
-cd /code/day4/rl
-pip3 -e install gym-jobshop
-pip3 install matplotlib
+cd /code/day4/rl/jobshop
 python3 jobshop_scheduling_demo.py
 ```
 
 Number of successful episodes for 10000 iterations using QLearning:
-![history](QLearningTDAgent_10000.png)
+![history](jobshop/QLearningTDAgent_10000.png)
 
 Each episode begins with a clean slate, where 8 tasks (for 3 jobs) are to be scheduled on 3 machines. The tasks must run on its assigned machine, and in the specified order in the job.
 
