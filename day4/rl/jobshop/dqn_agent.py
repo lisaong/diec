@@ -16,9 +16,17 @@ class DQNAgent:
     """Deep Q-Learning Agent
     observation_space: the observation space
     action_space: the action space
+    gamma: the discount factor in considering future rewards
+    alpha: how much prior knowledge to include
+    epsilon: how much exploration (vs greedy exploitation)
     """
-    def __init__(self, observation_space, action_space, verbose=False):
+    def __init__(self, observation_space, action_space,
+        gamma=.8, alpha=.1, epsilon=0.2, verbose=False):
+
+        self.gamma = gamma
+        self.alpha = alpha
         self.verbose = verbose
+        self.epsilon = epsilon
 
         # 1 neural network per task to predict the Q values of start time
         # given the input observation
@@ -39,10 +47,16 @@ class DQNAgent:
             self.models.append(model)
 
     def act(self, observation, reward, done):
-        
+        """Update the Q-values, then take an action
+        observation: current state
+        reward: reward from the previous action (unused)
+        done: whether the episode is completed
+        """
 
 
         pass
     
     def get_best_schedule(self):
+        """Returns the scheduling actions based on highest Q-values
+        """
         pass # not implemented
