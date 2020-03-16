@@ -14,6 +14,7 @@ import numpy as np
 # our agents
 from random_agent import RandomAgent
 from qlearning_td_agent import QLearningTDAgent
+from dqn_agent import DQNAgent
 
 def RunAgent(env, agent, episode_count, steps_per_episode):
     done = False
@@ -72,7 +73,10 @@ if __name__ == "__main__":
         # RandomAgent(env.action_space),
 
         # verbose=10 prints Q-values
-        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20, verbose=10)
+        QLearningTDAgent(jobs_data=jobs_data, epsilon=.4,
+            max_schedule_time=20)
+
+        #DQNAgent(jobs_data, env.observation_space, env.action_space)
     ]
 
     for agent in agents:
@@ -81,7 +85,7 @@ if __name__ == "__main__":
         env.reset()
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
-        success_history = RunAgent(env, agent, episode_count=20000,
+        success_history = RunAgent(env, agent, episode_count=50000,
             steps_per_episode=20)
 
         if len(success_history):
