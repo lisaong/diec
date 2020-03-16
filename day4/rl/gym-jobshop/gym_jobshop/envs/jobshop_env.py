@@ -329,8 +329,8 @@ class JobshopEnv(gym.Env):
     observation = self.tasks.schedule_task(action['task_id'],
       action['start_time'])
 
-    # check if we've reached our goal or failed
-    done = self.tasks.all_tasks_scheduled() or (reward < 0)
+    # check if we should stop (all tasks scheduled)
+    done = self.tasks.all_tasks_scheduled()
     makespan = self.tasks.get_makespan()
     if self.tasks.all_tasks_scheduled():
       reward += 100 * (self.max_schedule_time - makespan)
