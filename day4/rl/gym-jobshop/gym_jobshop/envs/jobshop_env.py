@@ -273,7 +273,7 @@ class JobshopEnv(gym.Env):
       print(f'DEBUG (Env): Checking for overlap: {flattened}')
 
     if overlap:
-      reward -= 1
+      reward -= 10
       error_info = 'Machine Overlap'
       if self.verbose:
         print(f'DEBUG (Env): Machine overlap: {task.machine_id}, {flattened}')
@@ -282,34 +282,33 @@ class JobshopEnv(gym.Env):
     # Makespan exceeded
     makespan = self.tasks.get_makespan()
     if makespan >= self.max_schedule_time:
-      reward -= 1
+      reward -= 10
       error_info = 'Makespan Exceeded'
       if self.verbose:
         print(f'DEBUG (Env): Makespan exceeded: {makespan}')
 
     # Constraint 4
     # Tasks must be in the right order
-    if reward >= 0:
-      not_in_order = False
+    not_in_order = False
 
-      # Task assigned in correct order and no overlap
-      pre_tasks = [self.tasks.get_task(p) for p in pre]
-      for pre in pre_tasks:
-        if pre.is_scheduled() and pre.end_time >= start_time:
-          not_in_order = True
-          break
+    # Task assigned in correct order and no overlap
+    pre_tasks = [self.tasks.get_task(p) for p in pre]
+    for pre in pre_tasks:
+      if pre.is_scheduled() and pre.end_time >= start_time:
+        not_in_order = True
+        break
 
-      post_tasks = [self.tasks.get_task(p) for p in post]
-      for post in post_tasks:
-        if post.is_scheduled() and post.start_time <= start_time:
-          not_in_order = True
-          break
+    post_tasks = [self.tasks.get_task(p) for p in post]
+    for post in post_tasks:
+      if post.is_scheduled() and post.start_time <= start_time:
+        not_in_order = True
+        break
 
-      if not_in_order:
-        reward -= 1
-        error_info = 'Out-of-sequence tasks'
-        if self.verbose:
-          print('DEBUG (Env): Out-of-sequence tasks')
+    if not_in_order:
+      reward -= 10
+      error_info = 'Out-of-sequence tasks'
+      if self.verbose:
+        print('DEBUG (Env): Out-of-sequence tasks')
 
     # If we made it this far, none of the constraints have been violated
     # reward for more tasks scheduled without errors
