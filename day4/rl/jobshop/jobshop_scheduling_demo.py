@@ -37,7 +37,7 @@ Reward: {reward}, Done: {done}, Info: {info}')
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
-                if all(obs['is_scheduled']):
+                if all(obs['is_scheduled']) and reward > 0:
                     success_history.append([episode, info['makespan']])
                 break
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         env.reset()
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
-        success_history = RunAgent(env, agent, episode_count=50000,
+        success_history = RunAgent(env, agent, episode_count=20000,
             steps_per_episode=20)
 
         if len(success_history):
