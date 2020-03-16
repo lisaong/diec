@@ -25,14 +25,16 @@ class QLearningTDAgent:
     gamma: the discount factor in considering future rewards
     alpha: how much prior knowledge to include
     epsilon: how much exploration (vs greedy exploitation)
+    Q0: initial value of Q to use (higher values encourage exploration)
     verbose: whether to print debugging messages
     """
     def __init__(self, jobs_data, max_schedule_time=20,
-        gamma=.8, alpha=.1, epsilon=0.3, verbose=False):
+        gamma=.8, alpha=.1, epsilon=0.2, Q0=0., verbose=False):
         self.gamma = gamma
         self.alpha = alpha
         self.verbose = verbose
         self.epsilon = epsilon
+        self.Q0 = Q0
         self.max_schedule_time = max_schedule_time
 
         # utility for parsing jobs data
@@ -113,7 +115,7 @@ class QLearningTDAgent:
             for action in actions:
                 action_key = self._action_to_key(action)
                 if action_key not in self.Q[obs_key]:
-                    self.Q[obs_key][action_key] = 0.
+                    self.Q[obs_key][action_key] = self.Q0
 
                 result.append(self.Q[obs_key][action_key])
         return np.array(result)
