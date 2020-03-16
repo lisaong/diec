@@ -206,8 +206,10 @@ class QLearningTDAgent:
 
         max_future_reward = 0.
         if len(next_valid_actions) > 0:
-            max_future_reward = \
-                self.get_QValues(next_observation, next_valid_actions).max()
+            # only look at non-negative max Q values
+            max_QValue = self.get_QValues(next_observation, next_valid_actions).max()
+            if max_QValue > 0:
+                max_future_reward = max_QValue
         else:
             max_future_reward = 100 # done
 
@@ -274,7 +276,7 @@ if __name__ == "__main__":
         # RandomAgent(env.action_space),
 
         # verbose=10 prints Q-values
-        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20) 
+        QLearningTDAgent(jobs_data=jobs_data, max_schedule_time=20, verbose=10)
     ]
 
     for agent in agents:
@@ -283,7 +285,7 @@ if __name__ == "__main__":
         env.reset()
         # in order for all tasks to be scheduled,
         # steps_per_episode should exceed number of tasks
-        success_history = RunAgent(env, agent, episode_count=10000,
+        success_history = RunAgent(env, agent, episode_count=20000,
             steps_per_episode=20)
 
         if len(success_history):
