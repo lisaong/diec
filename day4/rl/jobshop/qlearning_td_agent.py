@@ -28,7 +28,7 @@ class QLearningTDAgent:
     verbose: whether to print debugging messages
     """
     def __init__(self, jobs_data, max_schedule_time=20,
-        gamma=.8, alpha=.1, epsilon=0.1, verbose=False):
+        gamma=.8, alpha=.1, epsilon=0.3, verbose=False):
         self.gamma = gamma
         self.alpha = alpha
         self.verbose = verbose
@@ -172,7 +172,7 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
         # Note: the previous action's reward is used instead
         old_value = self.get_QValues(observation, [action])[0]
         new_value = old_value + \
-            self.alpha * (reward + self.gamma + max_future_reward - old_value)
+            self.alpha * (reward + self.gamma * max_future_reward - old_value)
         self.set_QValue(observation, action, new_value)
 
         if self.verbose >= 10:
