@@ -1,10 +1,10 @@
 #
-# Q-Learning Agent with Temporal Differencing
+# Q-Learning Agent with Temporal Differencing for Jobshop Scheduling
 #
 # Author: Lisa Ong, NUS/ISS
 #
-import numpy as np
 
+import numpy as np
 from collections import OrderedDict
 from copy import deepcopy
 
