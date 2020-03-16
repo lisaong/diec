@@ -5,6 +5,7 @@
 #
 
 import numpy as np
+import random
 from collections import OrderedDict
 from copy import deepcopy
 
@@ -23,13 +24,15 @@ class QLearningTDAgent:
     max_schedule_time: maximum schedule time
     gamma: the discount factor in considering future rewards
     alpha: how much prior knowledge to include
+    epsilon: how much exploration (vs greedy exploitation)
     verbose: whether to print debugging messages
     """
     def __init__(self, jobs_data, max_schedule_time=20,
-        gamma=.8, alpha=.1, verbose=False):
+        gamma=.8, alpha=.1, epsilon=0.1, verbose=False):
         self.gamma = gamma
         self.alpha = alpha
         self.verbose = verbose
+        self.epsilon = epsilon
         self.max_schedule_time = max_schedule_time
 
         # utility for parsing jobs data
@@ -136,10 +139,18 @@ class QLearningTDAgent:
         """
         if done:
             return None
-        
-        # randomly select the next action/observation from valid actions
-        valid_actions = self._get_valid_actions(observation)
-        action = valid_actions[np.random.choice(len(valid_actions))]
+
+        action = None
+
+        # epsilon-greedy
+        if random.uniform(0, 1) < self.epsilon:
+            # randomly select the next action/observation from valid actions
+            valid_actions = self._get_valid_actions(observation)
+            action = valid_actions[np.random.choice(len(valid_actions))]
+        else:
+            # find the action that has the maximum Q-value 
+            action = self._get_best_action(observation)
+
         task = self.tasks.get_task(action['task_id'])
 
         # find the maximum Q-value for any future actions
@@ -170,6 +181,22 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
 
         return action
 
+    def _get_best_action(self, observation):
+        action_Qvalues = self.get_QValues(observation)
+        if len(action_Qvalues):
+            # sort by highest Q-value
+            sorted_Qvalues = sorted(action_Qvalues.items(),
+                key=lambda item:item[1], reverse=True)
+            best_action = self._key_to_action(sorted_Qvalues[0][0])
+        else:
+            # no Q-values associated with this observation, use logic
+            assert(f'{observation} has no Q values yet, will generate a start time')
+            task_id = (np.array(is_scheduled) == 0).argmax()
+            start_time = np.array(is_scheduled).max() + 1
+            best_action = OrderedDict([('task_id', task_id), ('start_time', start_time)])
+
+        return best_action
+
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
         """
@@ -179,23 +206,8 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
         # all() returns True if all elements are true, or if is_scheduled is empty
         while (not all(is_scheduled)):
             observation = OrderedDict([('is_scheduled', is_scheduled)])
-            action_Qvalues = self.get_QValues(observation)
-
-            if len(action_Qvalues):
-                # sort by highest Q-value
-                sorted_Qvalues = sorted(action_Qvalues.items(),
-                    key=lambda item:item[1], reverse=True)
-                best_action = self._key_to_action(sorted_Qvalues[0][0])
-                actions.append(best_action)
-                is_scheduled[best_action['task_id']] = best_action['start_time']
-            else:
-                # no Q-values associated with this observation, use logic to generate the start time
-                assert(f'{observation} has no stored Q values, will generate a start time')
-                task_id = (np.array(is_scheduled) == 0).argmax()
-                start_time = np.array(is_scheduled).max() + 1
-                best_action = OrderedDict([('task_id', task_id), ('start_time', start_time)])
-
-                actions.append(best_action)
-                is_scheduled[best_action['task_id']] = best_action['start_time']
+            best_action = self._get_best_action(observation)
+            actions.append(best_action)
+            is_scheduled[best_action['task_id']] = best_action['start_time']
 
         return actions
