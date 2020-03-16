@@ -34,7 +34,7 @@ Reward: {reward}, Done: {done}, Info: {info}')
             if done:
                 print(f'Episode finished after {s+1} actions\n')
                 done = False # reset for next episode
-                if np.sum(obs['is_scheduled']) == len(obs['is_scheduled']):
+                if all(obs['is_scheduled']):
                     success_history.append([episode, info['makespan']])
                 break
 
