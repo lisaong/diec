@@ -163,10 +163,12 @@ class DQNAgent:
         is_scheduled = [0] * len(self.models)
 
         while (not all(is_scheduled)):
-
             # exploitation, find the model with the highest Q value
             X = np.array([is_scheduled])
             Q_values = np.array([model.predict(X)[0] for model in self.models])
+
+            # apply a mask so that we only select unscheduled tasks
+            Q_values[np.array(is_scheduled) != 0, :] = -float('inf')
 
             # find task, start_time with the highest Q-value
             ind = np.unravel_index(np.argmax(Q_values, axis=None), Q_values.shape)
