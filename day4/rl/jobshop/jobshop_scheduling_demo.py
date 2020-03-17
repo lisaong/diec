@@ -12,10 +12,31 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 
-# our agents
-from random_agent import RandomAgent
-from qlearning_td_agent import QLearningTDAgent
-from dqn_agent import DQNAgent
+class AgentFactory:
+    """Agent Factory to support delayed imports"""
+    def available_agents():
+        """Static method to return the available agents"""
+        return ['baseline', 'qlearning', 'dqn']
+
+    def create(name, env, max_schedule_time=20, verbose=False):
+        """Static method to create an agents by name"""
+        if name not in AgentFactory.available_agents():
+            raise(Exception(f'Unsupported agent: {name}'))
+        
+        if name == 'baseline':
+            from random_agent import RandomAgent
+            return RandomAgent(env.action_space)
+
+        if name == 'qlearning':
+            from qlearning_td_agent import QLearningTDAgent
+            return QLearningTDAgent(jobs_data=jobs_data, epsilon=.4,
+                max_schedule_time=max_schedule_time, verbose=verbose)
+
+        if name == 'dqn':
+            from dqn_agent import DQNAgent
+            return DQNAgent(env.observation_space, env.action_space,
+                verbose=verbose)
+        return None
 
 def RunAgent(env, agent, episode_count, steps_per_episode):
     done = False
@@ -66,22 +87,10 @@ if __name__ == "__main__":
         [(1, 4), (2, 3)]  # Job2
     ]
 
-    env = gym.make('gym_jobshop:jobshop-v0', 
-        jobs_data=jobs_data, max_schedule_time=20)
-
-    agents = {
-        'baseline': RandomAgent(env.action_space),
-
-        'qlearning': QLearningTDAgent(jobs_data=jobs_data, epsilon=.4,
-            max_schedule_time=20),
-
-        'dqn': DQNAgent(env.observation_space, env.action_space, verbose=10)
-    }
-
     parser = argparse.ArgumentParser(description='Job Shop Scheduling RL Demo')
 
     default_agent = 'qlearning'
-    parser.add_argument('--agent', type=str, choices=agents.keys(),
+    parser.add_argument('--agent', type=str, choices=AgentFactory.available_agents(),
         default=default_agent)
 
     default_episodes = 20000
@@ -94,10 +103,16 @@ if __name__ == "__main__":
     if args.episodes is None:
         args.episodes = default_episodes
 
-    agent = agents[args.agent]
-    print(f'\n*********{agent}*********')
-
+    # Create the environment
+    env = gym.make('gym_jobshop:jobshop-v0', 
+        jobs_data=jobs_data, max_schedule_time=20)
     env.reset()
+
+    # Create the selected agent
+    agent = AgentFactory.create(args.agent, env, verbose=True)
+    print(f'\n*********{args.agent}*********')
+
+    # Run the agent
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks
     RunAgent(env, agent, episode_count=args.episodes, steps_per_episode=20)
