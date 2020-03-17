@@ -22,18 +22,13 @@ from tensorflow.keras.optimizers import Adam
 class EpsilonPolicy:
     """Implements the epsilon policy
     """
-    def __init__(self, epsilon_decay=.995, epsilon_min=.01, update_period=10):
+    def __init__(self, epsilon_decay=.995, epsilon_min=.01):
         self.epsilon_min = epsilon_min
         self.epsilon_decay = epsilon_decay
         self.epsilon = 1.
-        self.counter = 0
-        self.update_period = update_period
 
     def get(self):
-        self.counter += 1
-
-        if ((self.counter % self.update_period) == 0) \
-            and (self.epsilon > self.epsilon_min):
+        if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
         return self.epsilon
@@ -47,7 +42,8 @@ class DQNAgent:
     epsilon_policy: object instance that defines the epsilon policy
     """
     def __init__(self, observation_space, action_space,
-        gamma=.8, alpha=.1, epsilon_policy=EpsilonPolicy(), verbose=False):
+        gamma=.8, alpha=.1, epsilon_policy=EpsilonPolicy(),
+        verbose=False):
 
         self.gamma = gamma
         self.alpha = alpha
