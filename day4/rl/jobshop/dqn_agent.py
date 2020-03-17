@@ -153,9 +153,7 @@ class DQNAgent:
                     self.alpha * (reward + self.gamma * max_future_reward - old_value)
 
             # update the model
-            history = self.models[task_id].fit(X, [[target]], epochs=1, verbose=self.verbose)
-            if self.verbose:
-                print(history.history)
+            self.models[task_id].fit(X, [[target]], epochs=1, verbose=self.verbose)
 
         # save the model weights
         [model.save(f'dqn_{task_id}.h5')
