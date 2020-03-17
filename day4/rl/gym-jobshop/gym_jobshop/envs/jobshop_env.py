@@ -203,7 +203,7 @@ class JobshopEnv(gym.Env):
 
     # Observation space describes the valid states
     # states may be used by the agent to determine the next action
-    # here, we observe the latest tasks scheduled per machine, with their
+    # here, we observe the latest tasks scheduled, with their
     # (non-zero) start times specified.
     # https://github.com/openai/gym/blob/master/gym/spaces/multi_discrete.py
     #
@@ -252,7 +252,7 @@ class JobshopEnv(gym.Env):
     # Constraint 1
     # Task already assigned
     if task.is_scheduled():
-      reward -= 1
+      reward -= 100
       error_info = 'Duplicate Scheduling'
       if self.verbose:
         print(f'DEBUG (Env): Task already scheduled: {id}')
@@ -273,7 +273,7 @@ class JobshopEnv(gym.Env):
       print(f'DEBUG (Env): Checking for overlap: {flattened}')
 
     if overlap:
-      reward -= 1
+      reward -= 100
       error_info = 'Machine Overlap'
       if self.verbose:
         print(f'DEBUG (Env): Machine overlap: {task.machine_id}, {flattened}')
@@ -282,34 +282,31 @@ class JobshopEnv(gym.Env):
     # Makespan exceeded
     makespan = self.tasks.get_makespan()
     if makespan >= self.max_schedule_time:
-      reward -= 1
+      reward -= 100
       error_info = 'Makespan Exceeded'
       if self.verbose:
         print(f'DEBUG (Env): Makespan exceeded: {makespan}')
 
     # Constraint 4
     # Tasks must be in the right order
-    if reward >= 0:
-      not_in_order = False
+    not_in_order = 0
 
-      # Task assigned in correct order and no overlap
-      pre_tasks = [self.tasks.get_task(p) for p in pre]
-      for pre in pre_tasks:
-        if pre.is_scheduled() and pre.end_time >= start_time:
-          not_in_order = True
-          break
+    # Task assigned in correct order and no overlap
+    pre_tasks = [self.tasks.get_task(p) for p in pre]
+    for pre in pre_tasks:
+      if pre.is_scheduled() and pre.end_time >= start_time:
+        not_in_order += 1
 
-      post_tasks = [self.tasks.get_task(p) for p in post]
-      for post in post_tasks:
-        if post.is_scheduled() and post.start_time <= start_time:
-          not_in_order = True
-          break
+    post_tasks = [self.tasks.get_task(p) for p in post]
+    for post in post_tasks:
+      if post.is_scheduled() and post.start_time <= start_time:
+        not_in_order += 1
 
-      if not_in_order:
-        reward -= 1
-        error_info = 'Out-of-sequence tasks'
-        if self.verbose:
-          print('DEBUG (Env): Out-of-sequence tasks')
+    if not_in_order > 0:
+      error_info = 'Out-of-sequence tasks'
+      reward -= (100 * not_in_order)
+      if self.verbose:
+        print('DEBUG (Env): Out-of-sequence tasks')
 
     # If we made it this far, none of the constraints have been violated
     # reward for more tasks scheduled without errors
@@ -329,8 +326,8 @@ class JobshopEnv(gym.Env):
     observation = self.tasks.schedule_task(action['task_id'],
       action['start_time'])
 
-    # check if we've reached our goal or failed
-    done = self.tasks.all_tasks_scheduled() or (reward < 0)
+    # check if we should stop (all tasks scheduled)
+    done = self.tasks.all_tasks_scheduled()
     makespan = self.tasks.get_makespan()
     if self.tasks.all_tasks_scheduled():
       reward += 100 * (self.max_schedule_time - makespan)

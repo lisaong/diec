@@ -57,6 +57,32 @@ Episode finished after 12 timesteps
 
 ![image](../../day3/swarm/job_shop_scheduling.png)
 
+State Space:
+
+We observe the already scheduled tasks, with non-zero start times. Start times of 0 indicate that the task has yet to be scheduled.
+
+Example:
+```
+{
+   'is_scheduled': [0, 0, 1, 0, 5, 0, 10, 1] - tasks 2, 4, 6, 7 already scheduled
+                                               tasks 0, 1, 3, 5 not yet scheduled
+}
+```
+
+Action Space:
+
+The action space consists the last scheduled task_id with its non-zero start time.
+
+Example:
+```
+# Schedule task 8 at start time 10
+
+{
+   'task_id' : 8,
+   'start_time' : 10
+}
+```
+
 Running on Raspberry Pi 3 or 4:
 1. Launch the Docker container 
 ```
@@ -66,12 +92,18 @@ sh launch_docker.sh
 
 2. From the Docker container:
 ```
-# Install the gym environment, then run the script
 cd /code/day4/rl/jobshop
+
+# To run the default agent (Q-Learning)
 python3 jobshop_scheduling_demo.py
+
+# To run the Deep Q-Learning agent
+python3 jobshop_scheduling_demo.py --agent dqn
 ```
 
-Number of successful episodes for 20000 iterations using QLearning:
+### Q-Learning Agent
+
+Number of successful episodes for 20000 iterations using Q-Learning:
 ![history](jobshop/QLearningTDAgent_20000.png)
 
 Each episode begins with a clean slate, where 8 tasks (for 3 jobs) are to be scheduled on 3 machines. The tasks must run on its assigned machine, and in the specified order in the job.
@@ -80,101 +112,177 @@ The episode starts with an action. For example, schedule task_id=3 at start_time
 
 If a task is scheduled without errors (i.e. no overlap, no out of order tasks), the reward is positive (e.g. 600):
 ```
-======Episode 9999======
-Action: OrderedDict([('task_id', 3), ('start_time', 8)]), State: {'is_scheduled': [0, 0, 0, 1, 0, 0, 0, 0]}, Reward: 600, Done: False, Info: {'makespan': 2}
+Action: OrderedDict([('task_id', 0), ('start_time', 4)]), State: {'is_scheduled': [4, 0, 0, 0, 7, 16, 0, 0]}, Reward: 100, Done: False, Info: {'makespan': 16}
 Job-view:
-0: Job: 0, Machine: 0, Start: 0, End: -1
+0: Job: 0, Machine: 0, Start: 4, End: 7
 1: Job: 0, Machine: 1, Start: 0, End: -1
 2: Job: 0, Machine: 2, Start: 0, End: -1
-3: Job: 1, Machine: 0, Start: 8, End: 10
-4: Job: 1, Machine: 2, Start: 0, End: -1
-5: Job: 1, Machine: 1, Start: 0, End: -1
+3: Job: 1, Machine: 0, Start: 0, End: -1
+4: Job: 1, Machine: 2, Start: 7, End: 8
+5: Job: 1, Machine: 1, Start: 16, End: 20
 6: Job: 2, Machine: 1, Start: 0, End: -1
 7: Job: 2, Machine: 2, Start: 0, End: -1
 
 Machine-view:
 
 Machine 0:
-|----|----
-        33
+|----|-
+    000
 
 Machine 1:
-idle
+|----|----|----|----
+                5555
 
 Machine 2:
-idle
-
+|----|--
+       4
 ```
 
-When a task is scheduled with errors (e.g. machine overlap, or out-of-sequence tasks), the reward is negative (-1) and the episode is done:
+When a task is scheduled with errors (e.g. machine overlap, or out-of-sequence tasks), the reward is negative.
+In order for the agent to experience as much as possible, the episode continues on until all tasks are scheduled:
 ```
-Action: OrderedDict([('task_id', 7), ('start_time', 2)]), State: {'is_scheduled': [1, 0, 1, 1, 1, 0, 0, 1]}, Reward: -1, Done: True, Info: {'makespan': 8, 'errors': 'Machine Overlap'}
+Action: OrderedDict([('task_id', 6), ('start_time', 13)]), State: {'is_scheduled': [4, 19, 0, 14, 7, 16, 13, 0]}, Reward: -100, Done: False, Info: {'makespan': 17, 'errors': 'Machine Overlap'}
 Job-view:
-0: Job: 0, Machine: 0, Start: 2, End: 5
-1: Job: 0, Machine: 1, Start: 0, End: -1
-2: Job: 0, Machine: 2, Start: 7, End: 9
-3: Job: 1, Machine: 0, Start: 8, End: 10
-4: Job: 1, Machine: 2, Start: 3, End: 4
-5: Job: 1, Machine: 1, Start: 0, End: -1
-6: Job: 2, Machine: 1, Start: 0, End: -1
-7: Job: 2, Machine: 2, Start: 2, End: 5
+0: Job: 0, Machine: 0, Start: 4, End: 7
+1: Job: 0, Machine: 1, Start: 19, End: 21
+2: Job: 0, Machine: 2, Start: 0, End: -1
+3: Job: 1, Machine: 0, Start: 14, End: 16
+4: Job: 1, Machine: 2, Start: 7, End: 8
+5: Job: 1, Machine: 1, Start: 16, End: 20
+6: Job: 2, Machine: 1, Start: 13, End: 17
+7: Job: 2, Machine: 2, Start: 0, End: -1
 
 Machine-view:
 
 Machine 0:
-|----|----
-  000   33
+|----|----|----|
+    000       33
 
 Machine 1:
-idle
+|----|----|----|----|
+             6666
+                5555
+                   11
 
 Machine 2:
-|----|---
-  777
-   4   22
-Episode finished after 5 actions
+|----|--
+       4
 
 ```
 
 When all episodes are complete, the best schedule based on Q-values stored in the agent will be printed. Note that this schedule can still result in errors when the agent has not learnt an optimum policy (aka the objective of reinforcement learning!)
 
-Temporal Differencing Q-Learning for single-agent seems too naive to learn the optimum policy quickly, as it averages less than 1% passing rate for this experiment. It is still slightly better than the baseline (RandomAgent), which has 0% passing rate.
-
-Other experiments to try: Multi-agent learning, Deep Q-learning
-
 ```
-Passing rate: 0.21%
+Passing rate: 8.86%
 
 *********Best Schedule*********
 Makespan: 3, Errors: None
-Makespan: 20, Errors: None
-Makespan: 20, Errors: Makespan Exceeded
-Makespan: 20, Errors: Makespan Exceeded
-Makespan: 21, Errors: Makespan Exceeded
-Makespan: 21, Errors: Makespan Exceeded
-Makespan: 21, Errors: Makespan Exceeded
-Makespan: 25, Errors: Makespan Exceeded
+Makespan: 6, Errors: None
+Makespan: 9, Errors: None
+Makespan: 10, Errors: Out-of-sequence tasks
+Makespan: 12, Errors: Out-of-sequence tasks
+Makespan: 14, Errors: Out-of-sequence tasks
+Makespan: 16, Errors: None
+Makespan: 17, Errors: Out-of-sequence tasks
 Job-view:
-0: Job: 0, Machine: 0, Start: 20, End: 23
-1: Job: 0, Machine: 1, Start: 21, End: 23
-2: Job: 0, Machine: 2, Start: 2, End: 4
-3: Job: 1, Machine: 0, Start: 10, End: 12
-4: Job: 1, Machine: 2, Start: 22, End: 23
-5: Job: 1, Machine: 1, Start: 8, End: 12
-6: Job: 2, Machine: 1, Start: 23, End: 27
-7: Job: 2, Machine: 2, Start: 19, End: 22
+0: Job: 0, Machine: 0, Start: 11, End: 14
+1: Job: 0, Machine: 1, Start: 4, End: 6
+2: Job: 0, Machine: 2, Start: 18, End: 20
+3: Job: 1, Machine: 0, Start: 8, End: 10
+4: Job: 1, Machine: 2, Start: 20, End: 21
+5: Job: 1, Machine: 1, Start: 6, End: 10
+6: Job: 2, Machine: 1, Start: 13, End: 17
+7: Job: 2, Machine: 2, Start: 15, End: 18
 
 Machine-view:
 
 Machine 0:
-|----|----|----|----|--
-          33        000
+|----|----|---
+        33 000
 
 Machine 1:
-|----|----|----|----|----|-
-        5555         116666
+|----|----|----|-
+    115555   6666
 
 Machine 2:
-|----|----|----|----|--
-  22               7774
+|----|----|----|----|
+               777224
+
 ```
+
+Temporal Differencing Q-Learning for single-agent seems too naive to learn the optimum policy quickly, resulting in best schedule with errors. It is still better than the baseline (RandomAgent), which has 0% passing rate.
+
+### Deep Q-Learning Agent
+
+The Deep Q-learning configuration trains one Deep Neural Network per task to predict the Q-values given the state.
+
+Input: 1 observation of the current schedule, shape = (number_of_tasks,)
+Output: Q-values, shape = (max_schedule_length, 1)
+
+```
+for i in range(n_models):
+   model = Sequential([
+         Dense(input_size*4, input_dim=input_size, activation='relu'),
+         Dense(input_size*4, activation='relu'),
+         Dense(output_size, activation='linear')
+   ])
+
+   # start with a slow learning rate as we are fitting in smaller
+   # batches (which will be noiser)
+   model.compile(loss='mse', optimizer=Adam(lr=1e-3), metrics=['mae'])
+   self.models.append(model)
+```
+
+Used Adam with a slow learning rate to reduce noise. 
+
+Replay memory is used to update the network every minibatch to improve convergence.
+
+Epsilon decay of 0.995 is applied to encourage early exploration, eventually decaying towards exploitation.
+
+(Reference: https://github.com/srnand/Reinforcement-Learning-using-OpenAI-Gym/blob/master/DQN/cartpole_dqn.py)
+
+Training output:
+```
+Action: OrderedDict([('task_id', 6), ('start_time', 2)]), State: {'is_scheduled': [16, 0, 14, 0, 0, 10, 2, 3]}, Reward: -100, Done: False, Info: {'makespan': 17, 'errors': 'Duplicate Scheduling'}
+Job-view:
+0: Job: 0, Machine: 0, Start: 16, End: 19
+1: Job: 0, Machine: 1, Start: 0, End: -1
+2: Job: 0, Machine: 2, Start: 14, End: 16
+3: Job: 1, Machine: 0, Start: 0, End: -1
+4: Job: 1, Machine: 2, Start: 0, End: -1
+5: Job: 1, Machine: 1, Start: 10, End: 14
+6: Job: 2, Machine: 1, Start: 2, End: 6
+7: Job: 2, Machine: 2, Start: 3, End: 6
+
+Machine-view:
+
+Machine 0:
+|----|----|----|---
+                000
+
+Machine 1:
+|----|----|---
+  6666    5555
+
+Machine 2:
+|----|----|----|
+   777        22
+Train on 1 samples
+{'loss': [87.25349426269531], 'mae': [9.340244]}
+Train on 1 samples
+{'loss': [12.640021324157715], 'mae': [3.475412]}
+Train on 1 samples
+{'loss': [913.83447265625], 'mae': [30.226482]}
+Train on 1 samples
+{'loss': [219.41464233398438], 'mae': [14.734228]}
+Train on 1 samples
+{'loss': [42.02494430541992], 'mae': [6.440313]}
+Train on 1 samples
+{'loss': [26.261499404907227], 'mae': [5.067707]}
+Train on 1 samples
+{'loss': [159.16775512695312], 'mae': [12.607638]}
+Train on 1 samples
+{'loss': [0.8870100975036621], 'mae': [0.8259033]}
+```
+
+Future experiments: Multi-agent learning
