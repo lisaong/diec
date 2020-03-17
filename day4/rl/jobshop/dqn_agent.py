@@ -113,26 +113,22 @@ class DQNAgent:
     def _replay(self):
         minibatch = random.sample(self.replay_memory, self.batch_size)
         for obs, action, reward, next_obs, done in minibatch:
+            X = np.array([obs['is_scheduled']])
             if done:
                 target = reward
             else:
                 # find the maximum Q-value for all future actions
-                X = np.array([next_obs['is_scheduled']])
-                max_future_reward = np.array([model.predict(X)[0]
+                next_X = np.array([next_obs['is_scheduled']])
+                max_future_reward = np.array([model.predict(next_X)[0]
                     for model in self.models]).max()
 
                 # apply Temporal Difference
                 task_id = action['task_id']
-                X = np.array([obs['is_scheduled']])
                 old_value = self.models[task_id].predict(X)[0]
                 target = old_value + \
                     self.alpha * (reward + self.gamma * max_future_reward - old_value)
 
-            if self.verbose:
-                print(f'DEBUG (Agent): Action: {action}, \
-    next state: {next_obs}, max future reward: {max_future_reward:.3f}')
-
-            X = np.array([obs['is_scheduled']])
+            # update the model
             self.models[task_id].fit(X, [[target]], epochs=1, verbose=self.verbose)
 
     def get_best_schedule(self):
