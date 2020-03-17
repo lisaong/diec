@@ -100,8 +100,7 @@ if __name__ == "__main__":
     env.reset()
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks
-    success_history = RunAgent(env, agent, episode_count=args.episodes,
-        steps_per_episode=20)
+    RunAgent(env, agent, episode_count=args.episodes, steps_per_episode=20)
 
     print('\n*********Best Schedule*********')
     actions = agent.get_best_schedule()
