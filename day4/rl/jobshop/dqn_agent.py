@@ -57,7 +57,7 @@ class DQNAgent:
 
             # start with a slow learning rate as we are fitting in smaller
             # batches (which will be noiser)
-            model.compile(loss='mse', optimizer=Adam(lr=1e-3))
+            model.compile(loss='mse', optimizer=Adam(lr=1e-3), metrics=['mae'])
             self.models.append(model)
 
         # Experience replay (to improve convergence)
@@ -129,7 +129,9 @@ class DQNAgent:
                     self.alpha * (reward + self.gamma * max_future_reward - old_value)
 
             # update the model
-            self.models[task_id].fit(X, [[target]], epochs=1, verbose=self.verbose)
+            history = self.models[task_id].fit(X, [[target]], epochs=1, verbose=self.verbose)
+            if self.verbose:
+                print(history.history)
 
         # save the model weights
         [model.save(f'dqn_{task_id}.h5')
