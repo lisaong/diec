@@ -220,9 +220,11 @@ Temporal Differencing Q-Learning for single-agent seems too naive to learn the o
 
 The Deep Q-learning configuration trains one Deep Neural Network per task to predict the Q-values given the state.
 
-Input: 1 observation of the current schedule, shape = (number_of_tasks,)
-Output: Q-values, shape = (max_schedule_length, 1)
+**Input**: 1 observation of the current schedule, shape = (number_of_tasks,)
 
+**Output**: Q-values, shape = (max_schedule_length, 1)
+
+**Architecture**: a simple 3-layer MLP
 ```
 for i in range(n_models):
    model = Sequential([
@@ -237,7 +239,7 @@ for i in range(n_models):
    self.models.append(model)
 ```
 
-Used Adam with a slow learning rate to reduce noise. 
+Used Adam with a slow learning rate to reduce noise.
 
 Replay memory is used to update the network every minibatch to improve convergence.
 
