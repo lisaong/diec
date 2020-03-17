@@ -15,7 +15,7 @@ import tensorflow as tf
 if float(tf.__version__.split('.')[0]) < 2.0:
     raise(Exception(f'Tensorflow >= 2.0 required, current version: {tf.__version__}'))
 
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Activation
 from tensorflow.keras.optimizers import Adam
 
@@ -155,4 +155,25 @@ class DQNAgent:
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
         """
-        pass # not implemented
+        # load the model weights
+        self.models = [load_model(f'dqn_{task_id}.h5')
+            for task_id in range(len(self.models))]
+
+        actions = []
+        is_scheduled = [0] * len(self.models)
+
+        while (not all(is_scheduled)):
+
+            # exploitation, find the model with the highest Q value
+            X = np.array([is_scheduled])
+            Q_values = np.array([model.predict(X)[0] for model in self.models])
+
+            # find task, start_time with the highest Q-value
+            ind = np.unravel_index(np.argmax(Q_values, axis=None), Q_values.shape)
+
+            # shift start_times by 1 (non-zero)
+            best_action = OrderedDict([('task_id', ind[0]), ('start_time', ind[1]+1)])
+            actions.append(best_action)
+            is_scheduled[best_action['task_id']] = best_action['start_time']
+
+        return actions
