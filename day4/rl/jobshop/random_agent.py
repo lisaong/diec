@@ -11,7 +11,6 @@ class RandomAgent:
 
     def act(self, observation, reward, done):
         return self.action_space.sample()
-    
+
     def get_best_schedule(self):
         pass # not implemented
-

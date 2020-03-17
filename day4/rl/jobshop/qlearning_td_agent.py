@@ -206,6 +206,7 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
 
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
+        This requires the model weights to be already saved.
         """
         self.Q = pickle.load(open(f'qlearning_td_Q.pkl', 'rb'))
 

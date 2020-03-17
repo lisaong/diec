@@ -83,6 +83,22 @@ class DQNAgent:
     def _not_restarted(self, observation):
         return any(observation['is_scheduled'])
 
+    def _get_best_action(self, observation):
+        # find the action with the highest Q value
+        is_scheduled = observation['is_scheduled']
+        X = np.array([is_scheduled])
+        Q_values = np.array([model.predict(X)[0] for model in self.models])
+
+        # apply a mask so that we only select unscheduled tasks
+        Q_values[np.array(is_scheduled) != 0, :] = -float('inf')
+
+        # find task, start_time with the highest Q-value
+        ind = np.unravel_index(np.argmax(Q_values, axis=None), Q_values.shape)
+
+        # shift start_times by 1 (non-zero)
+        best_action = OrderedDict([('task_id', ind[0]), ('start_time', ind[1]+1)])
+        return best_action
+
     def act(self, observation, reward, done):
         """Update the Q-values, then take an action
         observation: current state
@@ -101,19 +117,12 @@ class DQNAgent:
         if not done:
             # epsilon greedy
             if random.uniform(0, 1) < self.epsilon_policy.get():
-                # exploration
+                # exploration: random action
                 action = self.action_space.sample()
                 action['start_time'] += 1 # non-zero start times
             else:
-                # exploitation, find the model with the highest Q value
-                X = np.array([observation['is_scheduled']])
-                Q_values = np.array([model.predict(X)[0] for model in self.models])
-
-                # find task, start_time with the highest Q-value
-                ind = np.unravel_index(np.argmax(Q_values, axis=None), Q_values.shape)
-
-                # shift start_times by 1 (non-zero)
-                action = OrderedDict([('task_id', ind[0]), ('start_time', ind[1]+1)])
+                # exploitation
+                action = self._get_best_action(observation)
 
             self.prev_observation = observation
             self.prev_action = action
@@ -153,7 +162,8 @@ class DQNAgent:
             for model, task_id in zip(self.models, range(len(self.models)))]
 
     def get_best_schedule(self):
-        """Returns the scheduling actions based on highest Q-values
+        """Returns the scheduling actions based on highest Q-values.
+        This requires the model weights to be already saved.
         """
         # load the model weights
         self.models = [load_model(f'dqn_{task_id}.h5')
@@ -163,18 +173,8 @@ class DQNAgent:
         is_scheduled = [0] * len(self.models)
 
         while (not all(is_scheduled)):
-            # exploitation, find the model with the highest Q value
-            X = np.array([is_scheduled])
-            Q_values = np.array([model.predict(X)[0] for model in self.models])
-
-            # apply a mask so that we only select unscheduled tasks
-            Q_values[np.array(is_scheduled) != 0, :] = -float('inf')
-
-            # find task, start_time with the highest Q-value
-            ind = np.unravel_index(np.argmax(Q_values, axis=None), Q_values.shape)
-
-            # shift start_times by 1 (non-zero)
-            best_action = OrderedDict([('task_id', ind[0]), ('start_time', ind[1]+1)])
+            observation = OrderedDict([('is_scheduled', is_scheduled)])
+            best_action = self._get_best_action(observation)
             actions.append(best_action)
             is_scheduled[best_action['task_id']] = best_action['start_time']
 
