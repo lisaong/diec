@@ -57,8 +57,7 @@ Episode finished after 12 timesteps
 
 ![image](../../day3/swarm/job_shop_scheduling.png)
 
-State Space:
-
+**State Space:**
 We observe the already scheduled tasks, with non-zero start times. Start times of 0 indicate that the task has yet to be scheduled.
 
 Example:
@@ -69,8 +68,7 @@ Example:
 }
 ```
 
-Action Space:
-
+**Action Space:**
 The action space consists the last scheduled task_id with its non-zero start time.
 
 Example:
@@ -83,7 +81,10 @@ Example:
 }
 ```
 
-Running on Raspberry Pi 3 or 4:
+**Running on Raspberry Pi 3 or 4:**
+
+![training](jobshop/rl_jobshop_dqn.gif)
+
 1. Launch the Docker container 
 ```
 cd day4/rl/docker
@@ -243,9 +244,5 @@ Replay memory is used to update the network every minibatch to improve convergen
 Epsilon decay of 0.995 is applied to encourage early exploration, eventually decaying towards exploitation.
 
 (Reference: https://github.com/srnand/Reinforcement-Learning-using-OpenAI-Gym/blob/master/DQN/cartpole_dqn.py)
-
-Sample Training Output:
-
-![training](jobshop/rl_jobshop_dqn.gif)
 
 Future experiments: Multi-agent learning
