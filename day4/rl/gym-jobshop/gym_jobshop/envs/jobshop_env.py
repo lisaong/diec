@@ -203,7 +203,7 @@ class JobshopEnv(gym.Env):
 
     # Observation space describes the valid states
     # states may be used by the agent to determine the next action
-    # here, we observe the latest tasks scheduled per machine, with their
+    # here, we observe the latest tasks scheduled, with their
     # (non-zero) start times specified.
     # https://github.com/openai/gym/blob/master/gym/spaces/multi_discrete.py
     #

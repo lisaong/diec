@@ -57,6 +57,32 @@ Episode finished after 12 timesteps
 
 ![image](../../day3/swarm/job_shop_scheduling.png)
 
+State Space:
+
+We observe the already scheduled tasks, with non-zero start times. Start times of 0 indicate that the task has yet to be scheduled.
+
+Example:
+```
+{
+   'is_scheduled': [0, 0, 1, 0, 5, 0, 10, 1] - tasks 2, 4, 6, 7 already scheduled
+                                               tasks 0, 1, 3, 5 not yet scheduled
+}
+```
+
+Action Space:
+
+The action space consists the last scheduled task_id with its non-zero start time.
+
+Example:
+```
+# Schedule task 8 at start time 10
+
+{
+   'task_id' : 8,
+   'start_time' : 10
+}
+```
+
 Running on Raspberry Pi 3 or 4:
 1. Launch the Docker container 
 ```
@@ -71,7 +97,9 @@ cd /code/day4/rl/jobshop
 python3 jobshop_scheduling_demo.py
 ```
 
-Number of successful episodes for 20000 iterations using QLearning:
+### Q-Learning Agent
+
+Number of successful episodes for 20000 iterations using Q-Learning:
 ![history](jobshop/QLearningTDAgent_20000.png)
 
 Each episode begins with a clean slate, where 8 tasks (for 3 jobs) are to be scheduled on 3 machines. The tasks must run on its assigned machine, and in the specified order in the job.
@@ -180,4 +208,27 @@ Machine 2:
 
 Temporal Differencing Q-Learning for single-agent seems too naive to learn the optimum policy quickly, resulting in best schedule with errors. It is still better than the baseline (RandomAgent), which has 0% passing rate.
 
-Future experiments to try: Multi-agent learning, Deep Q-learning
+### Deep Q-Learning Agent
+
+The Deep Q-learning configuration trains one Deep Neural Network per task to predict the Q-values given the state.
+
+```
+        for i in range(n_models):
+            model = Sequential([
+                Dense(input_size*4, input_dim=input_size, activation='relu'),
+                Dense(input_size*4, activation='relu'),
+                Dense(output_size, activation='linear')
+            ])
+
+            # start with a slow learning rate as we are fitting in smaller
+            # batches (which will be noiser)
+            model.compile(loss='mse', optimizer=Adam(lr=1e-3), metrics=['mae'])
+            self.models.append(model)
+```
+
+Used Adam with a slow learning rate to reduce noise. 
+Replay memory is used to update the network every minibatch to improve convergence.
+
+Epsilon decay of 0.995 is applied to encourage early exploration, eventually decaying towards exploitation.
+
+Future experiments: Multi-agent learning
