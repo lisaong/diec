@@ -122,3 +122,4 @@ python
 
 # weights
 *.h5
+*.pkl

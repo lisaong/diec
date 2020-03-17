@@ -8,6 +8,7 @@ import numpy as np
 import random
 from collections import OrderedDict
 from copy import deepcopy
+import pickle
 
 import gym_jobshop.envs.jobshop_env as jobshop_env
 
@@ -132,6 +133,7 @@ class QLearningTDAgent:
             self.Q[obs_key] = {}
 
         self.Q[obs_key][action_key] = value
+        pickle.dump(self.Q, open(f'qlearning_td_Q.pkl', 'wb'))
 
     def act(self, observation, reward, done):
         """Update the Q-values, then take an action
@@ -205,6 +207,8 @@ next state: {next_observation}, max future reward: {max_future_reward:.3f}')
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
         """
+        self.Q = pickle.load(open(f'qlearning_td_Q.pkl', 'rb'))
+
         actions = []
         is_scheduled = [0] * self.tasks.length()
 

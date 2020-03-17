@@ -79,11 +79,20 @@ if __name__ == "__main__":
     }
 
     parser = argparse.ArgumentParser(description='Job Shop Scheduling RL Demo')
+
+    default_agent = 'qlearning'
     parser.add_argument('--agent', type=str, choices=agents.keys(),
-        default='qlearning')
+        default=default_agent)
+
+    default_episodes = 20000
+    parser.add_argument('--episodes', type=int, default=default_episodes)
+
     args = parser.parse_args()
+
     if args.agent is None:
-        args.agent = 'qlearning'
+        args.agent = default_agent
+    if args.episodes is None:
+        args.episodes = default_episodes
 
     agent = agents[args.agent]
     print(f'\n*********{agent}*********')
@@ -91,14 +100,13 @@ if __name__ == "__main__":
     env.reset()
     # in order for all tasks to be scheduled,
     # steps_per_episode should exceed number of tasks
-    success_history = RunAgent(env, agent, episode_count=20000,
+    success_history = RunAgent(env, agent, episode_count=args.episodes,
         steps_per_episode=20)
 
-    if len(success_history):
-        print('\n*********Best Schedule*********')
-        actions = agent.get_best_schedule()
-        env.reset()
-        for action in actions:
-            _, _, _, info = env.step(action)
-            print(f'Makespan: {info["makespan"]}, Errors: {info.get("errors")}')
-        env.render()
+    print('\n*********Best Schedule*********')
+    actions = agent.get_best_schedule()
+    env.reset()
+    for action in actions:
+        _, _, _, info = env.step(action)
+        print(f'Makespan: {info["makespan"]}, Errors: {info.get("errors")}')
+    env.render()
