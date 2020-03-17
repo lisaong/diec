@@ -234,9 +234,12 @@ for i in range(n_models):
 ```
 
 Used Adam with a slow learning rate to reduce noise. 
+
 Replay memory is used to update the network every minibatch to improve convergence.
 
 Epsilon decay of 0.995 is applied to encourage early exploration, eventually decaying towards exploitation.
+
+(Reference: https://github.com/srnand/Reinforcement-Learning-using-OpenAI-Gym/blob/master/DQN/cartpole_dqn.py)
 
 Training output:
 ```
