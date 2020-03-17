@@ -92,9 +92,13 @@ sh launch_docker.sh
 
 2. From the Docker container:
 ```
-# Install the gym environment, then run the script
 cd /code/day4/rl/jobshop
+
+# To run the default agent (Q-Learning)
 python3 jobshop_scheduling_demo.py
+
+# To run the Deep Q-Learning agent
+python3 jobshop_scheduling_demo.py --agent dqn
 ```
 
 ### Q-Learning Agent

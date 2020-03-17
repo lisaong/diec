@@ -10,6 +10,7 @@
 import gym
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 
 # our agents
 from random_agent import RandomAgent
@@ -68,30 +69,36 @@ if __name__ == "__main__":
     env = gym.make('gym_jobshop:jobshop-v0', 
         jobs_data=jobs_data, max_schedule_time=20)
 
-    agents = [
-        # baseline
-        # RandomAgent(env.action_space),
+    agents = {
+        'baseline': RandomAgent(env.action_space),
 
-        # verbose=10 prints Q-values
-        #QLearningTDAgent(jobs_data=jobs_data, epsilon=.4, max_schedule_time=20)
+        'qlearning': QLearningTDAgent(jobs_data=jobs_data, epsilon=.4,
+            max_schedule_time=20),
 
-        DQNAgent(env.observation_space, env.action_space, verbose=10)
-    ]
+        'dqn': DQNAgent(env.observation_space, env.action_space, verbose=10)
+    }
 
-    for agent in agents:
-        print(f'\n*********{agent}*********')
+    parser = argparse.ArgumentParser(description='Job Shop Scheduling RL Demo')
+    parser.add_argument('--agent', type=str, choices=agents.keys(),
+        default='qlearning')
+    args = parser.parse_args()
+    if args.agent is None:
+        args.agent = 'qlearning'
 
+    agent = agents[args.agent]
+    print(f'\n*********{agent}*********')
+
+    env.reset()
+    # in order for all tasks to be scheduled,
+    # steps_per_episode should exceed number of tasks
+    success_history = RunAgent(env, agent, episode_count=20000,
+        steps_per_episode=20)
+
+    if len(success_history):
+        print('\n*********Best Schedule*********')
+        actions = agent.get_best_schedule()
         env.reset()
-        # in order for all tasks to be scheduled,
-        # steps_per_episode should exceed number of tasks
-        success_history = RunAgent(env, agent, episode_count=20000,
-            steps_per_episode=20)
-
-        if len(success_history):
-            print('\n*********Best Schedule*********')
-            actions = agent.get_best_schedule()
-            env.reset()
-            for action in actions:
-                _, _, _, info = env.step(action)
-                print(f'Makespan: {info["makespan"]}, Errors: {info.get("errors")}')
-            env.render()
+        for action in actions:
+            _, _, _, info = env.step(action)
+            print(f'Makespan: {info["makespan"]}, Errors: {info.get("errors")}')
+        env.render()
