@@ -111,9 +111,14 @@ iota_wallets.json
 
 models/
 data/
-day3/*.png
 gen/
 obj/
 bin/
 dask-worker-space/
 python
+
+# images
+*.png
+
+# weights
+*.h5

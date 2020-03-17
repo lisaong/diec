@@ -131,6 +131,10 @@ class DQNAgent:
             # update the model
             self.models[task_id].fit(X, [[target]], epochs=1, verbose=self.verbose)
 
+        # save the model weights
+        [model.save(f'dqn_{task_id}.h5')
+            for model, task_id in zip(self.models, range(len(self.models)))]
+
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
         """
