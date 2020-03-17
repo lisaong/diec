@@ -96,7 +96,9 @@ class DQNAgent:
 
                 # find task, start_time with the highest Q-value
                 ind = np.unravel_index(np.argmax(Q_values, axis=None), Q_values.shape)
-                action = OrderedDict([('task_id', ind[0]), ('start_time', ind[1])])
+
+                # shift start_times by 1 (non-zero)
+                action = OrderedDict([('task_id', ind[0]), ('start_time', ind[1]+1)])
 
             self.prev_observation = observation
             self.prev_action = action
