@@ -91,8 +91,8 @@ class DQNAgent:
                 action['start_time'] += 1 # non-zero start times
             else:
                 # exploitation, find the model with the highest Q value
-                Q_values = np.array([model.predict([observation['is_scheduled']])[0]
-                    for model in self.models])
+                X = np.array([observation['is_scheduled']])
+                Q_values = np.array([model.predict(X)[0] for model in self.models])
 
                 # find task, start_time with the highest Q-value
                 ind = np.unravel_index(np.argmax(Q_values, axis=None), Q_values.shape)
@@ -117,12 +117,14 @@ class DQNAgent:
                 target = reward
             else:
                 # find the maximum Q-value for all future actions
-                max_future_reward = np.array([model.predict([next_obs['is_scheduled']])[0]
+                X = np.array([next_obs['is_scheduled']])
+                max_future_reward = np.array([model.predict(X)[0]
                     for model in self.models]).max()
 
                 # apply Temporal Difference
                 task_id = action['task_id']
-                old_value = self.models[task_id].predict([obs['is_scheduled']])[0]
+                X = np.array([obs['is_scheduled']])
+                old_value = self.models[task_id].predict(X)[0]
                 target = old_value + \
                     self.alpha * (reward + self.gamma * max_future_reward - old_value)
 
@@ -130,8 +132,8 @@ class DQNAgent:
                 print(f'DEBUG (Agent): Action: {action}, \
     next state: {next_obs}, max future reward: {max_future_reward:.3f}')
 
-            self.models[task_id].fit([obs['is_scheduled']], [[target]],
-                epochs=1, verbose=self.verbose)
+            X = np.array([obs['is_scheduled']])
+            self.models[task_id].fit(X, [[target]], epochs=1, verbose=self.verbose)
 
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
