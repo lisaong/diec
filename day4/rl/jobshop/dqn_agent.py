@@ -88,6 +88,7 @@ class DQNAgent:
             if random.uniform(0, 1) < self.epsilon:
                 # exploration
                 action = self.action_space.sample()
+                action['start_time'] += 1 # non-zero start times
             else:
                 # exploitation, find the model with the highest Q value
                 Q_values = np.array([model.predict([observation['is_scheduled']])[0]
@@ -127,7 +128,8 @@ class DQNAgent:
                 print(f'DEBUG (Agent): Action: {action}, \
     next state: {next_obs}, max future reward: {max_future_reward:.3f}')
 
-            self.models[task_id].fit(obs, [[target]], epochs=1, verbose=0)
+            self.models[task_id].fit([obs['is_scheduled']], [[target]],
+                epochs=1, verbose=self.verbose)
 
     def get_best_schedule(self):
         """Returns the scheduling actions based on highest Q-values
