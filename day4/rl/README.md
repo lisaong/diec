@@ -234,4 +234,48 @@ Replay memory is used to update the network every minibatch to improve convergen
 
 Epsilon decay of 0.995 is applied to encourage early exploration, eventually decaying towards exploitation.
 
+Training output:
+```
+Action: OrderedDict([('task_id', 6), ('start_time', 2)]), State: {'is_scheduled': [16, 0, 14, 0, 0, 10, 2, 3]}, Reward: -100, Done: False, Info: {'makespan': 17, 'errors': 'Duplicate Scheduling'}
+Job-view:
+0: Job: 0, Machine: 0, Start: 16, End: 19
+1: Job: 0, Machine: 1, Start: 0, End: -1
+2: Job: 0, Machine: 2, Start: 14, End: 16
+3: Job: 1, Machine: 0, Start: 0, End: -1
+4: Job: 1, Machine: 2, Start: 0, End: -1
+5: Job: 1, Machine: 1, Start: 10, End: 14
+6: Job: 2, Machine: 1, Start: 2, End: 6
+7: Job: 2, Machine: 2, Start: 3, End: 6
+
+Machine-view:
+
+Machine 0:
+|----|----|----|---
+                000
+
+Machine 1:
+|----|----|---
+  6666    5555
+
+Machine 2:
+|----|----|----|
+   777        22
+Train on 1 samples
+{'loss': [87.25349426269531], 'mae': [9.340244]}
+Train on 1 samples
+{'loss': [12.640021324157715], 'mae': [3.475412]}
+Train on 1 samples
+{'loss': [913.83447265625], 'mae': [30.226482]}
+Train on 1 samples
+{'loss': [219.41464233398438], 'mae': [14.734228]}
+Train on 1 samples
+{'loss': [42.02494430541992], 'mae': [6.440313]}
+Train on 1 samples
+{'loss': [26.261499404907227], 'mae': [5.067707]}
+Train on 1 samples
+{'loss': [159.16775512695312], 'mae': [12.607638]}
+Train on 1 samples
+{'loss': [0.8870100975036621], 'mae': [0.8259033]}
+```
+
 Future experiments: Multi-agent learning
