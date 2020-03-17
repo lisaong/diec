@@ -94,11 +94,14 @@ sh launch_docker.sh
 ```
 cd /code/day4/rl/jobshop
 
-# To run the default agent (Q-Learning)
+# Show help options
+python3 jobshop_scheduling_demo.py --help
+
+# Run the default agent (Q-Learning) for the default number of episodes (20000)
 python3 jobshop_scheduling_demo.py
 
-# To run the Deep Q-Learning agent
-python3 jobshop_scheduling_demo.py --agent dqn
+# Run the Deep Q-Learning agent, for 2000 episodes
+python3 jobshop_scheduling_demo.py --agent dqn --episodes 2000
 ```
 
 ### Q-Learning Agent
