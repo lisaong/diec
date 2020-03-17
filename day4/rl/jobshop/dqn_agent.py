@@ -19,25 +19,44 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation
 from tensorflow.keras.optimizers import Adam
 
+class EpsilonPolicy:
+    """Implements the epsilon policy
+    """
+    def __init__(self, epsilon_decay=.995, epsilon_min=.01, update_period=10):
+        self.epsilon_min = epsilon_min
+        self.epsilon_decay = epsilon_decay
+        self.epsilon = 1.
+        self.counter = 0
+        self.update_period = update_period
+
+    def get(self):
+        self.counter += 1
+
+        if ((self.counter % self.update_period) == 0) \
+            and (self.epsilon > self.epsilon_min):
+            self.epsilon *= self.epsilon_decay
+
+        return self.epsilon
+
 class DQNAgent:
     """Deep Q-Learning Agent
     observation_space: the observation space
     action_space: the action space
     gamma: the discount factor in considering future rewards
     alpha: how much prior knowledge to include
-    epsilon: how much exploration (vs greedy exploitation)
+    epsilon_policy: object instance that defines the epsilon policy
     """
     def __init__(self, observation_space, action_space,
-        gamma=.8, alpha=.1, epsilon=0.2, verbose=False):
+        gamma=.8, alpha=.1, epsilon_policy=EpsilonPolicy(), verbose=False):
 
         self.gamma = gamma
         self.alpha = alpha
         self.verbose = verbose
-        self.epsilon = epsilon
-        self.action_space = action_space
+        self.epsilon_policy = epsilon_policy
 
         # 1 neural network per task to predict the Q values of start time
         # given the input observation
+        self.action_space = action_space
         input_size = observation_space.spaces['is_scheduled'].shape[0]
         n_models = action_space['task_id'].n
         output_size = action_space['start_time'].n
@@ -85,7 +104,7 @@ class DQNAgent:
 
         if not done:
             # epsilon greedy
-            if random.uniform(0, 1) < self.epsilon:
+            if random.uniform(0, 1) < self.epsilon_policy.get():
                 # exploration
                 action = self.action_space.sample()
                 action['start_time'] += 1 # non-zero start times
