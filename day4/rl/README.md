@@ -212,18 +212,21 @@ Temporal Differencing Q-Learning for single-agent seems too naive to learn the o
 
 The Deep Q-learning configuration trains one Deep Neural Network per task to predict the Q-values given the state.
 
-```
-        for i in range(n_models):
-            model = Sequential([
-                Dense(input_size*4, input_dim=input_size, activation='relu'),
-                Dense(input_size*4, activation='relu'),
-                Dense(output_size, activation='linear')
-            ])
+Input: 1 observation of the current schedule, shape = (number_of_tasks,)
+Output: Q-values, shape = (max_schedule_length, 1)
 
-            # start with a slow learning rate as we are fitting in smaller
-            # batches (which will be noiser)
-            model.compile(loss='mse', optimizer=Adam(lr=1e-3), metrics=['mae'])
-            self.models.append(model)
+```
+for i in range(n_models):
+   model = Sequential([
+         Dense(input_size*4, input_dim=input_size, activation='relu'),
+         Dense(input_size*4, activation='relu'),
+         Dense(output_size, activation='linear')
+   ])
+
+   # start with a slow learning rate as we are fitting in smaller
+   # batches (which will be noiser)
+   model.compile(loss='mse', optimizer=Adam(lr=1e-3), metrics=['mae'])
+   self.models.append(model)
 ```
 
 Used Adam with a slow learning rate to reduce noise. 
