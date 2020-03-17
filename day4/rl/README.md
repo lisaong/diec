@@ -245,49 +245,7 @@ Epsilon decay of 0.995 is applied to encourage early exploration, eventually dec
 (Reference: https://github.com/srnand/Reinforcement-Learning-using-OpenAI-Gym/blob/master/DQN/cartpole_dqn.py)
 
 Sample Training Output:
-```
-Action: OrderedDict([('start_time', 17), ('task_id', 1)]), State: {'is_scheduled': [9, 17, 8, 12, 0, 17, 16, 16]}, Reward: -200, Done: False, Info: {'makespan': 13, 'errors': 'Out-of-sequence tasks'}
-Job-view:
-0: Job: 0, Machine: 0, Start: 9, End: 12
-1: Job: 0, Machine: 1, Start: 17, End: 19
-2: Job: 0, Machine: 2, Start: 8, End: 10
-3: Job: 1, Machine: 0, Start: 12, End: 14
-4: Job: 1, Machine: 2, Start: 0, End: -1
-5: Job: 1, Machine: 1, Start: 17, End: 21
-6: Job: 2, Machine: 1, Start: 16, End: 20
-7: Job: 2, Machine: 2, Start: 16, End: 19
 
-Machine-view:
-
-Machine 0:
-|----|----|---
-         00033
-
-Machine 1:
-|----|----|----|----|
-                6666
-                 11
-                 5555
-
-Machine 2:
-|----|----|----|---
-        22      777
-Train on 1 samples
-1/1 [==============================] - 0s 7ms/sample - loss: 263.2330 - mae: 16.2199
-Train on 1 samples
-1/1 [==============================] - 0s 7ms/sample - loss: 683.4779 - mae: 26.1415
-Train on 1 samples
-1/1 [==============================] - 0s 8ms/sample - loss: 354.1490 - mae: 18.8125
-Train on 1 samples
-1/1 [==============================] - 0s 8ms/sample - loss: 1.7002 - mae: 1.2633
-Train on 1 samples
-1/1 [==============================] - 0s 7ms/sample - loss: 76.3693 - mae: 8.7331
-Train on 1 samples
-1/1 [==============================] - 0s 8ms/sample - loss: 351.5317 - mae: 18.7426
-Train on 1 samples
-1/1 [==============================] - 0s 8ms/sample - loss: 76.4796 - mae: 8.7310
-Train on 1 samples
-1/1 [==============================] - 0s 8ms/sample - loss: 38.6636 - mae: 6.1986
-```
+![training](jobshop/rl_jobshop_dqn.gif)
 
 Future experiments: Multi-agent learning
