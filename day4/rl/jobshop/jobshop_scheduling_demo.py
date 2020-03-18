@@ -95,6 +95,7 @@ if __name__ == "__main__":
 
     default_episodes = 20000
     parser.add_argument('--episodes', type=int, default=default_episodes)
+    parser.add_argument('--eval_only', type=int)
 
     args = parser.parse_args()
 
@@ -102,6 +103,8 @@ if __name__ == "__main__":
         args.agent = default_agent
     if args.episodes is None:
         args.episodes = default_episodes
+    if args.eval_only is None:
+        args.eval_only = False
 
     # Create the environment
     env = gym.make('gym_jobshop:jobshop-v0', 
@@ -112,10 +115,11 @@ if __name__ == "__main__":
     agent = AgentFactory.create(args.agent, env, verbose=True)
     print(f'\n*********{args.agent}*********')
 
-    # Run the agent
-    # in order for all tasks to be scheduled,
-    # steps_per_episode should exceed number of tasks
-    RunAgent(env, agent, episode_count=args.episodes, steps_per_episode=20)
+    if not args.eval_only:
+        # Run the agent
+        # in order for all tasks to be scheduled,
+        # steps_per_episode should exceed number of tasks
+        RunAgent(env, agent, episode_count=args.episodes, steps_per_episode=20)
 
     print('\n*********Best Schedule*********')
     actions = agent.get_best_schedule()
