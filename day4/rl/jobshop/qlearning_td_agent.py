@@ -133,7 +133,10 @@ class QLearningTDAgent:
             self.Q[obs_key] = {}
 
         self.Q[obs_key][action_key] = value
-        pickle.dump(self.Q, open(f'qlearning_td_Q.pkl', 'wb'))
+
+        # save every N iterations
+        if len(self.Q.keys()) % self.tasks.length() == 0:
+            pickle.dump(self.Q, open(f'qlearning_td_Q.pkl', 'wb'))
 
     def act(self, observation, reward, done):
         """Update the Q-values, then take an action
