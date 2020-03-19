@@ -96,6 +96,7 @@ if __name__ == "__main__":
     default_episodes = 20000
     parser.add_argument('--episodes', type=int, default=default_episodes)
     parser.add_argument('--eval_only', type=int)
+    parser.add_argument('--verbose', type=int)
 
     args = parser.parse_args()
 
@@ -105,6 +106,8 @@ if __name__ == "__main__":
         args.episodes = default_episodes
     if args.eval_only is None:
         args.eval_only = False
+    if args.verbose is None:
+        args.verbose = False
 
     # Create the environment
     env = gym.make('gym_jobshop:jobshop-v0', 
@@ -112,7 +115,7 @@ if __name__ == "__main__":
     env.reset()
 
     # Create the selected agent
-    agent = AgentFactory.create(args.agent, env, verbose=True)
+    agent = AgentFactory.create(args.agent, env, verbose=args.verbose)
     print(f'\n*********{args.agent}*********')
 
     if not args.eval_only:
