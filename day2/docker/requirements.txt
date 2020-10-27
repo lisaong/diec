@@ -5,7 +5,7 @@ chardet==3.0.4
 class-registry==2.1.2
 Click==7.0
 cloudpickle==0.8.1
-cryptography==2.6.1
+cryptography==3.2
 dask==1.1.5
 distributed==1.26.1
 docutils==0.14
